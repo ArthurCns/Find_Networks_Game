@@ -219,9 +219,9 @@
   .map-score-points.danger{ color:var(--danger); }
 
   .reaction-toast{
-    position:fixed; top:16px; left:16px; z-index:50;
+    position:absolute; top:14px; left:14px; z-index:5;
     display:flex; align-items:center; gap:12px;
-    max-width:min(300px, calc(100vw - 32px));
+    max-width:min(300px, calc(100% - 130px));
     padding:10px 16px 10px 12px;
     background:var(--surface);
     border:2px solid var(--line);
@@ -730,13 +730,13 @@
             (showScorePoints ?
               '<div class="map-score-points '+rl.cls+'">+'+lastRound.score.total+'</div>'
             : '') +
+            (showScorePoints ? reactionHtml(rl, state.roundIdx) : '') +
           '</div>' +
           '<p class="map-credit">Fond de carte : <a href="https://commons.wikimedia.org/wiki/File:France_relief_location_map.jpg" target="_blank" rel="noopener">Eric Gaba (Wikimedia Commons)</a>, CC BY-SA</p>' +
           belowHtml +
         '</div>' +
         '<div class="game-aside">' + asideHtml + '</div>' +
-      '</div>' +
-      (showScorePoints ? reactionHtml(rl, state.roundIdx) : '');
+      '</div>';
 
     var svg = document.getElementById("map-svg");
 
