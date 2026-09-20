@@ -218,6 +218,33 @@
   .map-score-points.warn{ color:var(--warn); }
   .map-score-points.danger{ color:var(--danger); }
 
+  .reaction-toast{
+    position:fixed; top:16px; left:16px; z-index:50;
+    display:flex; align-items:center; gap:12px;
+    max-width:min(300px, calc(100vw - 32px));
+    padding:10px 16px 10px 12px;
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 12px 30px -10px rgba(0,0,0,.45);
+    animation:rx-pop .35s cubic-bezier(.2,1.4,.4,1) both;
+    pointer-events:none;
+  }
+  .reaction-toast.success{ border-color:var(--success); }
+  .reaction-toast.warn{ border-color:var(--warn); }
+  .reaction-toast.danger{ border-color:var(--danger); }
+  .rx-media{ flex:none; width:64px; height:64px; display:flex; align-items:center; justify-content:center; }
+  .rx-media img{ width:64px; height:64px; object-fit:cover; border-radius:10px; }
+  .rx-emoji{ font-size:3rem; line-height:1; display:inline-block; animation:rx-wiggle 1s ease-in-out infinite; }
+  .rx-text{ display:flex; flex-direction:column; gap:2px; }
+  .rx-title{ font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:1.15rem; text-transform:uppercase; letter-spacing:.03em; }
+  .reaction-toast.success .rx-title{ color:var(--success); }
+  .reaction-toast.warn .rx-title{ color:var(--warn); }
+  .reaction-toast.danger .rx-title{ color:var(--danger); }
+  .rx-caption{ font-size:.9rem; line-height:1.3; }
+  @keyframes rx-pop{ from{ opacity:0; transform:translateY(-14px) scale(.85); } to{ opacity:1; transform:none; } }
+  @keyframes rx-wiggle{ 0%,100%{ transform:rotate(-8deg) scale(1); } 50%{ transform:rotate(8deg) scale(1.12); } }
+  @media (prefers-reduced-motion: reduce){ .reaction-toast, .rx-emoji{ animation:none; } }
   .game-grid{ display:grid; grid-template-columns:1fr 280px; gap:16px; align-items:start; }
   .game-main{ display:flex; flex-direction:column; gap:14px; min-width:0; }
   .game-aside{ min-width:0; }
@@ -298,10 +325,39 @@
     {name:"Dijon", network:"Divia", x:878.3, y:489.42},
     {name:"Le Havre", network:"LiA", x:478.61, y:234.94},
     {name:"Nogent-le-Rotrou", network:"NosBus", x:536.77, y:372.22},
-    {name:"Fougères", network:"Le Surf", x:372.76, y:368.75},
+    {name:"Fougères", network:"SURF", x:372.76, y:368.75},
     {name:"Tours", network:"Fil Bleu", x:525.35, y:480.98},
     {name:"Saint-Malo", network:"MAT", x:305.77, y:333.94},
-    {name:"Vannes", network:"Kicéo", x:246.21, y:450.04}
+    {name:"Vannes", network:"Kicéo", x:246.21, y:450.04},
+    {name:"Orléans", network:"TAO", x:624.55, y:421.37},
+    {name:"Angers", network:"Irigo", x:424.25, y:471.1},
+    {name:"Lens / Béthune", network:"Tadao", x:699.29, y:125},
+    {name:"Valenciennes", network:"Transvilles", x:755.31, y:133.64},
+    {name:"Dunkerque", network:"DK\'Bus", x:662.42, y:54.55},
+    {name:"Le Mans", network:"SETRAM", x:486.04, y:409.29},
+    {name:"Brest", network:"Bibus", x:106.44, y:364.27},
+    {name:"Aix-en-Provence", network:"Aix en bus", x:911.18, y:933.66},
+    {name:"Besançon", network:"Ginko", x:957.9, y:499.29},
+    {name:"Lorient", network:"IZILO Mobilités", x:196.84, y:439.5},
+    {name:"Perpignan", network:"Sankéo", x:704.39, y:1032.18},
+    {name:"Amiens", network:"Ametis", x:655.86, y:188.12},
+    {name:"Valence", network:"Citéa", x:866.22, y:769.23},
+    {name:"Limoges", network:"TCL", x:572.04, y:663.78},
+    {name:"Chambéry", network:"Synchro mobilités", x:949.29, y:695.29},
+    {name:"Bayonne", network:"Txik Txak", x:350.4, y:937.97},
+    {name:"Montbéliard", network:"évolitY", x:1020.64, y:467.4},
+    {name:"Nîmes", network:"Tango", x:823.1, y:897.7},
+    {name:"Bourges", network:"AggloBus", x:664.14, y:517.65},
+    {name:"Thionville", network:"Temo\'b", x:969.59, y:250.93},
+    {name:"Clermont-Ferrand", network:"T2C", x:719.96, y:670.39},
+    {name:"Caen", network:"Twisto", x:439.84, y:271.43},
+    {name:"Mulhouse", network:"Soléa", x:1064.17, y:439.19},
+    {name:"Poitiers", network:"Vitalis", x:497.45, y:576.32},
+    {name:"Pau", network:"Idelis", x:439.83, y:961.15},
+    {name:"Avignon", network:"Orizo", x:859.18, y:884.51},
+    {name:"Annecy", network:"Sibra", x:966.43, y:656.09},
+    {name:"La Rochelle", network:"Yélo", x:376.62, y:625.51},
+    {name:"Laval", network:"TUL", x:407.49, y:401.82}
   ];
 
   var ROUNDS_PER_GAME = 10;
@@ -516,6 +572,29 @@
     });
   }
 
+  // Reactions shown top-left after each answer. Set "gif" to a file path (e.g. "gifs/excellent.gif")
+  // to use your own GIF; without it, the animated emoji is used.
+  var REACTIONS = {
+    "Excellent": {emoji:"🎯", gif:"gifs/excellent.gif", captions:["Chirurgical !","Tu as le GPS dans la tête.","Le conducteur de tram, c'est toi ?"]},
+    "Très bon":  {emoji:"😎", gif:"gifs/tres-bon.gif", captions:["Propre, très propre.","Presque un plan de réseau vivant.","Tu connais tes lignes !"]},
+    "Bon":       {emoji:"🙂", gif:"gifs/bon.gif", captions:["Pas mal, bonne région au moins.","Correct, on a vu pire.","Ça roule, sans excès de vitesse."]},
+    "Moyen":     {emoji:"😬", gif:"gifs/moyen.gif", captions:["Tu as raté ta correspondance ?","Ça sent la ligne en travaux.","Le bus était déjà passé."]},
+    "Loin":      {emoji:"🫠", gif:"gifs/loin.gif", captions:["Terminus, tout le monde descend… ailleurs.","Le bus est parti sans toi.","Tu as pris la mauvaise navette."]}
+  };
+
+  function reactionHtml(rl, idx){
+    var rx = REACTIONS[rl.text];
+    if(!rx) return '';
+    var caption = rx.captions[idx % rx.captions.length];
+    var emoji = '<span class="rx-emoji"' + (rx.gif ? ' style="display:none"' : '') + '>' + rx.emoji + '</span>';
+    var media = rx.gif
+      ? '<img src="' + rx.gif + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-block\'">' + emoji
+      : emoji;
+    return '<div class="reaction-toast ' + rl.cls + '" aria-live="polite">' +
+      '<div class="rx-media">' + media + '</div>' +
+      '<div class="rx-text"><span class="rx-title">' + rl.text + '</span><span class="rx-caption">' + caption + '</span></div>' +
+    '</div>';
+  }
   function renderApp(){
     var gate = state.screen === "gate";
     var playing = state.screen === "play";
@@ -656,7 +735,8 @@
           belowHtml +
         '</div>' +
         '<div class="game-aside">' + asideHtml + '</div>' +
-      '</div>';
+      '</div>' +
+      (showScorePoints ? reactionHtml(rl, state.roundIdx) : '');
 
     var svg = document.getElementById("map-svg");
 
