@@ -273,11 +273,18 @@
   .map-credit{ margin:6px 2px 0; font-size:.75rem; color:var(--muted); text-align:right; }
   .map-credit a{ color:inherit; }
   .clickcatch{ fill:transparent; }
-  .guess-dot{ fill:var(--pin); stroke:var(--surface); stroke-width:2; }
-  .target-dot{ fill:var(--target); stroke:var(--surface); stroke-width:2; }
-  .link-line{ stroke:var(--muted); stroke-width:1.6; stroke-dasharray:4 4; }
-  .map-label{ font-family:"Public Sans",sans-serif; font-size:13px; font-weight:600; fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:3px; }
-  .hint{ text-align:center; color:var(--muted); font-size:.85rem; padding-block:6px 0; }
+  .guess-dot{ fill:var(--pin); stroke:var(--surface); stroke-width:4; transform-box:fill-box; transform-origin:center; animation:mk-drop .5s cubic-bezier(.3,1.5,.5,1) both; }
+  .target-dot{ fill:var(--target); stroke:var(--surface); stroke-width:4; transform-box:fill-box; transform-origin:center; animation:mk-pop .45s cubic-bezier(.3,1.6,.5,1) .95s both; }
+  .link-line{ stroke:var(--muted); stroke-width:3.5; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; animation:mk-draw .45s ease-out .5s forwards; }
+  .click-ripple{ fill:none; stroke:var(--pin); stroke-width:4; transform-box:fill-box; transform-origin:center; animation:mk-ripple .8s ease-out both; }
+  .click-ripple.target{ stroke:var(--target); animation-delay:.95s; }
+  .map-label{ font-family:"Public Sans",sans-serif; font-size:28px; font-weight:700; fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:7px; stroke-linejoin:round; animation:mk-fade .35s ease-out 1.05s both; }
+  @keyframes mk-drop{ 0%{ opacity:0; transform:translateY(-90px) scale(1.5); } 60%{ opacity:1; transform:translateY(0) scale(1); } 80%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
+  @keyframes mk-pop{ 0%{ opacity:0; transform:scale(0); } 100%{ opacity:1; transform:scale(1); } }
+  @keyframes mk-draw{ to{ stroke-dashoffset:0; } }
+  @keyframes mk-ripple{ 0%{ opacity:.9; transform:scale(.6); } 100%{ opacity:0; transform:scale(5); } }
+  @keyframes mk-fade{ from{ opacity:0; } to{ opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .guess-dot,.target-dot,.link-line,.click-ripple,.map-label{ animation:none; } .link-line{ stroke-dashoffset:0; } .click-ripple{ display:none; } }  .hint{ text-align:center; color:var(--muted); font-size:.85rem; padding-block:6px 0; }
 
   .result-panel{ display:flex; gap:22px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
   .result-metrics{ display:flex; gap:22px; flex-wrap:wrap; }
@@ -876,22 +883,27 @@
       for(var k in attrs) e.setAttribute(k, attrs[k]);
       return e;
     }
+    [0, 0.18].forEach(function(delay){
+      marks.appendChild(el("circle", {
+        class:"click-ripple", cx:r.guess.x, cy:r.guess.y, r:14, style:"animation-delay:"+delay+"s"
+      }));
+    });
     marks.appendChild(el("line", {
-      class:"link-line", x1:r.guess.x, y1:r.guess.y, x2:r.city.x, y2:r.city.y
+      class:"link-line", pathLength:1, x1:r.guess.x, y1:r.guess.y, x2:r.city.x, y2:r.city.y
     }));
     marks.appendChild(el("circle", {
-      class:"guess-dot", cx:r.guess.x, cy:r.guess.y, r:7
+      class:"click-ripple target", cx:r.city.x, cy:r.city.y, r:14
     }));
     marks.appendChild(el("circle", {
-      class:"target-dot", cx:r.city.x, cy:r.city.y, r:7
+      class:"guess-dot", cx:r.guess.x, cy:r.guess.y, r:13
     }));
-    var labelX = r.city.x + 10;
-    var labelY = r.city.y - 10;
-    var t = el("text", {class:"map-label", x:labelX, y:labelY});
+    marks.appendChild(el("circle", {
+      class:"target-dot", cx:r.city.x, cy:r.city.y, r:13
+    }));
+    var t = el("text", {class:"map-label", x:r.city.x + 20, y:r.city.y - 18});
     t.textContent = r.city.name;
     marks.appendChild(t);
   }
-
   function finishGame(){
     var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
     state.screen = "end";
