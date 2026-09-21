@@ -245,6 +245,26 @@
   @keyframes rx-pop{ from{ opacity:0; transform:translateY(-14px) scale(.85); } to{ opacity:1; transform:none; } }
   @keyframes rx-wiggle{ 0%,100%{ transform:rotate(-8deg) scale(1); } 50%{ transform:rotate(8deg) scale(1.12); } }
   @media (prefers-reduced-motion: reduce){ .reaction-toast, .rx-emoji{ animation:none; } }
+  .map-fs-btn{
+    position:absolute; right:12px; bottom:12px; z-index:6;
+    width:36px; height:36px; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); color:var(--ink);
+    border:1px solid var(--line); border-radius:9px;
+    box-shadow:0 6px 16px -6px rgba(0,0,0,.4);
+    opacity:.9;
+  }
+  .map-fs-btn:hover{ opacity:1; background:var(--surface-2); }
+  .map-fs-btn svg{ width:18px; height:18px; display:block; }
+  .fs-ico-off{ display:none !important; }
+  #app:fullscreen .fs-ico-on{ display:none !important; }
+  #app:fullscreen .fs-ico-off{ display:block !important; }
+  #app:-webkit-full-screen .fs-ico-on{ display:none !important; }
+  #app:-webkit-full-screen .fs-ico-off{ display:block !important; }
+  #app:fullscreen{ max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
+  #app:-webkit-full-screen{ max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
+  #app:fullscreen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.04)); margin-inline:auto; }
+  #app:-webkit-full-screen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.04)); margin-inline:auto; }
   .game-grid{ display:grid; grid-template-columns:1fr 280px; gap:16px; align-items:start; }
   .game-main{ display:flex; flex-direction:column; gap:14px; min-width:0; }
   .game-aside{ min-width:0; }
@@ -595,6 +615,16 @@
       '<div class="rx-text"><span class="rx-title">' + rl.text + '</span><span class="rx-caption">' + caption + '</span></div>' +
     '</div>';
   }
+  function toggleFullscreen(){
+    var el = document.getElementById("app");
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    try{
+      var p = isFs
+        ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+        : (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      if(p && p.catch) p.catch(function(){});
+    }catch(e){}
+  }
   function renderApp(){
     var gate = state.screen === "gate";
     var playing = state.screen === "play";
@@ -605,6 +635,7 @@
     var lastRound = state.rounds[state.rounds.length-1];
     var rl = lastRound ? rankLabel(lastRound.distKm) : null;
     var showScorePoints = playing && state.revealed && lastRound;
+    var fsSupported = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
 
     var stats = (playing || ended) ? (
       '<div class="stat-row">' +
@@ -731,6 +762,10 @@
               '<div class="map-score-points '+rl.cls+'">+'+lastRound.score.total+'</div>'
             : '') +
             (showScorePoints ? reactionHtml(rl, state.roundIdx) : '') +
+            (fsSupported ? '<button type="button" class="map-fs-btn" id="fs-btn" aria-label="Plein écran" title="Plein écran">' +
+              '<svg class="fs-ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
+              '<svg class="fs-ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>' +
+            '</button>' : '') +
           '</div>' +
           '<p class="map-credit">Fond de carte : <a href="https://commons.wikimedia.org/wiki/File:France_relief_location_map.jpg" target="_blank" rel="noopener">Eric Gaba (Wikimedia Commons)</a>, CC BY-SA</p>' +
           belowHtml +
@@ -739,6 +774,8 @@
       '</div>';
 
     var svg = document.getElementById("map-svg");
+    var fsBtn = document.getElementById("fs-btn");
+    if(fsBtn) fsBtn.addEventListener("click", toggleFullscreen);
 
     if(gate){
       var startBtn = document.getElementById("start-btn");
