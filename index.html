@@ -1,0 +1,1006 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réseaux de France</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f2ede2;
+    --surface:#ffffff;
+    --surface-2:#e9e1d1;
+    --ink:#1d2530;
+    --muted:#6f6455;
+    --line:#d8cfba;
+    --accent:#cf4f1e;
+    --accent-ink:#ffffff;
+    --accent-2:#1f5c9e;
+    --map-bg:#e6f1f5;
+    --pin:#cf4f1e;
+    --target:#1f5c9e;
+    --success:#2f8f5b;
+    --warn:#b98423;
+    --danger:#c1473c;
+    --shadow: 0 1px 2px rgba(30,20,10,.06), 0 8px 24px -12px rgba(30,20,10,.25);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12161c;
+      --surface:#1a2029;
+      --surface-2:#222a35;
+      --ink:#eae6dd;
+      --muted:#9c9484;
+      --line:#323b48;
+      --accent:#ff7d43;
+      --accent-ink:#1a0e06;
+      --accent-2:#6fa8e0;
+      --map-bg:#141c22;
+      --pin:#ff7d43;
+      --target:#6fa8e0;
+      --success:#57c78d;
+      --warn:#e0ab4a;
+      --danger:#ef7a6d;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12161c;
+    --surface:#1a2029;
+    --surface-2:#222a35;
+    --ink:#eae6dd;
+    --muted:#9c9484;
+    --line:#323b48;
+    --accent:#ff7d43;
+    --accent-ink:#1a0e06;
+    --accent-2:#6fa8e0;
+    --map-bg:#141c22;
+    --pin:#ff7d43;
+    --target:#6fa8e0;
+    --success:#57c78d;
+    --warn:#e0ab4a;
+    --danger:#ef7a6d;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Public Sans",system-ui,sans-serif;
+    padding-inline:16px;
+    padding-block:20px;
+    display:flex;
+    justify-content:center;
+  }
+  img{ max-width:100%; }
+  /* ---------- site navigation (left rail) ---------- */
+  body{ padding-left:184px; }
+  .site-nav{
+    position:fixed; top:0; left:0; bottom:0; width:168px; z-index:40;
+    display:flex; flex-direction:column; align-items:stretch; gap:6px;
+    padding:20px 12px;
+    background:var(--surface);
+    border-right:1px solid var(--line);
+    box-shadow:10px 0 24px -18px rgba(0,0,0,.35);
+  }
+  .nav-item{
+    display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:10px;
+    width:100%; padding:10px 12px;
+    border-radius:10px; text-decoration:none;
+    color:var(--muted);
+    font-family:"Barlow Condensed",system-ui,sans-serif; font-weight:600;
+    font-size:1.05rem; letter-spacing:.04em; text-transform:uppercase;
+    transition:background .12s ease, color .12s ease;
+  }
+  .nav-item svg{ width:22px; height:22px; flex:none; display:block; }
+  .nav-item:hover{ background:var(--surface-2); color:var(--ink); }
+  .nav-item.is-active{ background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
+  .nav-item:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
+  @media (max-width:700px){
+    body{ padding-left:16px; padding-bottom:88px; }
+    .site-nav{
+      top:auto; right:0; width:auto; height:68px;
+      flex-direction:row; justify-content:center; align-items:center;
+      padding:6px 12px; border-right:none; border-top:1px solid var(--line);
+      box-shadow:0 -10px 24px -18px rgba(0,0,0,.35);
+    }
+    .nav-item{ width:auto; }
+  }
+  .app{
+    width:100%;
+    max-width:1280px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  h1,h2,h3{
+    font-family:"Barlow Condensed",system-ui,sans-serif;
+    font-weight:700;
+    text-wrap:balance;
+    margin:0;
+  }
+  .label{
+    font-family:"Barlow Condensed",system-ui,sans-serif;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-size:.78rem;
+    color:var(--muted);
+  }
+  .tnum{ font-variant-numeric:tabular-nums; }
+  button{
+    font-family:"Barlow Condensed",system-ui,sans-serif;
+    font-weight:600;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    font-size:1rem;
+    cursor:pointer;
+    border-radius:8px;
+    border:1px solid transparent;
+    padding:.7em 1.4em;
+    transition:transform .08s ease, filter .12s ease;
+  }
+  button:active{ transform:translateY(1px); }
+  button:focus-visible, input:focus-visible, .pill:focus-visible{
+    outline:2px solid var(--accent-2);
+    outline-offset:2px;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:var(--accent-ink);
+  }
+  .btn-primary:hover{ filter:brightness(1.06); }
+  .btn-primary:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border-color:var(--line);
+  }
+  .btn-ghost:hover{ background:var(--surface-2); }
+
+  input[type="text"]{
+    font-family:"Public Sans",sans-serif;
+    font-size:1.05rem;
+    padding:.7em .9em;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    width:100%;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:20px;
+  }
+
+  header.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand h1{ font-size:1.7rem; letter-spacing:.01em; }
+  .brand .tag{ color:var(--muted); font-size:.85rem; }
+
+  .stat-row{ display:flex; gap:18px; flex-wrap:wrap; }
+  .stat{ display:flex; flex-direction:column; gap:2px; min-width:64px; }
+  .stat .v{ font-size:1.3rem; font-weight:700; font-family:"Barlow Condensed",sans-serif; }
+
+  .rules{ display:flex; flex-direction:column; gap:6px; color:var(--muted); font-size:.88rem; line-height:1.5;}
+  .rules b{ color:var(--ink); }
+
+  table.board{ width:100%; border-collapse:collapse; font-size:.92rem; }
+  table.board th{ text-align:left; color:var(--muted); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; padding-bottom:6px; border-bottom:1px solid var(--line);}
+  table.board td{ padding:7px 4px; border-bottom:1px solid var(--line); }
+  table.board tr:last-child td{ border-bottom:none; }
+  table.board td.rank{ color:var(--muted); width:1.6em; }
+  .empty-board{ color:var(--muted); font-size:.9rem; padding:8px 0; }
+
+  /* ---------- play screen ---------- */
+  .prompt-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .prompt-target{ display:flex; flex-direction:column; gap:2px; }
+  .prompt-target .network{ font-size:1.5rem; font-family:"Barlow Condensed",sans-serif; font-weight:700; }
+  .timerwrap{ flex:1; min-width:160px; max-width:280px; }
+  .timerbar{ height:8px; border-radius:5px; background:var(--surface-2); overflow:hidden; border:1px solid var(--line); }
+  .timerbar > i{ display:block; height:100%; background:var(--accent-2); width:100%; transform-origin:left; transition:width .1s linear, background .2s ease; }
+
+  .map-wrap{ position:relative; border-radius:14px; overflow:hidden; background:var(--map-bg); border:1px solid var(--line); box-shadow:var(--shadow); }
+  .map-wrap.inactive svg.map{ cursor:default; opacity:.55; }
+  .map-gate-overlay{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    width:min(300px, 84%);
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 12px 32px -10px rgba(0,0,0,.4);
+    padding:22px 24px;
+    text-align:center;
+  }
+  .map-gate-overlay .network{ font-size:1.25rem; }
+  .map-gate-overlay input{ text-align:center; }
+  .map-gate-overlay button{ width:100%; }
+
+  .map-score-points{
+    position:absolute; top:14px; right:14px;
+    font-family:"Barlow Condensed",sans-serif; font-weight:700;
+    font-size:1.9rem; line-height:1;
+    padding:.15em .45em;
+    border-radius:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    box-shadow:0 8px 20px -8px rgba(0,0,0,.4);
+  }
+  .map-score-points.success{ color:var(--success); }
+  .map-score-points.warn{ color:var(--warn); }
+  .map-score-points.danger{ color:var(--danger); }
+
+  .reaction-toast{
+    position:absolute; top:14px; left:14px; z-index:5;
+    display:flex; align-items:center; gap:12px;
+    max-width:min(300px, calc(100% - 130px));
+    padding:10px 16px 10px 12px;
+    background:var(--surface);
+    border:2px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 12px 30px -10px rgba(0,0,0,.45);
+    animation:rx-pop .35s cubic-bezier(.2,1.4,.4,1) both;
+    pointer-events:none;
+  }
+  .reaction-toast.success{ border-color:var(--success); }
+  .reaction-toast.warn{ border-color:var(--warn); }
+  .reaction-toast.danger{ border-color:var(--danger); }
+  .rx-media{ flex:none; width:64px; height:64px; display:flex; align-items:center; justify-content:center; }
+  .rx-media img{ width:64px; height:64px; object-fit:cover; border-radius:10px; }
+  .rx-emoji{ font-size:3rem; line-height:1; display:inline-block; animation:rx-wiggle 1s ease-in-out infinite; }
+  .rx-text{ display:flex; flex-direction:column; gap:2px; }
+  .rx-title{ font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:1.15rem; text-transform:uppercase; letter-spacing:.03em; }
+  .reaction-toast.success .rx-title{ color:var(--success); }
+  .reaction-toast.warn .rx-title{ color:var(--warn); }
+  .reaction-toast.danger .rx-title{ color:var(--danger); }
+  .rx-caption{ font-size:.9rem; line-height:1.3; }
+  @keyframes rx-pop{ from{ opacity:0; transform:translateY(-14px) scale(.85); } to{ opacity:1; transform:none; } }
+  @keyframes rx-wiggle{ 0%,100%{ transform:rotate(-8deg) scale(1); } 50%{ transform:rotate(8deg) scale(1.12); } }
+  @media (prefers-reduced-motion: reduce){ .reaction-toast, .rx-emoji{ animation:none; } }
+  .map-fs-btn{
+    position:absolute; right:12px; bottom:12px; z-index:6;
+    width:36px; height:36px; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); color:var(--ink);
+    border:1px solid var(--line); border-radius:9px;
+    box-shadow:0 6px 16px -6px rgba(0,0,0,.4);
+    opacity:.9;
+  }
+  .map-fs-btn:hover{ opacity:1; background:var(--surface-2); }
+  .map-fs-btn svg{ width:18px; height:18px; display:block; }
+  .fs-ico-off{ display:none !important; }
+  #app:fullscreen .fs-ico-on{ display:none !important; }
+  #app:fullscreen .fs-ico-off{ display:block !important; }
+  #app:-webkit-full-screen .fs-ico-on{ display:none !important; }
+  #app:-webkit-full-screen .fs-ico-off{ display:block !important; }
+  #app:fullscreen{ max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
+  #app:-webkit-full-screen{ max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
+  #app:fullscreen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.04)); margin-inline:auto; }
+  #app:-webkit-full-screen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.04)); margin-inline:auto; }
+  .game-grid{ display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start; }
+  .game-main{ display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .recap-card{ padding:16px; }
+  .recap-total{ font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:1.5rem; color:var(--accent); }
+  .recap-total small{ font-size:.75rem; color:var(--muted); font-weight:600; }
+  .recap-list{ list-style:none; margin:0; padding:0; }
+  .recap-list li{ display:grid; grid-template-columns:1.4em 1fr auto auto; gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid var(--line); font-size:.88rem; animation:mk-fade .4s ease-out both; }
+  .recap-list li:last-child{ border-bottom:none; }
+  .rc-n{ color:var(--muted); }
+  .rc-name b{ font-weight:600; }
+  .rc-name i{ display:block; font-style:normal; color:var(--muted); font-size:.76rem; }
+  .rc-km{ color:var(--muted); font-size:.8rem; }
+  .rc-pts{ font-size:.8rem; min-width:3.2em; text-align:center; }
+  .recap-next{ margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }  .game-aside{ min-width:0; display:flex; flex-direction:column; gap:14px; }
+  .game-aside .result-panel{ flex-direction:column; align-items:stretch; gap:14px; padding:16px; }
+  .game-aside .result-metrics{ display:grid; grid-template-columns:1fr 1fr; gap:12px 16px; }
+  @media (max-width:860px){ .game-grid{ grid-template-columns:1fr; } }
+  svg.map{ display:block; width:100%; height:auto; cursor:crosshair; touch-action:manipulation; }
+  .map-credit{ margin:6px 2px 0; font-size:.75rem; color:var(--muted); text-align:right; }
+  .map-credit a{ color:inherit; }
+  .clickcatch{ fill:transparent; }
+  .guess-dot{ fill:var(--pin); stroke:var(--surface); stroke-width:4; transform-box:fill-box; transform-origin:center; animation:mk-drop .5s cubic-bezier(.3,1.5,.5,1) both; }
+  .target-dot{ fill:var(--target); stroke:var(--surface); stroke-width:4; transform-box:fill-box; transform-origin:center; animation:mk-pop .45s cubic-bezier(.3,1.6,.5,1) .95s both; }
+  .link-line{ stroke:var(--muted); stroke-width:3.5; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; animation:mk-draw .45s ease-out .5s forwards; }
+  .click-ripple{ fill:none; stroke:var(--pin); stroke-width:4; transform-box:fill-box; transform-origin:center; animation:mk-ripple .8s ease-out both; }
+  .click-ripple.target{ stroke:var(--target); animation-delay:.95s; }
+  .map-label{ font-family:"Public Sans",sans-serif; font-size:28px; font-weight:700; fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:7px; stroke-linejoin:round; animation:mk-fade .35s ease-out 1.05s both; }
+  @keyframes mk-drop{ 0%{ opacity:0; transform:translateY(-90px) scale(1.5); } 60%{ opacity:1; transform:translateY(0) scale(1); } 80%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
+  @keyframes mk-pop{ 0%{ opacity:0; transform:scale(0); } 100%{ opacity:1; transform:scale(1); } }
+  @keyframes mk-draw{ to{ stroke-dashoffset:0; } }
+  @keyframes mk-ripple{ 0%{ opacity:.9; transform:scale(.6); } 100%{ opacity:0; transform:scale(5); } }
+  @keyframes mk-fade{ from{ opacity:0; } to{ opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ .guess-dot,.target-dot,.link-line,.click-ripple,.map-label{ animation:none; } .link-line{ stroke-dashoffset:0; } .click-ripple{ display:none; } }  .hint{ text-align:center; color:var(--muted); font-size:.85rem; padding-block:6px 0; }
+
+  .result-panel{ display:flex; gap:22px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+  .result-metrics{ display:flex; gap:22px; flex-wrap:wrap; }
+  .metric{ display:flex; flex-direction:column; gap:2px; }
+  .metric .v{ font-size:1.5rem; font-weight:700; font-family:"Barlow Condensed",sans-serif; }
+  .badge{ display:inline-block; padding:.15em .6em; border-radius:99px; font-size:.75rem; font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+  .badge.success{ background:color-mix(in srgb, var(--success) 20%, transparent); color:var(--success); }
+  .badge.warn{ background:color-mix(in srgb, var(--warn) 22%, transparent); color:var(--warn); }
+  .badge.danger{ background:color-mix(in srgb, var(--danger) 20%, transparent); color:var(--danger); }
+
+  .rounds-strip{ display:flex; gap:6px; flex-wrap:wrap; }
+  .round-chip{
+    width:30px; height:30px; border-radius:7px; display:flex; align-items:center; justify-content:center;
+    font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:.85rem;
+    background:var(--surface-2); color:var(--muted); border:1px solid var(--line);
+  }
+  .round-chip.done{ background:var(--accent-2); color:#fff; border-color:transparent; }
+  .round-chip.current{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  /* ---------- end screen ---------- */
+  .recap-table{ width:100%; border-collapse:collapse; font-size:.92rem; overflow-x:auto; display:block; }
+  .recap-table thead, .recap-table tbody{ display:table; width:100%; table-layout:fixed; }
+  .recap-table th{ text-align:left; color:var(--muted); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; padding:6px 4px; border-bottom:1px solid var(--line); }
+  .recap-table td{ padding:7px 4px; border-bottom:1px solid var(--line); }
+  .total-line{ display:flex; justify-content:space-between; align-items:baseline; padding-top:10px; }
+  .total-line .v{ font-size:2.1rem; font-family:"Barlow Condensed",sans-serif; font-weight:700; color:var(--accent); }
+
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .flex-1{ flex:1; }
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Navigation principale">
+  <a class="nav-item is-active" href="index.html" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+    <span>Réseau</span>
+  </a>
+  <a class="nav-item" href="metro.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3.5"/><path d="M5 11h14"/><circle cx="9" cy="14" r=".9"/><circle cx="15" cy="14" r=".9"/><path d="M8 21l2-4M16 21l-2-4"/></svg>
+    <span>Métro</span>
+  </a>
+  <a class="nav-item" href="arrets.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16"/><circle cx="8" cy="14.2" r=".9"/><circle cx="16" cy="14.2" r=".9"/><path d="M6.5 17v3M17.5 17v3"/></svg>
+    <span>Arrêts</span>
+  </a>
+</nav>
+<div class="app" id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var GEO = {
+    viewBox: "0 0 1280 1230",
+    mapImage: "france_relief_1280.jpg",
+    kmPerPx: 0.9495,
+  };
+
+  var CITIES = [
+    {name:"Paris", network:"RATP / Île-de-France Mobilités", x:660.43, y:309.66},
+    {name:"Lyon", network:"TCL", x:861.63, y:671.93},
+    {name:"Marseille", network:"RTM", x:904.9, y:960.98},
+    {name:"Lille", network:"Ilévia", x:717.55, y:102.01},
+    {name:"Toulouse", network:"Tisséo", x:586.87, y:924.88},
+    {name:"Bordeaux", network:"TBM", x:422.95, y:780.43},
+    {name:"Nantes", network:"TAN", x:344.01, y:501.56},
+    {name:"Strasbourg", network:"CTS", x:1097.89, y:342.83},
+    {name:"Rennes", network:"STAR", x:333.95, y:396.26},
+    {name:"Nice", network:"Lignes d\'Azur", x:1058.19, y:912.52},
+    {name:"Montpellier", network:"TaM", x:783.94, y:924.16},
+    {name:"Grenoble", network:"TAG / SMMAG", x:933.63, y:739.35},
+    {name:"Rouen", network:"Astuce", x:558.93, y:240.95},
+    {name:"Toulon", network:"Réseau Mistral", x:950.12, y:981.17},
+    {name:"Saint-Étienne", network:"STAS", x:825.29, y:709.92},
+    {name:"Nancy", network:"Stan", x:970.89, y:328.93},
+    {name:"Reims", network:"Citura", x:796.49, y:262.6},
+    {name:"Metz", network:"Le Met\'", x:970.18, y:278.88},
+    {name:"Dijon", network:"Divia", x:878.3, y:489.42},
+    {name:"Le Havre", network:"LiA", x:478.61, y:234.94},
+    {name:"Nogent-le-Rotrou", network:"NosBus", x:536.77, y:372.22},
+    {name:"Fougères", network:"SURF", x:372.76, y:368.75},
+    {name:"Tours", network:"Fil Bleu", x:525.35, y:480.98},
+    {name:"Saint-Malo", network:"MAT", x:305.77, y:333.94},
+    {name:"Vannes", network:"Kicéo", x:246.21, y:450.04},
+    {name:"Orléans", network:"TAO", x:624.55, y:421.37},
+    {name:"Angers", network:"Irigo", x:424.25, y:471.1},
+    {name:"Lens / Béthune", network:"Tadao", x:699.29, y:125},
+    {name:"Valenciennes", network:"Transvilles", x:755.31, y:133.64},
+    {name:"Dunkerque", network:"DK\'Bus", x:662.42, y:54.55},
+    {name:"Le Mans", network:"SETRAM", x:486.04, y:409.29},
+    {name:"Brest", network:"Bibus", x:106.44, y:364.27},
+    {name:"Aix-en-Provence", network:"Aix en bus", x:911.18, y:933.66},
+    {name:"Besançon", network:"Ginko", x:957.9, y:499.29},
+    {name:"Lorient", network:"IZILO Mobilités", x:196.84, y:439.5},
+    {name:"Perpignan", network:"Sankéo", x:704.39, y:1032.18},
+    {name:"Amiens", network:"Ametis", x:655.86, y:188.12},
+    {name:"Valence", network:"Citéa", x:866.22, y:769.23},
+    {name:"Limoges", network:"TCL", x:572.04, y:663.78},
+    {name:"Chambéry", network:"Synchro mobilités", x:949.29, y:695.29},
+    {name:"Bayonne", network:"Txik Txak", x:350.4, y:937.97},
+    {name:"Montbéliard", network:"évolitY", x:1020.64, y:467.4},
+    {name:"Nîmes", network:"Tango", x:823.1, y:897.7},
+    {name:"Bourges", network:"AggloBus", x:664.14, y:517.65},
+    {name:"Thionville", network:"Temo\'b", x:969.59, y:250.93},
+    {name:"Clermont-Ferrand", network:"T2C", x:719.96, y:670.39},
+    {name:"Caen", network:"Twisto", x:439.84, y:271.43},
+    {name:"Mulhouse", network:"Soléa", x:1064.17, y:439.19},
+    {name:"Poitiers", network:"Vitalis", x:497.45, y:576.32},
+    {name:"Pau", network:"Idelis", x:439.83, y:961.15},
+    {name:"Avignon", network:"Orizo", x:859.18, y:884.51},
+    {name:"Annecy", network:"Sibra", x:966.43, y:656.09},
+    {name:"La Rochelle", network:"Yélo", x:376.62, y:625.51},
+    {name:"Laval", network:"TUL", x:407.49, y:401.82}
+  ];
+
+  var ROUNDS_PER_GAME = 10;
+  var TIME_LIMIT_S = 20; // seconds for the timer bar / full time-bonus window
+  var LS_KEY = "reseaux-fr-scores-v1";
+  var LEADERBOARD_SIZE = 10;
+
+  // ---------------- leaderboard (Supabase, local fallback) ----------------
+  // 1. Create a free project at https://supabase.com
+  // 2. In the SQL editor, run:
+  //      create table scores (
+  //        id bigint generated always as identity primary key,
+  //        pseudo text not null,
+  //        score integer not null,
+  //        created_at timestamptz not null default now()
+  //      );
+  //      alter table scores enable row level security;
+  //      create policy "public read" on scores for select to anon using (true);
+  //      create policy "public insert" on scores for insert to anon
+  //        with check (char_length(pseudo) <= 18 and score >= 0 and score <= 13000);
+  // 3. Project Settings > API: copy the "Project URL" and the "anon public" key below.
+  var SUPABASE_URL = "https://wubushemowkizczoogvg.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_T4k5fQbOQb5lRRt1q4E1XQ_AQTdYWAr";
+
+  // Accepts the bare project URL or one that already ends in /rest/v1(/) — either pasted value works.
+  var SUPABASE_REST_URL = SUPABASE_URL.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'') + "/rest/v1";
+
+  var dbStatus = "connecting";  // "connecting" | "shared" | "local"
+  var scoresCache = [];         // always the current top LEADERBOARD_SIZE, freshest first
+
+  function loadLocalScores(){
+    try{
+      var raw = localStorage.getItem(LS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveLocalScores(list){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(list)); }catch(e){}
+  }
+  function addLocalScore(pseudo, score){
+    var list = loadLocalScores();
+    list.push({pseudo:pseudo, score:score, date:new Date().toISOString()});
+    list.sort(function(a,b){ return b.score - a.score; });
+    list = list.slice(0, LEADERBOARD_SIZE);
+    saveLocalScores(list);
+    return list;
+  }
+
+  function fallbackToLocal(){
+    dbStatus = "local";
+    scoresCache = loadLocalScores();
+    if(state.screen === "gate" || state.screen === "end") render();
+  }
+
+  function loadLeaderboard(){
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      fallbackToLocal();
+      return;
+    }
+    fetch(SUPABASE_REST_URL + "/scores?select=pseudo,score&order=score.desc&limit=" + LEADERBOARD_SIZE, {
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      }
+    }).then(function(r){
+      if(!r.ok) throw new Error("supabase read failed");
+      return r.json();
+    }).then(function(rows){
+      dbStatus = "shared";
+      scoresCache = rows;
+      if(state.screen === "gate" || state.screen === "end") render();
+    }).catch(fallbackToLocal);
+  }
+
+  function initLeaderboard(){
+    loadLeaderboard();
+  }
+
+  // Writes the score, then refreshes the leaderboard (or falls back to local storage).
+  function submitScore(pseudo, score){
+    if(dbStatus !== "shared"){
+      scoresCache = addLocalScore(pseudo, score);
+      render();
+      return;
+    }
+    fetch(SUPABASE_REST_URL + "/scores", {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({pseudo: pseudo, score: score})
+    }).then(function(r){
+      if(!r.ok) throw new Error("supabase insert failed");
+      loadLeaderboard();
+    }).catch(function(){
+      scoresCache = addLocalScore(pseudo, score);
+      render();
+    });
+  }
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  function dist(ax,ay,bx,by){ return Math.hypot(ax-bx, ay-by); }
+
+  function scoreRound(distKm, elapsedS){
+    var precision = Math.round(Math.max(0, 1000 - distKm*2));
+    var timeBonus = Math.round(Math.max(0, 300 - (elapsedS/TIME_LIMIT_S)*300));
+    return {precision:precision, timeBonus:timeBonus, total:precision+timeBonus};
+  }
+
+  function rankLabel(distKm){
+    if(distKm < 8) return {text:"Excellent", cls:"success"};
+    if(distKm < 25) return {text:"Très bon", cls:"success"};
+    if(distKm < 60) return {text:"Bon", cls:"warn"};
+    if(distKm < 130) return {text:"Moyen", cls:"warn"};
+    return {text:"Loin", cls:"danger"};
+  }
+
+  function fmt(n){ return Math.round(n).toLocaleString("fr-FR"); }
+
+  // ---------------- state ----------------
+  var ADVANCE_DELAY_MS = 3000;
+  var state = {
+    screen: "gate",        // gate | play | end
+    pseudo: "",
+    order: [],             // array of city indices, length ROUNDS_PER_GAME
+    roundIdx: 0,
+    rounds: [],            // per-round results {city, guess:{x,y}, distKm, elapsedS, score}
+    roundStartTs: 0,
+    revealed: false,
+    timerRAF: null,
+    advanceInterval: null,
+    advanceTimeout: null
+  };
+
+  function clearAdvanceTimers(){
+    if(state.advanceInterval){ clearInterval(state.advanceInterval); state.advanceInterval = null; }
+    if(state.advanceTimeout){ clearTimeout(state.advanceTimeout); state.advanceTimeout = null; }
+  }
+
+  function newGame(pseudo){
+    clearAdvanceTimers();
+    state.pseudo = pseudo;
+    state.order = shuffle(CITIES.map(function(_,i){return i;})).slice(0, ROUNDS_PER_GAME);
+    state.roundIdx = 0;
+    state.rounds = [];
+    state.revealed = false;
+    state.screen = "play";
+    startRoundTimer();
+  }
+
+  function currentCity(){ return CITIES[state.order[state.roundIdx]]; }
+
+  function startRoundTimer(){
+    state.roundStartTs = performance.now();
+    state.revealed = false;
+  }
+
+  // ---------------- rendering ----------------
+  var app = document.getElementById("app");
+
+  function render(){ renderApp(); }
+
+  function topBar(extraStatsHtml){
+    return '' +
+      '<header class="topbar card">' +
+        '<div class="brand"><h1>🚇 Réseaux de France</h1><span class="tag">Devine et place les réseaux</span></div>' +
+        (extraStatsHtml || '') +
+      '</header>';
+  }
+
+  function boardStatusLabel(){
+    if(dbStatus === "shared") return '<span class="label" style="color:var(--success);">Partagé — tous les joueurs</span>';
+    if(dbStatus === "local") return '<span class="label">Enregistré sur cet appareil</span>';
+    return '<span class="label">Connexion…</span>';
+  }
+
+  function leaderboardCard(highlight){
+    var list = scoresCache;
+    var marked = false;
+    var boardHtml = list.length ? (
+      '<table class="board"><thead><tr><th>#</th><th>Pseudo</th><th>Score</th></tr></thead><tbody>' +
+      list.map(function(s,i){
+        var mine = highlight && !marked && s.pseudo===highlight.pseudo && s.score===highlight.score;
+        if(mine) marked = true;
+        return '<tr style="'+(mine?'font-weight:700;':'')+'"><td class="rank">'+(i+1)+'</td><td>'+escapeHtml(s.pseudo)+'</td><td class="tnum">'+fmt(s.score)+'</td></tr>';
+      }).join('') +
+      '</tbody></table>'
+    ) : '<p class="empty-board">Aucune partie enregistrée pour l\'instant. Sois le premier à marquer des points !</p>';
+
+    return '<div class="card">' +
+      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:12px;">' +
+        '<h3>Meilleurs scores</h3>' + boardStatusLabel() +
+      '</div>' +
+      boardHtml +
+    '</div>';
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  // Reactions shown top-left after each answer. Set "gif" to a file path (e.g. "gifs/excellent.gif")
+  // to use your own GIF; without it, the animated emoji is used.
+  var REACTIONS = {
+    "Excellent": {emoji:"🎯", gif:"gifs/excellent.gif", captions:["Chirurgical !","Tu as le GPS dans la tête.","Le conducteur de tram, c'est toi ?"]},
+    "Très bon":  {emoji:"😎", gif:"gifs/tres-bon.gif", captions:["Propre, très propre.","Presque un plan de réseau vivant.","Tu connais tes lignes !"]},
+    "Bon":       {emoji:"🙂", gif:"gifs/bon.gif", captions:["Pas mal, bonne région au moins.","Correct, on a vu pire.","Ça roule, sans excès de vitesse."]},
+    "Moyen":     {emoji:"😬", gif:"gifs/moyen.gif", captions:["Tu as raté ta correspondance ?","Ça sent la ligne en travaux.","Le bus était déjà passé."]},
+    "Loin":      {emoji:"🫠", gif:"gifs/loin.gif", captions:["Terminus, tout le monde descend… ailleurs.","Le bus est parti sans toi.","Tu as pris la mauvaise navette."]}
+  };
+
+  function reactionHtml(rl, idx){
+    var rx = REACTIONS[rl.text];
+    if(!rx) return '';
+    var caption = rx.captions[idx % rx.captions.length];
+    var emoji = '<span class="rx-emoji"' + (rx.gif ? ' style="display:none"' : '') + '>' + rx.emoji + '</span>';
+    var media = rx.gif
+      ? '<img src="' + rx.gif + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-block\'">' + emoji
+      : emoji;
+    return '<div class="reaction-toast ' + rl.cls + '" aria-live="polite">' +
+      '<div class="rx-media">' + media + '</div>' +
+      '<div class="rx-text"><span class="rx-title">' + rl.text + '</span><span class="rx-caption">' + caption + '</span></div>' +
+    '</div>';
+  }
+  function recapCardHtml(){
+    if(state.screen === "gate" || !state.rounds.length) return '';
+    var ended = state.screen === "end";
+    var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    var items = state.rounds.map(function(r,i){
+      var rk = rankLabel(r.distKm);
+      return '<li>' +
+        '<span class="rc-n tnum">'+(i+1)+'</span>' +
+        '<span class="rc-name"><b>'+escapeHtml(r.city.network)+'</b><i>'+escapeHtml(r.city.name)+'</i></span>' +
+        '<span class="rc-km tnum">'+fmt(r.distKm)+' km</span>' +
+        '<span class="badge rc-pts tnum '+rk.cls+'">'+fmt(r.score.total)+'</span>' +
+      '</li>';
+    }).join('');
+    var next = (!ended && state.revealed)
+      ? '<div class="label recap-next">'+((state.roundIdx+1) < ROUNDS_PER_GAME ? 'Manche suivante dans' : 'Résultat final dans')+' <span id="cd-num" class="tnum">3</span> s…</div>'
+      : '';
+    return '<div class="card recap-card">' +
+      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:6px;">' +
+        '<h3>Résumé de partie</h3><span class="recap-total tnum">'+fmt(total)+' <small>/ 13 000</small></span>' +
+      '</div>' +
+      '<ul class="recap-list">'+items+'</ul>' + next +
+    '</div>';
+  }
+  function toggleFullscreen(){
+    var el = document.getElementById("app");
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    try{
+      var p = isFs
+        ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+        : (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      if(p && p.catch) p.catch(function(){});
+    }catch(e){}
+  }
+  function renderApp(){
+    var gate = state.screen === "gate";
+    var playing = state.screen === "play";
+    var ended = state.screen === "end";
+
+    var roundNum = state.roundIdx + 1;
+    var runningScore = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    var lastRound = state.rounds[state.rounds.length-1];
+    var rl = lastRound ? rankLabel(lastRound.distKm) : null;
+    var showScorePoints = playing && state.revealed && lastRound;
+    var fsSupported = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+
+    var stats = (playing || ended) ? (
+      '<div class="stat-row">' +
+        '<div class="stat"><span class="label">Manche</span><span class="v tnum">'+(ended ? ROUNDS_PER_GAME : roundNum)+' / '+ROUNDS_PER_GAME+'</span></div>' +
+        '<div class="stat"><span class="label">Score</span><span class="v tnum">'+fmt(ended ? state.lastTotal : runningScore)+'</span></div>' +
+      '</div>'
+    ) : '';
+
+    var promptInner;
+    if(gate){
+      promptInner =
+        '<div class="prompt-bar">' +
+          '<div class="prompt-target">' +
+            '<span class="label">Comment ça marche</span>' +
+            '<span class="network">Trouve le plus de réseaux rapidement !</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="rules">' +
+          '<div><b>Précision</b> — jusqu\'à 1000 pts par manche selon la distance entre ton clic et la ville réelle.</div>' +
+          '<div><b>Rapidité</b> — jusqu\'à 300 pts bonus si tu réponds en moins de '+TIME_LIMIT_S+' secondes.</div>' +
+          '<div><b>Score final</b> — la somme des 10 manches, sur 13 000 points.</div>' +
+        '</div>';
+    } else if(playing){
+      var city = currentCity();
+      promptInner =
+        '<div class="prompt-bar">' +
+          '<div class="prompt-target">' +
+            '<span class="label">Place ce réseau sur la carte</span>' +
+            '<span class="network">'+escapeHtml(city.network)+'</span>' +
+          '</div>' +
+          '<div class="timerwrap"><div class="timerbar"><i id="timer-fill"></i></div></div>' +
+        '</div>';
+    } else {
+      var isTop = scoresCache.length && scoresCache[0].pseudo === state.pseudo && scoresCache[0].score === state.lastTotal;
+      promptInner =
+        '<div class="prompt-bar">' +
+          '<div class="prompt-target">' +
+            '<span class="label">Partie terminée</span>' +
+            '<span class="network">'+escapeHtml(state.pseudo)+' — '+fmt(state.lastTotal)+' pts</span>' +
+          '</div>' +
+          '<div class="row">' +
+            '<button class="btn-primary" id="replay-btn">Rejouer</button>' +
+            '<button class="btn-ghost" id="switch-btn">Changer de pseudo</button>' +
+          '</div>' +
+        '</div>' +
+        (isTop ? '<div class="rules"><b style="color:var(--success);">Nouveau meilleur score du classement !</b></div>' : '');
+    }
+
+    var stripHtml = gate ? '' : (
+      '<div class="rounds-strip">' +
+      state.order.map(function(_,i){
+        var cls = "round-chip";
+        if(ended || i < state.roundIdx) cls += " done";
+        if(playing && i === state.roundIdx) cls += " current";
+        return '<div class="'+cls+'">'+(i+1)+'</div>';
+      }).join('') +
+      '</div>'
+    );
+
+    var belowHtml = '';
+    var summaryHtml = '';
+    if(gate){
+      belowHtml = '';
+    } else if(playing && state.revealed && lastRound){
+      summaryHtml =
+        '<div class="card result-panel">' +
+          '<div class="result-metrics">' +
+            '<div class="metric"><span class="label">Distance</span><span class="v tnum">'+fmt(lastRound.distKm)+' km</span></div>' +
+            '<div class="metric"><span class="label">Temps</span><span class="v tnum">'+lastRound.elapsedS.toFixed(1)+' s</span></div>' +
+            '<div class="metric"><span class="label">Précision</span><span class="v tnum">+'+lastRound.score.precision+'</span></div>' +
+            '<div class="metric"><span class="label">Bonus rapidité</span><span class="v tnum">+'+lastRound.score.timeBonus+'</span></div>' +
+            '<div class="metric"><span class="label">Résultat</span><span class="badge '+rl.cls+'">'+rl.text+'</span></div>' +
+          '</div>' +
+          '<div class="label">'+(roundNum < ROUNDS_PER_GAME ? "Manche suivante dans" : "Résultat final dans")+' <span id="cd-num" class="tnum">3</span> s…</div>' +
+        '</div>';
+    } else if(playing){
+      belowHtml = '<p class="hint" id="hint">Clique sur la carte à l\'endroit où tu penses que se trouve ce réseau.</p>';
+    } else {
+      var rows = state.rounds.map(function(r,i){
+        var rl2 = rankLabel(r.distKm);
+        return '<tr>' +
+          '<td class="tnum">'+(i+1)+'</td>' +
+          '<td>'+escapeHtml(r.city.network)+' <span style="color:var(--muted)">— '+escapeHtml(r.city.name)+'</span></td>' +
+          '<td class="tnum">'+fmt(r.distKm)+' km</td>' +
+          '<td class="tnum">'+r.elapsedS.toFixed(1)+' s</td>' +
+          '<td><span class="badge '+rl2.cls+'">'+rl2.text+'</span></td>' +
+          '<td class="tnum">'+r.score.total+'</td>' +
+        '</tr>';
+      }).join('');
+      belowHtml =
+        '<div class="card">' +
+          '<div class="total-line"><span class="label">Score total (sur 13 000)</span><span class="v tnum">'+fmt(state.lastTotal)+'</span></div>' +
+          '<div style="overflow-x:auto; margin-top:10px;">' +
+          '<table class="recap-table"><thead><tr><th style="width:2em;">#</th><th>Réseau</th><th style="width:6em;">Distance</th><th style="width:5em;">Temps</th><th style="width:6em;">Résultat</th><th style="width:4em;">Points</th></tr></thead><tbody>' +
+          rows +
+          '</tbody></table></div>' +
+        '</div>';
+    }
+
+    belowHtml = ended ? '' : belowHtml;
+    summaryHtml = recapCardHtml();
+    var asideHtml = leaderboardCard(ended ? {pseudo: state.pseudo, score: state.lastTotal} : null) + summaryHtml;
+
+    app.innerHTML =
+      topBar(stats) +
+      '<div class="game-grid">' +
+        '<div class="game-main">' +
+          '<div class="card" style="display:flex; flex-direction:column; gap:12px;">' +
+            promptInner +
+            stripHtml +
+          '</div>' +
+          '<div class="map-wrap'+(gate ? ' inactive' : '')+'">' +
+            '<svg class="map" viewBox="'+GEO.viewBox+'" id="map-svg">' +
+              '<image href="'+GEO.mapImage+'" x="0" y="0" width="1280" height="1230" preserveAspectRatio="xMidYMid slice" />' +
+              '<rect class="clickcatch" id="clickcatch" x="0" y="0" width="1280" height="1230" />' +
+              '<g id="marks"></g>' +
+            '</svg>' +
+            (gate ?
+              '<div class="map-gate-overlay">' +
+                '<span class="label">Bienvenue</span>' +
+                '<span class="network">Entre ton pseudo pour jouer</span>' +
+                '<input type="text" id="pseudo-input" placeholder="Ton pseudo" maxlength="18" autocomplete="off" />' +
+                '<button class="btn-primary" id="start-btn">Jouer</button>' +
+              '</div>'
+            : '') +
+            (showScorePoints ?
+              '<div class="map-score-points '+rl.cls+'">+'+lastRound.score.total+'</div>'
+            : '') +
+            (showScorePoints ? reactionHtml(rl, state.roundIdx) : '') +
+            (fsSupported ? '<button type="button" class="map-fs-btn" id="fs-btn" aria-label="Plein écran" title="Plein écran">' +
+              '<svg class="fs-ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
+              '<svg class="fs-ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>' +
+            '</button>' : '') +
+          '</div>' +
+          '<p class="map-credit">Fond de carte : <a href="https://commons.wikimedia.org/wiki/File:France_relief_location_map.jpg" target="_blank" rel="noopener">Eric Gaba (Wikimedia Commons)</a>, CC BY-SA</p>' +
+          belowHtml +
+        '</div>' +
+        '<div class="game-aside">' + asideHtml + '</div>' +
+      '</div>';
+
+    var svg = document.getElementById("map-svg");
+    var fsBtn = document.getElementById("fs-btn");
+    if(fsBtn) fsBtn.addEventListener("click", toggleFullscreen);
+
+    if(gate){
+      var startBtn = document.getElementById("start-btn");
+      var pseudoInput = document.getElementById("pseudo-input");
+      startBtn.addEventListener("click", function(){
+        var pseudo = (pseudoInput.value || "").trim().slice(0,18) || "Anonyme";
+        newGame(pseudo);
+        render();
+      });
+      pseudoInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ startBtn.click(); }
+      });
+      pseudoInput.focus();
+    } else if(playing && !state.revealed){
+      svg.addEventListener("click", onMapClick);
+      runTimerBar();
+    } else if(playing && state.revealed && lastRound){
+      drawReveal(lastRound);
+      scheduleAdvance(roundNum);
+    } else if(ended){
+      document.getElementById("replay-btn").addEventListener("click", function(){
+        newGame(state.pseudo);
+        render();
+      });
+      document.getElementById("switch-btn").addEventListener("click", function(){
+        state.screen = "gate";
+        state.pseudo = "";
+        render();
+      });
+    }
+
+    function onMapClick(evt){
+      var city = currentCity();
+      var pt = svg.createSVGPoint();
+      var ce = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
+      pt.x = ce.clientX; pt.y = ce.clientY;
+      var loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+      var elapsedS = (performance.now() - state.roundStartTs) / 1000;
+      var distPx = dist(loc.x, loc.y, city.x, city.y);
+      var distKm = distPx * GEO.kmPerPx;
+      var score = scoreRound(distKm, elapsedS);
+      state.rounds.push({
+        city: city,
+        guess: {x: loc.x, y: loc.y},
+        distKm: distKm,
+        elapsedS: elapsedS,
+        score: score
+      });
+      state.revealed = true;
+      cancelTimerBar();
+      svg.removeEventListener("click", onMapClick);
+      render();
+    }
+
+    function runTimerBar(){
+      var fill = document.getElementById("timer-fill");
+      function tick(){
+        if(state.revealed) return;
+        var elapsed = (performance.now() - state.roundStartTs)/1000;
+        var pct = Math.max(0, 1 - elapsed/TIME_LIMIT_S);
+        fill.style.width = (pct*100)+"%";
+        fill.style.background = pct > .4 ? "var(--accent-2)" : (pct > .15 ? "var(--warn)" : "var(--danger)");
+        state.timerRAF = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+    function cancelTimerBar(){
+      if(state.timerRAF) cancelAnimationFrame(state.timerRAF);
+      state.timerRAF = null;
+    }
+
+    function scheduleAdvance(roundNumAtReveal){
+      var secondsLeft = Math.round(ADVANCE_DELAY_MS/1000);
+      clearAdvanceTimers();
+      state.advanceInterval = setInterval(function(){
+        secondsLeft--;
+        var el = document.getElementById("cd-num");
+        if(el) el.textContent = Math.max(secondsLeft, 0);
+      }, 1000);
+      state.advanceTimeout = setTimeout(function(){
+        clearAdvanceTimers();
+        if(roundNumAtReveal < ROUNDS_PER_GAME){
+          state.roundIdx++;
+          startRoundTimer();
+          render();
+        } else {
+          finishGame();
+        }
+      }, ADVANCE_DELAY_MS);
+    }
+  }
+
+  function drawReveal(r){
+    var marks = document.getElementById("marks");
+    var svgns = "http://www.w3.org/2000/svg";
+    function el(tag, attrs){
+      var e = document.createElementNS(svgns, tag);
+      for(var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+    [0, 0.18].forEach(function(delay){
+      marks.appendChild(el("circle", {
+        class:"click-ripple", cx:r.guess.x, cy:r.guess.y, r:14, style:"animation-delay:"+delay+"s"
+      }));
+    });
+    marks.appendChild(el("line", {
+      class:"link-line", pathLength:1, x1:r.guess.x, y1:r.guess.y, x2:r.city.x, y2:r.city.y
+    }));
+    marks.appendChild(el("circle", {
+      class:"click-ripple target", cx:r.city.x, cy:r.city.y, r:14
+    }));
+    marks.appendChild(el("circle", {
+      class:"guess-dot", cx:r.guess.x, cy:r.guess.y, r:13
+    }));
+    marks.appendChild(el("circle", {
+      class:"target-dot", cx:r.city.x, cy:r.city.y, r:13
+    }));
+    var t = el("text", {class:"map-label", x:r.city.x + 20, y:r.city.y - 18});
+    t.textContent = r.city.name;
+    marks.appendChild(t);
+  }
+  function finishGame(){
+    var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    state.screen = "end";
+    state.lastTotal = total;
+    render();
+    submitScore(state.pseudo, total);
+  }
+
+  initLeaderboard();
+  render();
+})();
+</script>
+</body>
+</html>
