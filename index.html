@@ -77,6 +77,39 @@
     justify-content:center;
   }
   img{ max-width:100%; }
+  /* ---------- site navigation (left rail) ---------- */
+  body{ padding-left:184px; }
+  .site-nav{
+    position:fixed; top:0; left:0; bottom:0; width:168px; z-index:40;
+    display:flex; flex-direction:column; align-items:stretch; gap:6px;
+    padding:20px 12px;
+    background:var(--surface);
+    border-right:1px solid var(--line);
+    box-shadow:10px 0 24px -18px rgba(0,0,0,.35);
+  }
+  .nav-item{
+    display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:10px;
+    width:100%; padding:10px 12px;
+    border-radius:10px; text-decoration:none;
+    color:var(--muted);
+    font-family:"Barlow Condensed",system-ui,sans-serif; font-weight:600;
+    font-size:1.05rem; letter-spacing:.04em; text-transform:uppercase;
+    transition:background .12s ease, color .12s ease;
+  }
+  .nav-item svg{ width:22px; height:22px; flex:none; display:block; }
+  .nav-item:hover{ background:var(--surface-2); color:var(--ink); }
+  .nav-item.is-active{ background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
+  .nav-item:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
+  @media (max-width:700px){
+    body{ padding-left:16px; padding-bottom:88px; }
+    .site-nav{
+      top:auto; right:0; width:auto; height:68px;
+      flex-direction:row; justify-content:center; align-items:center;
+      padding:6px 12px; border-right:none; border-top:1px solid var(--line);
+      box-shadow:0 -10px 24px -18px rgba(0,0,0,.35);
+    }
+    .nav-item{ width:auto; }
+  }
   .app{
     width:100%;
     max-width:1280px;
@@ -267,7 +300,18 @@
   #app:-webkit-full-screen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.04)); margin-inline:auto; }
   .game-grid{ display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start; }
   .game-main{ display:flex; flex-direction:column; gap:14px; min-width:0; }
-  .game-aside{ min-width:0; display:flex; flex-direction:column; gap:14px; }
+  .recap-card{ padding:16px; }
+  .recap-total{ font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:1.5rem; color:var(--accent); }
+  .recap-total small{ font-size:.75rem; color:var(--muted); font-weight:600; }
+  .recap-list{ list-style:none; margin:0; padding:0; }
+  .recap-list li{ display:grid; grid-template-columns:1.4em 1fr auto auto; gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid var(--line); font-size:.88rem; animation:mk-fade .4s ease-out both; }
+  .recap-list li:last-child{ border-bottom:none; }
+  .rc-n{ color:var(--muted); }
+  .rc-name b{ font-weight:600; }
+  .rc-name i{ display:block; font-style:normal; color:var(--muted); font-size:.76rem; }
+  .rc-km{ color:var(--muted); font-size:.8rem; }
+  .rc-pts{ font-size:.8rem; min-width:3.2em; text-align:center; }
+  .recap-next{ margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }  .game-aside{ min-width:0; display:flex; flex-direction:column; gap:14px; }
   .game-aside .result-panel{ flex-direction:column; align-items:stretch; gap:14px; padding:16px; }
   .game-aside .result-metrics{ display:grid; grid-template-columns:1fr 1fr; gap:12px 16px; }
   @media (max-width:860px){ .game-grid{ grid-template-columns:1fr; } }
@@ -320,6 +364,16 @@
 </style>
 </head>
 <body>
+<nav class="site-nav" aria-label="Navigation principale">
+  <a class="nav-item is-active" href="index.html" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+    <span>Réseau</span>
+  </a>
+  <a class="nav-item" href="metro.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3.5"/><path d="M5 11h14"/><circle cx="9" cy="14" r=".9"/><circle cx="15" cy="14" r=".9"/><path d="M8 21l2-4M16 21l-2-4"/></svg>
+    <span>Métro</span>
+  </a>
+</nav>
 <div class="app" id="app"></div>
 
 <script>
@@ -624,6 +678,29 @@
       '<div class="rx-text"><span class="rx-title">' + rl.text + '</span><span class="rx-caption">' + caption + '</span></div>' +
     '</div>';
   }
+  function recapCardHtml(){
+    if(state.screen === "gate" || !state.rounds.length) return '';
+    var ended = state.screen === "end";
+    var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    var items = state.rounds.map(function(r,i){
+      var rk = rankLabel(r.distKm);
+      return '<li>' +
+        '<span class="rc-n tnum">'+(i+1)+'</span>' +
+        '<span class="rc-name"><b>'+escapeHtml(r.city.network)+'</b><i>'+escapeHtml(r.city.name)+'</i></span>' +
+        '<span class="rc-km tnum">'+fmt(r.distKm)+' km</span>' +
+        '<span class="badge rc-pts tnum '+rk.cls+'">'+fmt(r.score.total)+'</span>' +
+      '</li>';
+    }).join('');
+    var next = (!ended && state.revealed)
+      ? '<div class="label recap-next">'+((state.roundIdx+1) < ROUNDS_PER_GAME ? 'Manche suivante dans' : 'Résultat final dans')+' <span id="cd-num" class="tnum">3</span> s…</div>'
+      : '';
+    return '<div class="card recap-card">' +
+      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:6px;">' +
+        '<h3>Résumé de partie</h3><span class="recap-total tnum">'+fmt(total)+' <small>/ 13 000</small></span>' +
+      '</div>' +
+      '<ul class="recap-list">'+items+'</ul>' + next +
+    '</div>';
+  }
   function toggleFullscreen(){
     var el = document.getElementById("app");
     var isFs = document.fullscreenElement || document.webkitFullscreenElement;
@@ -744,6 +821,8 @@
         '</div>';
     }
 
+    belowHtml = ended ? '' : belowHtml;
+    summaryHtml = recapCardHtml();
     var asideHtml = leaderboardCard(ended ? {pseudo: state.pseudo, score: state.lastTotal} : null) + summaryHtml;
 
     app.innerHTML =
