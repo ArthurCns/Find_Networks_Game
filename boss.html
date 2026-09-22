@@ -377,10 +377,19 @@
   .row{ display:flex; gap:10px; flex-wrap:wrap; }
   .flex-1{ flex:1; }
   [hidden]{ display:none !important; }
-  .boss-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
-  .boss-card h3{ font-size:1.15rem; }
-  table.board td.date{ color:var(--muted); font-size:.85rem; white-space:nowrap; }
-  table.board th.date{ white-space:nowrap; }
+  .boss-section{ display:flex; flex-direction:column; gap:8px; }
+  .boss-section-label{
+    font-family:"Barlow Condensed",sans-serif; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    font-size:.82rem; color:var(--muted);
+  }
+  .boss-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:16px; }
+  .boss-card{ min-width:0; }
+  .boss-card h3{ font-size:1.1rem; }
+  .boss-card .board-wrap{ overflow-x:auto; }
+  table.board{ table-layout:fixed; }
+  table.board td, table.board th{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  table.board td.rank, table.board th:first-child{ width:1.8em; }
+  table.board td.date, table.board th.date{ color:var(--muted); font-size:.78rem; width:6.4em; white-space:normal; }
 </style>
 </head>
 <body>
@@ -467,9 +476,10 @@
   var SUPABASE_ANON_KEY = "sb_publishable_T4k5fQbOQb5lRRt1q4E1XQ_AQTdYWAr";
   var SUPABASE_REST_URL = SUPABASE_URL.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'') + "/rest/v1";
 
-  function fetchTable(table, limit){
+  function fetchTable(table, limit, cityScoped){
     if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return Promise.reject(new Error("no supabase"));
-    return fetch(SUPABASE_REST_URL + "/" + table + "?select=pseudo,score,created_at,city&order=score.desc&limit=" + limit, {
+    var fields = cityScoped ? "pseudo,score,created_at,city" : "pseudo,score,created_at";
+    return fetch(SUPABASE_REST_URL + "/" + table + "?select=" + fields + "&order=score.desc&limit=" + limit, {
       headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY }
     }).then(function(r){
       if(!r.ok) throw new Error("fetch failed");
@@ -495,7 +505,7 @@
 
   function loadTable(g){
     status[g.table] = "connecting";
-    fetchTable(g.table, SAMPLE_SIZE).then(function(rows){
+    fetchTable(g.table, SAMPLE_SIZE, g.cityScoped).then(function(rows){
       status[g.table] = "shared";
       tableSample[g.table] = rows;
       render();
@@ -549,54 +559,73 @@
 
   function boardHtml(list){
     if(list && list.length){
-      return '<table class="board"><thead><tr><th>#</th><th>Pseudo</th><th>Score</th><th class="date">Date de la masterclass</th></tr></thead><tbody>' +
+      return '<div class="board-wrap"><table class="board"><thead><tr><th>#</th><th>Pseudo</th><th>Score</th><th class="date">Date</th></tr></thead><tbody>' +
         list.map(function(s,i){
           return '<tr><td class="rank">'+(i+1)+'</td><td>'+escapeHtml(s.pseudo)+'</td><td class="tnum">'+fmt(s.score)+'</td><td class="date">'+fmtDate(s.date)+'</td></tr>';
         }).join('') +
-      '</tbody></table>';
+      '</tbody></table></div>';
     }
     return '<p class="empty-board">Aucun score enregistré pour l\'instant.</p>';
+  }
+
+  function cardHtml(titleHtml, statusHtml, list){
+    return '<div class="card boss-card">' +
+      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:10px;">' +
+        titleHtml + statusHtml +
+      '</div>' +
+      boardHtml(list) +
+    '</div>';
   }
 
   var app = document.getElementById("app");
 
   function render(){
     var reseauGame = GAMES.filter(function(g){ return g.key === "reseau"; })[0];
-    var reseauCard = '<div class="card boss-card">' +
-      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:10px;">' +
-        '<h3>🏆 Le Boss — '+escapeHtml(reseauGame.label)+'</h3>' + statusLabel(status[reseauGame.table]) +
-      '</div>' +
-      boardHtml(top3For(reseauGame, null)) +
-    '</div>';
+    var reseauSection =
+      '<div class="boss-section">' +
+        '<div class="boss-section-label">Réseau</div>' +
+        '<div class="boss-grid">' +
+          cardHtml('<h3>🏆 Le Boss — '+escapeHtml(reseauGame.label)+'</h3>', statusLabel(status[reseauGame.table]), top3For(reseauGame, null)) +
+        '</div>' +
+      '</div>';
 
-    var cityCards = CITIES.map(function(city){
-      var gameCards = city.games.map(function(gKey){
+    var arretsCards = [];
+    CITIES.forEach(function(city){
+      city.games.forEach(function(gKey){
         var g = GAMES.filter(function(x){ return x.key === gKey; })[0];
-        return '<div class="card boss-card">' +
-          '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:10px;">' +
-            '<h3>🏆 Le Boss — '+escapeHtml(g.label)+' ('+escapeHtml(city.name)+')</h3>' + statusLabel(status[g.table]) +
-          '</div>' +
-          boardHtml(top3For(g, city.key)) +
-        '</div>';
-      }).join('');
+        arretsCards.push(cardHtml(
+          '<h3>🏆 Le Boss — '+escapeHtml(g.label)+' ('+escapeHtml(city.name)+')</h3>',
+          statusLabel(status[g.table]),
+          top3For(g, city.key)
+        ));
+      });
+    });
+    var arretsSection =
+      '<div class="boss-section">' +
+        '<div class="boss-section-label">Arrêts</div>' +
+        '<div class="boss-grid">' + arretsCards.join('') + '</div>' +
+      '</div>';
 
+    var cityBossCards = CITIES.map(function(city){
       var gameLabels = city.games.map(function(gKey){
         var g = GAMES.filter(function(x){ return x.key === gKey; })[0];
         return g ? g.label : gKey;
       }).join(' + ');
-      var combinedCard = '<div class="card boss-card">' +
-        '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:10px;">' +
-          '<h3>👑 Le Boss de '+escapeHtml(city.name)+'</h3><span class="label">'+escapeHtml(gameLabels)+'</span>' +
-        '</div>' +
-        boardHtml(cityCombinedTop3(city)) +
-      '</div>';
-
-      return gameCards + combinedCard;
+      return cardHtml(
+        '<h3>👑 Le Boss de '+escapeHtml(city.name)+'</h3>',
+        '<span class="label">'+escapeHtml(gameLabels)+'</span>',
+        cityCombinedTop3(city)
+      );
     }).join('');
+    var citySection =
+      '<div class="boss-section">' +
+        '<div class="boss-section-label">Boss des villes</div>' +
+        '<div class="boss-grid">' + cityBossCards + '</div>' +
+      '</div>';
 
     app.innerHTML =
       '<header class="topbar card"><div class="brand"><h1>🏆 Les Boss</h1><span class="tag">Le classement des meilleurs joueurs</span></div></header>' +
-      '<div class="boss-grid">' + reseauCard + cityCards + '</div>';
+      reseauSection + arretsSection + citySection;
   }
 
   render();
