@@ -78,9 +78,9 @@
   }
   img{ max-width:100%; }
   /* ---------- site navigation (left rail) ---------- */
-  body{ padding-left:184px; }
+  body{ padding-left:226px; }
   .site-nav{
-    position:fixed; top:0; left:0; bottom:0; width:168px; z-index:40;
+    position:fixed; top:0; left:0; bottom:0; width:210px; z-index:40;
     display:flex; flex-direction:column; align-items:stretch; gap:6px;
     padding:20px 12px;
     background:var(--surface);
@@ -97,11 +97,13 @@
     transition:background .12s ease, color .12s ease;
   }
   .nav-item svg{ width:22px; height:22px; flex:none; display:block; }
+  .nav-item span{ white-space:nowrap; }
   .nav-item:hover{ background:var(--surface-2); color:var(--ink); }
   .nav-item.is-active{ background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); }
   .nav-item:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
   @media (max-width:700px){
     body{ padding-left:16px; padding-bottom:88px; }
+    .nav-item span{ white-space:normal; }
     .site-nav{
       top:auto; right:0; width:auto; height:68px;
       flex-direction:row; justify-content:center; align-items:center;
@@ -109,6 +111,20 @@
       box-shadow:0 -10px 24px -18px rgba(0,0,0,.35);
     }
     .nav-item{ width:auto; }
+  }
+  .nav-menu-label{
+    font-family:"Barlow Condensed",system-ui,sans-serif; font-weight:700;
+    font-size:.98rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--accent); padding:2px 12px 10px; margin-bottom:6px;
+    border-bottom:2px solid var(--line);
+  }
+  .nav-spacer{ flex:1 1 auto; }
+  .nav-theme-btn{ background:transparent; border:none; }
+  .theme-ico-moon{ display:none; }
+  :root[data-theme="dark"] .theme-ico-sun{ display:none; }
+  :root[data-theme="dark"] .theme-ico-moon{ display:block; }
+  @media (max-width:700px){
+    .nav-menu-label, .nav-spacer{ display:none; }
   }
   .app{
     width:100%;
@@ -386,25 +402,49 @@
 </style>
 </head>
 <body>
+<script>
+  try{
+    var __t = localStorage.getItem("site-theme");
+    if(__t === "light" || __t === "dark") document.documentElement.setAttribute("data-theme", __t);
+  }catch(e){}
+</script>
 <nav class="site-nav" aria-label="Navigation principale">
+  <div class="nav-menu-label">Menu</div>
   <a class="nav-item" href="index.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
     <span>Réseau</span>
   </a>
   <a class="nav-item" href="metro.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3.5"/><path d="M5 11h14"/><circle cx="9" cy="14" r=".9"/><circle cx="15" cy="14" r=".9"/><path d="M8 21l2-4M16 21l-2-4"/></svg>
-    <span>Métro</span>
+    <span>Arrêts - Métro</span>
   </a>
   <a class="nav-item is-active" href="arrets.html" aria-current="page">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16"/><circle cx="8" cy="14.2" r=".9"/><circle cx="16" cy="14.2" r=".9"/><path d="M6.5 17v3M17.5 17v3"/></svg>
-    <span>Arrêts</span>
+    <span>Arrêts - Bus</span>
   </a>
+  <div class="nav-spacer"></div>
+  <button type="button" class="nav-item nav-theme-btn" id="theme-toggle" aria-label="Changer de thème (clair / sombre)">
+    <svg class="theme-ico theme-ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
+    <svg class="theme-ico theme-ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.4 6.4 0 0 0 10.5 10.5z"/></svg>
+    <span>Thème</span>
+  </button>
 </nav>
 <div class="app" id="app"></div>
 
 <script>
 (function(){
   "use strict";
+  (function(){
+    var root = document.documentElement;
+    var themeBtn = document.getElementById("theme-toggle");
+    if(themeBtn) themeBtn.addEventListener("click", function(){
+      var current = root.getAttribute("data-theme");
+      var isDark = current ? current === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = isDark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try{ localStorage.setItem("site-theme", next); }catch(e){}
+    });
+  })();
 
   var GEO = {
     viewBox: "0 0 1200 1012",
