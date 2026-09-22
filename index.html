@@ -400,6 +400,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16"/><circle cx="8" cy="14.2" r=".9"/><circle cx="16" cy="14.2" r=".9"/><path d="M6.5 17v3M17.5 17v3"/></svg>
     <span>Arrêts - Bus</span>
   </a>
+  <a class="nav-item" href="boss.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M8 5H4v2a4 4 0 0 0 4 4"/><path d="M16 5h4v2a4 4 0 0 1-4 4"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4l1 4H9l1-4z"/></svg>
+    <span>Les Boss</span>
+  </a>
   <div class="nav-spacer"></div>
   <button type="button" class="nav-item nav-theme-btn" id="theme-toggle" aria-label="Changer de thème (clair / sombre)">
     <svg class="theme-ico theme-ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
@@ -586,6 +590,22 @@
       scoresCache = addLocalScore(pseudo, score);
       render();
     });
+  }
+
+  function trackEvent(type, page, city){
+    try{
+      if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+      fetch(SUPABASE_REST_URL + "/site_events", {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({type: type, page: page, city: city || null})
+      }).catch(function(){});
+    }catch(e){}
   }
 
   function shuffle(arr){
@@ -1036,9 +1056,11 @@
     state.lastTotal = total;
     render();
     submitScore(state.pseudo, total);
+    trackEvent("game_completed", "reseau");
   }
 
   initLeaderboard();
+  trackEvent("visit", "reseau");
   render();
 })();
 </script>
