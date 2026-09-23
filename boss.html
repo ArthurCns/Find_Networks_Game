@@ -528,21 +528,22 @@
 
   /* Arrets: mode x city matrix */
   .boss-matrix{ display:grid; grid-template-columns:auto repeat(2, minmax(0,1fr)); gap:14px 16px; align-items:stretch; }
-  .mx-col{ align-self:end; padding:0 4px; font-family:var(--font-display); font-weight:700; font-size:1.05rem; }
-  .mx-row{
-    align-self:center; display:inline-flex; align-items:center; gap:8px; padding-right:4px;
+  .mx-row{ align-self:center; padding-right:8px; font-family:var(--font-display); font-weight:700; font-size:1rem; }
+  .mx-col{
+    align-self:end; display:inline-flex; align-items:center; gap:8px; padding:0 4px;
     font-weight:800; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
   }
-  .mx-row::before{ content:""; width:14px; height:14px; flex:none; border:2px solid var(--border); border-radius:4px; background:var(--mode-color); }
+  .mx-col::before{ content:""; width:14px; height:14px; flex:none; border:2px solid var(--border); border-radius:4px; background:var(--mode-color); }
   .mode-metro{ --mode-color:var(--accent-2); }
   .mode-bus{ --mode-color:oklch(64% 0.19 35); }
   .mx-cell{ display:flex; flex-direction:column; gap:10px; min-width:0; padding:16px; }
   .mx-cell-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
   .mx-cell-title{ display:none; font-size:1rem; }
+  .mx-na{ justify-content:center; border:2px dashed var(--line); border-radius:14px; }
   .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 
   /* Boss des villes: night tiles */
-  .city-grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
+  .city-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
   .city-boss{ display:flex; flex-direction:column; gap:12px; min-width:0; padding:24px; background:var(--tile-night); color:var(--tile-night-ink); }
   .city-boss h3{ font-size:1.1rem; }
   .city-boss .boss-sub{ color:var(--tile-night-muted); font-size:.8rem; }
@@ -603,6 +604,9 @@
       <div class="nav-sublabel">Métro</div>
       <a class="nav-item nav-item-city" data-page="metro.html" data-city="rennes" href="metro.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="metro.html" data-city="paris" href="metro.html?city=paris">Paris</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lille" href="metro.html?city=lille">Lille</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lyon" href="metro.html?city=lyon">Lyon</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="marseille" href="metro.html?city=marseille">Marseille</a>
       <div class="nav-sublabel">Bus</div>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
@@ -654,7 +658,10 @@
   ];
   var CITIES = [
     {key:"rennes", name:"Rennes", games:["metro","bus"]},
-    {key:"paris", name:"Paris", games:["metro","bus"]}
+    {key:"paris", name:"Paris", games:["metro","bus"]},
+    {key:"lille", name:"Lille", games:["metro"]},
+    {key:"lyon", name:"Lyon", games:["metro"]},
+    {key:"marseille", name:"Marseille", games:["metro"]}
   ];
   var SAMPLE_SIZE = 200;
 
@@ -822,14 +829,22 @@
       '</section>';
 
     var modes = ["metro", "bus"];
+    var MODE_NAME = {metro:"Métro", bus:"Bus"};
     var matrix = '<div class="mx-corner" aria-hidden="true"></div>' +
-      CITIES.map(function(c){ return '<div class="mx-col" aria-hidden="true">'+escapeHtml(c.name)+'</div>'; }).join('');
-    modes.forEach(function(mKey){
-      var g = gameByKey(mKey);
-      var modeName = mKey === "metro" ? "Métro" : "Bus";
-      matrix += '<div class="mx-row mode-'+mKey+'" aria-hidden="true">'+modeName+'</div>';
-      CITIES.forEach(function(city){
-        var list = city.games.indexOf(mKey) >= 0 ? top3For(g, city.key) : [];
+      modes.map(function(mKey){ return '<div class="mx-col mode-'+mKey+'" aria-hidden="true">'+MODE_NAME[mKey]+'</div>'; }).join('');
+    CITIES.forEach(function(city){
+      matrix += '<div class="mx-row" aria-hidden="true">'+escapeHtml(city.name)+'</div>';
+      modes.forEach(function(mKey){
+        var g = gameByKey(mKey);
+        var modeName = MODE_NAME[mKey];
+        if(city.games.indexOf(mKey) < 0){
+          matrix += '<div class="mx-cell mx-na">' +
+            '<h3 class="mx-cell-title">'+modeName+' · '+escapeHtml(city.name)+'</h3>' +
+            '<p class="empty-board">Pas encore de jeu '+modeName+' à '+escapeHtml(city.name)+'.</p>' +
+          '</div>';
+          return;
+        }
+        var list = top3For(g, city.key);
         var href = GAME_PAGE[mKey] + '?city=' + city.key;
         matrix += '<div class="card mx-cell">' +
           '<div class="mx-cell-head">' +
@@ -858,7 +873,7 @@
           (top.length > 1 ? '<ol class="city-court">' + top.slice(1).map(function(s,i){
             return '<li><span class="tnum">'+(i+2)+'</span><span class="r-who">'+escapeHtml(s.pseudo)+'</span><span class="tnum">'+fmt(s.score)+'</span></li>';
           }).join('') + '</ol>' : '')
-        : '<p class="city-empty"><b>Le trône est libre.</b>Joue au métro ou au bus de '+escapeHtml(city.name)+' pour le prendre.</p>';
+        : '<p class="city-empty"><b>Le trône est libre.</b>Joue au '+(city.games.length > 1 ? 'métro ou au bus' : 'métro')+' de '+escapeHtml(city.name)+' pour le prendre.</p>';
       return '<div class="card city-boss">' +
         '<div><h3>Le Boss de '+escapeHtml(city.name)+'</h3><span class="boss-sub">'+escapeHtml(gameLabels)+'</span></div>' +
         body +
@@ -866,7 +881,7 @@
     }).join('');
     var citySection =
       '<section class="boss-section" aria-label="Boss des villes">' +
-        sectionHead('Boss des villes', '<span class="boss-sub">Meilleur score cumulé métro + bus</span>') +
+        sectionHead('Boss des villes', '<span class="boss-sub">Meilleurs scores cumulés sur les jeux de chaque ville</span>') +
         '<div class="city-grid">' + cityBossCards + '</div>' +
       '</section>';
 

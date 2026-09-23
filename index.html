@@ -553,15 +553,17 @@
   .tile-arrets .tile-desc{ color:var(--accent-ink); }
   .arrets-groups{ display:flex; flex-direction:column; gap:var(--space-md); margin-top:auto; padding-top:var(--space-sm); }
   .arrets-group{ display:flex; flex-direction:column; gap:var(--space-2xs); }
+  .city-btns{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--space-2xs); }
   .arrets-mode{ font-weight:800; font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; }
   .city-btn{
     display:flex; align-items:center; justify-content:space-between; gap:var(--space-xs);
-    min-height:44px; padding:.6em 1em;
+    min-width:0; min-height:44px; padding:.6em .8em;
     background:var(--surface); color:var(--ink);
     border:var(--bw) solid var(--border); border-radius:9px; box-shadow:var(--shadow-sm);
     font-weight:800; font-size:.95rem; text-decoration:none; white-space:nowrap;
     transition:transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out);
   }
+  .city-btn span{ overflow:hidden; text-overflow:ellipsis; }
   .city-btn svg{ width:16px; height:16px; flex:none; transition:transform 140ms var(--ease-out); }
   .city-btn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }
   .city-btn:focus-visible{ outline:3px solid var(--accent-2); outline-offset:2px; }
@@ -646,6 +648,10 @@
     .steps{ grid-template-columns:minmax(0,1fr); }
   }
 
+  @media (max-width:400px){
+    .city-btn{ padding:.6em .7em; }
+    .city-btn svg{ display:none; }
+  }
   @media (max-width:700px){
     :root{ --bento-gap:var(--space-sm); }
     .app.home{ padding-block:var(--space-sm) var(--space-xl); }
@@ -681,6 +687,9 @@
       <div class="nav-sublabel">Métro</div>
       <a class="nav-item nav-item-city" data-page="metro.html" data-city="rennes" href="metro.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="metro.html" data-city="paris" href="metro.html?city=paris">Paris</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lille" href="metro.html?city=lille">Lille</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lyon" href="metro.html?city=lyon">Lyon</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="marseille" href="metro.html?city=marseille">Marseille</a>
       <div class="nav-sublabel">Bus</div>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
@@ -721,7 +730,7 @@
           <p class="tile-desc">Place les plus grands r&#233;seaux de transport en commun de France sur la carte, contre la montre.</p>
           <span class="tile-cta">Jouer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </div>
-        <svg class="reseau-map" viewBox="0 0 760 760" aria-hidden="true" focusable="false"><path class="map-land" d="M 433.52,76.72 L 468.79,111.47 L 494.74,105.73 L 538.96,139.33 L 550.27,145.73 L 564.85,144.17 L 588.71,163.47 L 661.55,177.05 L 635.99,227.52 L 629.58,280.03 L 615.70,292.62 L 592.67,285.84 L 594.29,304.57 L 557.32,345.98 L 556.58,379.36 L 580.71,367.81 L 598.08,400.13 L 595.99,420.96 L 610.87,448.63 L 593.34,471.08 L 606.37,528.11 L 633.76,537.46 L 627.98,569.46 L 582.19,611.10 L 482.49,591.14 L 408.86,615.05 L 403.08,659.44 L 344.48,668.99 L 287.60,635.65 L 269.23,651.59 L 176.18,618.09 L 156.03,589.43 L 182.17,545.22 L 191.79,398.38 L 139.63,321.03 L 102.35,283.73 L 25.10,255.38 L 20.00,201.64 L 85.54,185.60 L 170.43,204.57 L 154.40,121.14 L 202.12,152.75 L 319.81,95.28 L 334.99,34.88 L 379.20,20 L 386.52,45.92 L 410.02,47.13 L 433.52,76.72 Z"/><path class="map-land" d="M 735.39,683.06 L 718.70,740.00 L 695.74,724.99 L 684.04,675.40 L 694.24,648.01 L 726.80,619.86 L 735.39,683.06 Z"/><circle class="map-city" cx="307.71" cy="145.7" r="10"/><circle class="map-city" cx="551.79" cy="611.44" r="10"/><circle class="map-city" cx="448.1" cy="575.58" r="10"/><circle class="map-city" cx="541.51" cy="459.29" r="10"/><circle class="map-city" cx="473.91" cy="440.78" r="10"/><circle class="map-city" cx="564.32" cy="169.57" r="10"/><circle class="map-city" cx="506.98" cy="302.04" r="10"/><circle class="map-city" cx="564.76" cy="201.05" r="10"/><circle class="map-city" cx="455.94" cy="159.32" r="10"/><circle class="map-city" cx="257.59" cy="141.92" r="10"/><circle class="map-city" cx="406.68" cy="58.28" r="10"/><circle class="map-city" cx="619.23" cy="568.25" r="10"/><circle class="map-city" cx="496.58" cy="416.87" r="10"/><circle class="map-city" cx="523.58" cy="598.74" r="10"/><circle class="map-city" cx="644" cy="209.8" r="10"/><circle class="map-city" cx="325.14" cy="576.03" r="10"/><circle class="map-city" cx="222.86" cy="485.14" r="10"/><circle class="map-city" cx="173.61" cy="309.67" r="10"/><circle class="map-city is-arrets" cx="371.04" cy="188.93" r="17"/><circle class="map-city is-arrets" cx="167.33" cy="243.42" r="17"/></svg>
+        <svg class="reseau-map" viewBox="0 0 760 760" aria-hidden="true" focusable="false"><path class="map-land" d="M 433.52,76.72 L 468.79,111.47 L 494.74,105.73 L 538.96,139.33 L 550.27,145.73 L 564.85,144.17 L 588.71,163.47 L 661.55,177.05 L 635.99,227.52 L 629.58,280.03 L 615.70,292.62 L 592.67,285.84 L 594.29,304.57 L 557.32,345.98 L 556.58,379.36 L 580.71,367.81 L 598.08,400.13 L 595.99,420.96 L 610.87,448.63 L 593.34,471.08 L 606.37,528.11 L 633.76,537.46 L 627.98,569.46 L 582.19,611.10 L 482.49,591.14 L 408.86,615.05 L 403.08,659.44 L 344.48,668.99 L 287.60,635.65 L 269.23,651.59 L 176.18,618.09 L 156.03,589.43 L 182.17,545.22 L 191.79,398.38 L 139.63,321.03 L 102.35,283.73 L 25.10,255.38 L 20.00,201.64 L 85.54,185.60 L 170.43,204.57 L 154.40,121.14 L 202.12,152.75 L 319.81,95.28 L 334.99,34.88 L 379.20,20 L 386.52,45.92 L 410.02,47.13 L 433.52,76.72 Z"/><path class="map-land" d="M 735.39,683.06 L 718.70,740.00 L 695.74,724.99 L 684.04,675.40 L 694.24,648.01 L 726.80,619.86 L 735.39,683.06 Z"/><circle class="map-city" cx="307.71" cy="145.7" r="10"/><circle class="map-city" cx="551.79" cy="611.44" r="10"/><circle class="map-city" cx="448.1" cy="575.58" r="10"/><circle class="map-city" cx="541.51" cy="459.29" r="10"/><circle class="map-city" cx="473.91" cy="440.78" r="10"/><circle class="map-city" cx="564.32" cy="169.57" r="10"/><circle class="map-city" cx="506.98" cy="302.04" r="10"/><circle class="map-city" cx="564.76" cy="201.05" r="10"/><circle class="map-city" cx="455.94" cy="159.32" r="10"/><circle class="map-city" cx="257.59" cy="141.92" r="10"/><circle class="map-city" cx="222.86" cy="485.14" r="10"/><circle class="map-city" cx="619.23" cy="568.25" r="10"/><circle class="map-city" cx="173.61" cy="309.67" r="10"/><circle class="map-city" cx="325.14" cy="576.03" r="10"/><circle class="map-city" cx="644" cy="209.8" r="10"/><circle class="map-city is-arrets" cx="496.58" cy="416.87" r="17"/><circle class="map-city is-arrets" cx="371.04" cy="188.93" r="17"/><circle class="map-city is-arrets" cx="167.33" cy="243.42" r="17"/><circle class="map-city is-arrets" cx="406.68" cy="58.28" r="17"/><circle class="map-city is-arrets" cx="523.58" cy="598.74" r="17"/></svg>
       </a>
       <section class="card tile tile-arrets" aria-labelledby="arrets-title">
         <h2 class="tile-name" id="arrets-title">Arr&#234;ts</h2>
@@ -729,13 +738,20 @@
         <div class="arrets-groups">
           <div class="arrets-group">
             <span class="arrets-mode">M&#233;tro</span>
-            <a class="city-btn" href="metro.html?city=rennes" aria-label="M&#233;tro de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a class="city-btn" href="metro.html?city=paris" aria-label="M&#233;tro de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <div class="city-btns">
+              <a class="city-btn" href="metro.html?city=rennes" aria-label="M&#233;tro de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="metro.html?city=paris" aria-label="M&#233;tro de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="metro.html?city=lille" aria-label="M&#233;tro de Lille"><span>Lille</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="metro.html?city=lyon" aria-label="M&#233;tro de Lyon"><span>Lyon</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="metro.html?city=marseille" aria-label="M&#233;tro de Marseille"><span>Marseille</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
           </div>
           <div class="arrets-group">
             <span class="arrets-mode">Bus</span>
-            <a class="city-btn" href="arrets.html?city=rennes" aria-label="Bus de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a class="city-btn" href="arrets.html?city=paris" aria-label="Bus de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <div class="city-btns">
+              <a class="city-btn" href="arrets.html?city=rennes" aria-label="Bus de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="arrets.html?city=paris" aria-label="Bus de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
           </div>
         </div>
       </section>

@@ -353,7 +353,7 @@
   #app:-webkit-full-screen{ max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
   #app:fullscreen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.19)); margin-inline:auto; }
   #app:-webkit-full-screen .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.19)); margin-inline:auto; }
-  .lbadge{ display:inline-flex; align-items:center; justify-content:center; width:1.4em; height:1.4em; border-radius:50%; color:#fff; font-family:"Public Sans",sans-serif; font-weight:800; font-size:.8em; margin-right:.4em; vertical-align:.08em; text-transform:lowercase; border:2px solid var(--border); }
+  .lbadge{ display:inline-flex; align-items:center; justify-content:center; min-width:1.4em; height:1.4em; padding:0 .3em; border-radius:99px; color:#fff; font-family:"Public Sans",sans-serif; font-weight:800; font-size:.8em; margin-right:.4em; vertical-align:.08em; border:2px solid var(--border); }
   .m-land{ fill:var(--m-land); }
   .m-green{ fill:var(--m-green); }
   .m-waterfill{ fill:var(--m-water); }
@@ -535,6 +535,9 @@
       <div class="nav-sublabel">Métro</div>
       <a class="nav-item nav-item-city" data-page="metro.html" data-city="rennes" href="metro.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="metro.html" data-city="paris" href="metro.html?city=paris">Paris</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lille" href="metro.html?city=lille">Lille</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lyon" href="metro.html?city=lyon">Lyon</a>
+      <a class="nav-item nav-item-city" data-page="metro.html" data-city="marseille" href="metro.html?city=marseille">Marseille</a>
       <div class="nav-sublabel">Bus</div>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
@@ -585,6 +588,7 @@
   };
   var CITY_KEY = "rennes";
   var MAP, GEO, CITIES, LINE_COLOR;
+  var CITY_SAMPLE_SIZE = 200;  // scores fetched for all cities, then filtered per city
   function loadCity(key){
     CITY_KEY = key;
     MAP = CITY_DATA[key].map;
@@ -637,7 +641,7 @@
     var list = loadLocalScores();
     list.push({pseudo:pseudo, score:score, date:new Date().toISOString(), city: CITY_KEY});
     list.sort(function(a,b){ return b.score - a.score; });
-    list = list.slice(0, LEADERBOARD_SIZE);
+    list = list.slice(0, CITY_SAMPLE_SIZE);
     saveLocalScores(list);
     return list;
   }
@@ -653,7 +657,7 @@
       fallbackToLocal();
       return;
     }
-    fetch(SUPABASE_REST_URL + "/scores_arrets?select=pseudo,score&order=score.desc&limit=" + LEADERBOARD_SIZE, {
+    fetch(SUPABASE_REST_URL + "/scores_arrets?select=pseudo,score,city&order=score.desc&limit=" + CITY_SAMPLE_SIZE, {
       headers: {
         "apikey": SUPABASE_ANON_KEY,
         "Authorization": "Bearer " + SUPABASE_ANON_KEY
@@ -799,7 +803,7 @@
   }
 
   function leaderboardCard(highlight){
-    var list = scoresCache;
+    var list = cityScores();
     var marked = false;
     var boardHtml = list.length ? (
       '<table class="board"><thead><tr><th>#</th><th>Pseudo</th><th>Score</th></tr></thead><tbody>' +
@@ -880,6 +884,9 @@
       '</div>' +
       '<ul class="recap-list">'+items+'</ul>' + next +
     '</div>';
+  }
+  function cityScores(){
+    return scoresCache.filter(function(s){ return (s.city || "rennes") === CITY_KEY; }).slice(0, LEADERBOARD_SIZE);
   }
   function fmtDist(km){
     return km < 1 ? Math.round(km*1000).toLocaleString("fr-FR") + " m" : (Math.round(km*10)/10).toLocaleString("fr-FR") + " km";
@@ -987,7 +994,7 @@
           '<div class="timerwrap"><div class="timerbar"><i id="timer-fill"></i></div></div>' +
         '</div>';
     } else {
-      var isTop = scoresCache.length && scoresCache[0].pseudo === state.pseudo && scoresCache[0].score === state.lastTotal;
+      var cs = cityScores(); var isTop = cs.length && cs[0].pseudo === state.pseudo && cs[0].score === state.lastTotal;
       promptInner =
         '<div class="prompt-bar">' +
           '<div class="prompt-target">' +
