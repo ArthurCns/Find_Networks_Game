@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Les Boss - Reseaux de France</title>
+<title>Réseaux de France</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -477,103 +477,6 @@
     .page-head .stat{ padding:8px 14px; }
     .page-head .stat .v{ font-size:1.1rem; }
   }
-  /* Hallmark · genre: playful · macrostructure: Stat-Led leaderboard (podium hero + matrix) · design-system: design.md · designed-as-app */
-  .boss-section{ display:flex; flex-direction:column; gap:14px; margin-top:22px; min-width:0; }
-  .boss-section-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px 16px; flex-wrap:wrap; }
-  .boss-section-head h2{ font-size:clamp(1.15rem, 1rem + .6vw, 1.5rem); }
-  .boss-sub{ color:var(--muted); font-weight:600; font-size:.92rem; }
-  table.board{ table-layout:fixed; }
-  table.board td, table.board th{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  table.board td.rank, table.board th:first-child{ width:1.9em; }
-  table.board td.date, table.board th.date{ color:var(--muted); font-size:.78rem; width:6.4em; white-space:normal; }
-  .board-wrap{ overflow-x:auto; }
-  .empty-cta{ display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
-  .play-link{
-    display:inline-flex; align-items:center; gap:6px;
-    font-weight:800; font-size:.82rem; letter-spacing:.04em; text-transform:uppercase; white-space:nowrap;
-    color:var(--ink); text-decoration:underline; text-decoration-color:var(--accent);
-    text-decoration-thickness:3px; text-underline-offset:5px;
-  }
-  .play-link svg{ width:16px; height:16px; transition:transform 160ms var(--ease-out); }
-  .play-link:focus-visible{ outline:3px solid var(--accent-2); outline-offset:3px; border-radius:4px; }
-
-  /* Reseau: podium hero */
-  .boss-hero{ display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:28px 40px; align-items:end; padding:28px; }
-  .podium-big{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); align-items:end; gap:10px; border-bottom:var(--bw) solid var(--border); }
-  .step{ display:flex; flex-direction:column; gap:6px; min-width:0; text-align:center; }
-  .step-who{ font-weight:800; font-size:1rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .step-score{ font-family:var(--font-display); font-weight:700; font-size:1.05rem; }
-  .step-date{ color:var(--muted); font-size:.74rem; font-weight:600; }
-  .step-block{
-    display:flex; justify-content:center; padding-top:10px; margin-top:4px;
-    border:var(--bw) solid var(--border); border-bottom:none; border-radius:10px 10px 0 0;
-    background:var(--surface-2); color:var(--ink);
-    font-family:var(--font-display); font-weight:700; font-size:1.5rem;
-    transform-origin:bottom center; animation:step-rise 420ms var(--ease-out) both;
-  }
-  .step-1 .step-block{ height:132px; background:var(--accent); color:var(--accent-ink); animation-delay:120ms; }
-  .step-2 .step-block{ height:96px; }
-  .step-3 .step-block{ height:68px; animation-delay:60ms; }
-  .step.is-empty .step-who, .step.is-empty .step-score{ color:var(--muted); }
-  .runners{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; }
-  .runners li{
-    display:grid; grid-template-columns:1.9em minmax(0,1fr) auto 6.4em; gap:10px; align-items:baseline;
-    padding:10px 4px; border-bottom:1px solid var(--line); font-weight:600;
-  }
-  .runners li:last-child{ border-bottom:none; }
-  .runners .r-rank{ color:var(--muted); font-weight:800; }
-  .runners .r-who{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .runners .r-date{ color:var(--muted); font-size:.78rem; text-align:right; }
-  .runners-empty{ margin:0; color:var(--muted); font-weight:600; font-size:.92rem; }
-
-  /* Arrets: mode x city matrix */
-  .boss-matrix{ display:grid; grid-template-columns:auto repeat(2, minmax(0,1fr)); gap:14px 16px; align-items:stretch; }
-  .mx-col{ align-self:end; padding:0 4px; font-family:var(--font-display); font-weight:700; font-size:1.05rem; }
-  .mx-row{
-    align-self:center; display:inline-flex; align-items:center; gap:8px; padding-right:4px;
-    font-weight:800; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
-  }
-  .mx-row::before{ content:""; width:14px; height:14px; flex:none; border:2px solid var(--border); border-radius:4px; background:var(--mode-color); }
-  .mode-metro{ --mode-color:var(--accent-2); }
-  .mode-bus{ --mode-color:oklch(64% 0.19 35); }
-  .mx-cell{ display:flex; flex-direction:column; gap:10px; min-width:0; padding:16px; }
-  .mx-cell-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
-  .mx-cell-title{ display:none; font-size:1rem; }
-  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
-
-  /* Boss des villes: night tiles */
-  .city-grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
-  .city-boss{ display:flex; flex-direction:column; gap:12px; min-width:0; padding:24px; background:var(--tile-night); color:var(--tile-night-ink); }
-  .city-boss h3{ font-size:1.1rem; }
-  .city-boss .boss-sub{ color:var(--tile-night-muted); font-size:.8rem; }
-  .city-king{ display:flex; flex-direction:column; gap:4px; min-width:0; }
-  .city-king-name{ font-family:var(--font-display); font-weight:700; font-size:clamp(1.5rem, 1.1rem + 1.6vw, 2.3rem); line-height:1.1; color:var(--accent); overflow-wrap:anywhere; }
-  .city-king-score{ font-weight:800; font-size:.95rem; }
-  .city-court{ list-style:none; margin:4px 0 0; padding:10px 0 0; display:flex; flex-direction:column; gap:6px; border-top:2px solid color-mix(in oklch, var(--tile-night-ink) 22%, var(--tile-night)); }
-  .city-court li{ display:grid; grid-template-columns:1.9em minmax(0,1fr) auto; gap:8px; font-weight:600; font-size:.9rem; color:var(--tile-night-muted); }
-  .city-court .r-who{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--tile-night-ink); }
-  .city-empty{ margin:0; color:var(--tile-night-muted); font-weight:600; line-height:1.5; }
-  .city-empty b{ display:block; font-family:var(--font-display); font-size:1.3rem; color:var(--accent); margin-bottom:4px; }
-
-  @keyframes step-rise{ from{ transform:scaleY(0); } to{ transform:none; } }
-  @media (hover:hover){ .play-link:hover svg{ transform:translateX(3px); } }
-  @media (prefers-reduced-motion: reduce){ .step-block{ animation:none; } .play-link svg{ transition:none; } }
-
-  @media (max-width:1100px){
-    .boss-hero{ grid-template-columns:minmax(0,1fr); }
-  }
-  @media (max-width:960px){
-    .boss-matrix{ grid-template-columns:minmax(0,1fr); }
-    .mx-corner, .mx-col, .mx-row{ display:none; }
-    .mx-cell-title{ display:block; }
-  }
-  @media (max-width:700px){
-    .city-grid{ grid-template-columns:minmax(0,1fr); }
-    .boss-hero, .city-boss{ padding:18px; }
-    .step-1 .step-block{ height:104px; } .step-2 .step-block{ height:76px; } .step-3 .step-block{ height:54px; }
-    .runners li{ grid-template-columns:1.9em minmax(0,1fr) auto; }
-    .runners .r-date{ display:none; }
-  }
 </style>
 </head>
 <body>
@@ -589,7 +492,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-6h4v6"/></svg>
     <span>Accueil</span>
   </a>
-  <a class="nav-item" href="reseau.html">
+  <a class="nav-item is-active" href="reseau.html" aria-current="page">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
     <span>Réseau</span>
   </a>
@@ -608,7 +511,7 @@
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
     </div>
   </details>
-  <a class="nav-item is-active" href="boss.html" aria-current="page">
+  <a class="nav-item" href="boss.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M8 5H4v2a4 4 0 0 0 4 4"/><path d="M16 5h4v2a4 4 0 0 1-4 4"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4l1 4H9l1-4z"/></svg>
     <span>Les Boss</span>
   </a>
@@ -647,237 +550,648 @@
     });
   })();
 
-  var GAMES = [
-    {key:"reseau", label:"Réseau", table:"scores", ls:"reseaux-fr-scores-v1", cityScoped:false},
-    {key:"metro", label:"Arrêts - Métro", table:"scores_metro", ls:"metro-rennes-scores-v1", cityScoped:true},
-    {key:"bus", label:"Arrêts - Bus", table:"scores_arrets", ls:"arrets-star-scores-v1", cityScoped:true}
-  ];
-  var CITIES = [
-    {key:"rennes", name:"Rennes", games:["metro","bus"]},
-    {key:"paris", name:"Paris", games:["metro","bus"]}
-  ];
-  var SAMPLE_SIZE = 200;
+  var GEO = {
+    viewBox: "0 0 1280 1230",
+    mapImage: "france_relief_1280.jpg",
+    kmPerPx: 0.9495,
+  };
 
-  var tableSample = {};  // table -> rows [{pseudo,score,date,city}]
-  var status = {};       // table -> "connecting" | "shared" | "local"
+  var CITIES = [
+    {name:"Paris", network:"RATP / Île-de-France Mobilités", x:660.43, y:309.66},
+    {name:"Lyon", network:"TCL", x:861.63, y:671.93},
+    {name:"Marseille", network:"RTM", x:904.9, y:960.98},
+    {name:"Lille", network:"Ilévia", x:717.55, y:102.01},
+    {name:"Toulouse", network:"Tisséo", x:586.87, y:924.88},
+    {name:"Bordeaux", network:"TBM", x:422.95, y:780.43},
+    {name:"Nantes", network:"TAN", x:344.01, y:501.56},
+    {name:"Strasbourg", network:"CTS", x:1097.89, y:342.83},
+    {name:"Rennes", network:"STAR", x:333.95, y:396.26},
+    {name:"Nice", network:"Lignes d\'Azur", x:1058.19, y:912.52},
+    {name:"Montpellier", network:"TaM", x:783.94, y:924.16},
+    {name:"Grenoble", network:"TAG / SMMAG", x:933.63, y:739.35},
+    {name:"Rouen", network:"Astuce", x:558.93, y:240.95},
+    {name:"Toulon", network:"Réseau Mistral", x:950.12, y:981.17},
+    {name:"Saint-Étienne", network:"STAS", x:825.29, y:709.92},
+    {name:"Nancy", network:"Stan", x:970.89, y:328.93},
+    {name:"Reims", network:"Citura", x:796.49, y:262.6},
+    {name:"Metz", network:"Le Met\'", x:970.18, y:278.88},
+    {name:"Dijon", network:"Divia", x:878.3, y:489.42},
+    {name:"Le Havre", network:"LiA", x:478.61, y:234.94},
+    {name:"Nogent-le-Rotrou", network:"NosBus", x:536.77, y:372.22},
+    {name:"Fougères", network:"SURF", x:372.76, y:368.75},
+    {name:"Tours", network:"Fil Bleu", x:525.35, y:480.98},
+    {name:"Saint-Malo", network:"MAT", x:305.77, y:333.94},
+    {name:"Vannes", network:"Kicéo", x:246.21, y:450.04},
+    {name:"Orléans", network:"TAO", x:624.55, y:421.37},
+    {name:"Angers", network:"Irigo", x:424.25, y:471.1},
+    {name:"Lens / Béthune", network:"Tadao", x:699.29, y:125},
+    {name:"Valenciennes", network:"Transvilles", x:755.31, y:133.64},
+    {name:"Dunkerque", network:"DK\'Bus", x:662.42, y:54.55},
+    {name:"Le Mans", network:"SETRAM", x:486.04, y:409.29},
+    {name:"Brest", network:"Bibus", x:106.44, y:364.27},
+    {name:"Aix-en-Provence", network:"Aix en bus", x:911.18, y:933.66},
+    {name:"Besançon", network:"Ginko", x:957.9, y:499.29},
+    {name:"Lorient", network:"IZILO Mobilités", x:196.84, y:439.5},
+    {name:"Perpignan", network:"Sankéo", x:704.39, y:1032.18},
+    {name:"Amiens", network:"Ametis", x:655.86, y:188.12},
+    {name:"Valence", network:"Citéa", x:866.22, y:769.23},
+    {name:"Limoges", network:"TCL", x:572.04, y:663.78},
+    {name:"Chambéry", network:"Synchro mobilités", x:949.29, y:695.29},
+    {name:"Bayonne", network:"Txik Txak", x:350.4, y:937.97},
+    {name:"Montbéliard", network:"évolitY", x:1020.64, y:467.4},
+    {name:"Nîmes", network:"Tango", x:823.1, y:897.7},
+    {name:"Bourges", network:"AggloBus", x:664.14, y:517.65},
+    {name:"Thionville", network:"Temo\'b", x:969.59, y:250.93},
+    {name:"Clermont-Ferrand", network:"T2C", x:719.96, y:670.39},
+    {name:"Caen", network:"Twisto", x:439.84, y:271.43},
+    {name:"Mulhouse", network:"Soléa", x:1064.17, y:439.19},
+    {name:"Poitiers", network:"Vitalis", x:497.45, y:576.32},
+    {name:"Pau", network:"Idelis", x:439.83, y:961.15},
+    {name:"Avignon", network:"Orizo", x:859.18, y:884.51},
+    {name:"Annecy", network:"Sibra", x:966.43, y:656.09},
+    {name:"La Rochelle", network:"Yélo", x:376.62, y:625.51},
+    {name:"Laval", network:"TUL", x:407.49, y:401.82}
+  ];
+
+  var ROUNDS_PER_GAME = 10;
+  var TIME_LIMIT_S = 20; // seconds for the timer bar / full time-bonus window
+  var LS_KEY = "reseaux-fr-scores-v1";
+  var LEADERBOARD_SIZE = 10;
+
+  // ---------------- leaderboard (Supabase, local fallback) ----------------
+  // 1. Create a free project at https://supabase.com
+  // 2. In the SQL editor, run:
+  //      create table scores (
+  //        id bigint generated always as identity primary key,
+  //        pseudo text not null,
+  //        score integer not null,
+  //        created_at timestamptz not null default now()
+  //      );
+  //      alter table scores enable row level security;
+  //      create policy "public read" on scores for select to anon using (true);
+  //      create policy "public insert" on scores for insert to anon
+  //        with check (char_length(pseudo) <= 18 and score >= 0 and score <= 13000);
+  // 3. Project Settings > API: copy the "Project URL" and the "anon public" key below.
+  var SUPABASE_URL = "https://wubushemowkizczoogvg.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_T4k5fQbOQb5lRRt1q4E1XQ_AQTdYWAr";
+
+  // Accepts the bare project URL or one that already ends in /rest/v1(/) — either pasted value works.
+  var SUPABASE_REST_URL = SUPABASE_URL.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'') + "/rest/v1";
+
+  var dbStatus = "connecting";  // "connecting" | "shared" | "local"
+  var scoresCache = [];         // always the current top LEADERBOARD_SIZE, freshest first
+
+  function loadLocalScores(){
+    try{
+      var raw = localStorage.getItem(LS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveLocalScores(list){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(list)); }catch(e){}
+  }
+  function addLocalScore(pseudo, score){
+    var list = loadLocalScores();
+    list.push({pseudo:pseudo, score:score, date:new Date().toISOString()});
+    list.sort(function(a,b){ return b.score - a.score; });
+    list = list.slice(0, LEADERBOARD_SIZE);
+    saveLocalScores(list);
+    return list;
+  }
+
+  function fallbackToLocal(){
+    dbStatus = "local";
+    scoresCache = loadLocalScores();
+    if(state.screen === "gate" || state.screen === "end") render();
+  }
+
+  function loadLeaderboard(){
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      fallbackToLocal();
+      return;
+    }
+    fetch(SUPABASE_REST_URL + "/scores?select=pseudo,score&order=score.desc&limit=" + LEADERBOARD_SIZE, {
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      }
+    }).then(function(r){
+      if(!r.ok) throw new Error("supabase read failed");
+      return r.json();
+    }).then(function(rows){
+      dbStatus = "shared";
+      scoresCache = rows;
+      if(state.screen === "gate" || state.screen === "end") render();
+    }).catch(fallbackToLocal);
+  }
+
+  function initLeaderboard(){
+    loadLeaderboard();
+  }
+
+  // Writes the score, then refreshes the leaderboard (or falls back to local storage).
+  function submitScore(pseudo, score){
+    if(dbStatus !== "shared"){
+      scoresCache = addLocalScore(pseudo, score);
+      render();
+      return;
+    }
+    fetch(SUPABASE_REST_URL + "/scores", {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({pseudo: pseudo, score: score})
+    }).then(function(r){
+      if(!r.ok) throw new Error("supabase insert failed");
+      loadLeaderboard();
+    }).catch(function(){
+      scoresCache = addLocalScore(pseudo, score);
+      render();
+    });
+  }
+
+  function trackEvent(type, page, city){
+    try{
+      if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+      fetch(SUPABASE_REST_URL + "/site_events", {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({type: type, page: page, city: city || null})
+      }).catch(function(){});
+    }catch(e){}
+  }
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=a[i]; a[i]=a[j]; a[j]=t;
+    }
+    return a;
+  }
+
+  function dist(ax,ay,bx,by){ return Math.hypot(ax-bx, ay-by); }
+
+  function scoreRound(distKm, elapsedS){
+    var precision = Math.round(Math.max(0, 1000 - distKm*2));
+    var timeBonus = Math.round(Math.max(0, 300 - (elapsedS/TIME_LIMIT_S)*300));
+    return {precision:precision, timeBonus:timeBonus, total:precision+timeBonus};
+  }
+
+  function rankLabel(distKm){
+    if(distKm < 8) return {text:"Excellent", cls:"success"};
+    if(distKm < 25) return {text:"Très bon", cls:"success"};
+    if(distKm < 60) return {text:"Bon", cls:"warn"};
+    if(distKm < 130) return {text:"Moyen", cls:"warn"};
+    return {text:"Loin", cls:"danger"};
+  }
+
+  function fmt(n){ return Math.round(n).toLocaleString("fr-FR"); }
+
+  // ---------------- state ----------------
+  var ADVANCE_DELAY_MS = 3000;
+  var state = {
+    screen: "gate",        // gate | play | end
+    pseudo: "",
+    order: [],             // array of city indices, length ROUNDS_PER_GAME
+    roundIdx: 0,
+    rounds: [],            // per-round results {city, guess:{x,y}, distKm, elapsedS, score}
+    roundStartTs: 0,
+    revealed: false,
+    timerRAF: null,
+    advanceInterval: null,
+    advanceTimeout: null
+  };
+
+  function clearAdvanceTimers(){
+    if(state.advanceInterval){ clearInterval(state.advanceInterval); state.advanceInterval = null; }
+    if(state.advanceTimeout){ clearTimeout(state.advanceTimeout); state.advanceTimeout = null; }
+  }
+
+  function newGame(pseudo){
+    clearAdvanceTimers();
+    state.pseudo = pseudo;
+    state.order = shuffle(CITIES.map(function(_,i){return i;})).slice(0, ROUNDS_PER_GAME);
+    state.roundIdx = 0;
+    state.rounds = [];
+    state.revealed = false;
+    state.screen = "play";
+    startRoundTimer();
+  }
+
+  function currentCity(){ return CITIES[state.order[state.roundIdx]]; }
+
+  function startRoundTimer(){
+    state.roundStartTs = performance.now();
+    state.revealed = false;
+  }
+
+  // ---------------- rendering ----------------
+  var app = document.getElementById("app");
+
+  function render(){ renderApp(); }
+
+  function topBar(extraStatsHtml){
+    return '' +
+      '<header class="topbar page-head">' +
+        '<div class="brand"><h1>Réseaux de France</h1><span class="tag">Devine et place les réseaux</span></div>' +
+        (extraStatsHtml || '') +
+      '</header>';
+  }
+
+  function boardStatusLabel(){
+    if(dbStatus === "shared") return '<span class="label" style="color:var(--success);">Partagé — tous les joueurs</span>';
+    if(dbStatus === "local") return '<span class="label">Enregistré sur cet appareil</span>';
+    return '<span class="label">Connexion…</span>';
+  }
+
+  function leaderboardCard(highlight){
+    var list = scoresCache;
+    var marked = false;
+    var boardHtml = list.length ? (
+      '<table class="board"><thead><tr><th>#</th><th>Pseudo</th><th>Score</th></tr></thead><tbody>' +
+      list.map(function(s,i){
+        var mine = highlight && !marked && s.pseudo===highlight.pseudo && s.score===highlight.score;
+        if(mine) marked = true;
+        return '<tr style="'+(mine?'font-weight:700;':'')+'"><td class="rank">'+(i+1)+'</td><td>'+escapeHtml(s.pseudo)+'</td><td class="tnum">'+fmt(s.score)+'</td></tr>';
+      }).join('') +
+      '</tbody></table>'
+    ) : '<p class="empty-board">Aucune partie enregistrée pour l\'instant. Sois le premier à marquer des points !</p>';
+
+    return '<div class="card">' +
+      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:12px;">' +
+        '<h3>Meilleurs scores</h3>' + boardStatusLabel() +
+      '</div>' +
+      boardHtml +
+    '</div>';
+  }
 
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, function(c){
       return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
     });
   }
-  function fmt(n){ return Math.round(n).toLocaleString("fr-FR"); }
-  function fmtDate(iso){
-    if(!iso) return "—";
-    var d = new Date(iso);
-    if(isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString("fr-FR", {day:"2-digit", month:"2-digit", year:"numeric"});
-  }
 
-  function loadLocal(lsKey){
-    try{ var raw = localStorage.getItem(lsKey); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
-  }
+  // Reactions shown top-left after each answer. Set "gif" to a file path (e.g. "gifs/excellent.gif")
+  // to use your own GIF; without it, the animated emoji is used.
+  var REACTIONS = {
+    "Excellent": {emoji:"🎯", gif:"gifs/excellent.gif", captions:["Chirurgical !","Tu as le GPS dans la tête.","Le conducteur de tram, c'est toi ?"]},
+    "Très bon":  {emoji:"😎", gif:"gifs/tres-bon.gif", captions:["Propre, très propre.","Presque un plan de réseau vivant.","Tu connais tes lignes !"]},
+    "Bon":       {emoji:"🙂", gif:"gifs/bon.gif", captions:["Pas mal, bonne région au moins.","Correct, on a vu pire.","Ça roule, sans excès de vitesse."]},
+    "Moyen":     {emoji:"😬", gif:"gifs/moyen.gif", captions:["Tu as raté ta correspondance ?","Ça sent la ligne en travaux.","Le bus était déjà passé."]},
+    "Loin":      {emoji:"🫠", gif:"gifs/loin.gif", captions:["Terminus, tout le monde descend… ailleurs.","Le bus est parti sans toi.","Tu as pris la mauvaise navette."]}
+  };
 
-  var SUPABASE_URL = "https://wubushemowkizczoogvg.supabase.co";
-  var SUPABASE_ANON_KEY = "sb_publishable_T4k5fQbOQb5lRRt1q4E1XQ_AQTdYWAr";
-  var SUPABASE_REST_URL = SUPABASE_URL.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'') + "/rest/v1";
-
-  function fetchTable(table, limit, cityScoped){
-    if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return Promise.reject(new Error("no supabase"));
-    var fields = cityScoped ? "pseudo,score,created_at,city" : "pseudo,score,created_at";
-    return fetch(SUPABASE_REST_URL + "/" + table + "?select=" + fields + "&order=score.desc&limit=" + limit, {
-      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY }
-    }).then(function(r){
-      if(!r.ok) throw new Error("fetch failed");
-      return r.json();
-    }).then(function(rows){
-      return rows.map(function(r){ return {pseudo:r.pseudo, score:r.score, date:r.created_at, city:r.city}; });
-    });
-  }
-  function trackVisit(){
-    if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return;
-    fetch(SUPABASE_REST_URL + "/site_events", {
-      method: "POST",
-      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
-      body: JSON.stringify({type: "visit", page: "boss", city: null})
-    }).catch(function(){});
-  }
-
-  function fallbackLocal(g){
-    status[g.table] = "local";
-    tableSample[g.table] = loadLocal(g.ls);
-    render();
-  }
-
-  function loadTable(g){
-    status[g.table] = "connecting";
-    fetchTable(g.table, SAMPLE_SIZE, g.cityScoped).then(function(rows){
-      status[g.table] = "shared";
-      tableSample[g.table] = rows;
-      render();
-    }).catch(function(){ fallbackLocal(g); });
-  }
-
-  function rowsFor(game, cityKey){
-    var rows = tableSample[game.table] || [];
-    if(!game.cityScoped) return rows;
-    return rows.filter(function(r){ return (r.city || "rennes") === cityKey; });
-  }
-
-  function top3For(game, cityKey){
-    return rowsFor(game, cityKey).slice(0, 3);
-  }
-
-  function bestPerPseudo(rows){
-    var map = {};
-    (rows||[]).forEach(function(r){
-      if(!(r.pseudo in map) || r.score > map[r.pseudo].score){
-        map[r.pseudo] = {score:r.score, date:r.date};
-      }
-    });
-    return map;
-  }
-
-  function cityCombinedTop3(city){
-    var maps = city.games.map(function(gKey){
-      var g = GAMES.filter(function(x){ return x.key === gKey; })[0];
-      return bestPerPseudo(rowsFor(g, city.key));
-    });
-    var pseudos = {};
-    maps.forEach(function(m){ Object.keys(m).forEach(function(p){ pseudos[p]=true; }); });
-    return Object.keys(pseudos).map(function(p){
-      var total = 0, lastDate = null;
-      maps.forEach(function(m){
-        if(m[p]){
-          total += m[p].score;
-          if(!lastDate || new Date(m[p].date) > new Date(lastDate)) lastDate = m[p].date;
-        }
-      });
-      return {pseudo:p, score:total, date:lastDate};
-    }).sort(function(a,b){ return b.score-a.score; }).slice(0,3);
-  }
-
-  function statusLabel(st){
-    if(st === "shared") return '<span class="label" style="color:var(--success);">Partagé</span>';
-    if(st === "local") return '<span class="label">Cet appareil</span>';
-    return '<span class="label">Connexion…</span>';
-  }
-
-  var ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-  var GAME_PAGE = {reseau:"reseau.html", metro:"metro.html", bus:"arrets.html"};
-  function gameByKey(k){ return GAMES.filter(function(g){ return g.key === k; })[0]; }
-  function playLink(href, text){ return '<a class="play-link" href="'+href+'">'+text+' '+ARROW+'</a>'; }
-
-  function boardHtml(list){
-    if(list && list.length){
-      return '<div class="board-wrap"><table class="board"><thead><tr><th>#</th><th>Pseudo</th><th>Score</th><th class="date">Date</th></tr></thead><tbody>' +
-        list.map(function(s,i){
-          return '<tr><td class="rank">'+(i+1)+'</td><td>'+escapeHtml(s.pseudo)+'</td><td class="tnum">'+fmt(s.score)+'</td><td class="date">'+fmtDate(s.date)+'</td></tr>';
-        }).join('') +
-      '</tbody></table></div>';
-    }
-    return '<p class="empty-board">Aucun score enregistré pour l\'instant.</p>';
-  }
-
-  function podiumHtml(list){
-    function step(place){
-      var s = list[place-1];
-      return '<div role="listitem" class="step step-'+place+(s ? '' : ' is-empty')+'">' +
-        '<span class="step-who">'+(s ? escapeHtml(s.pseudo) : '—')+'</span>' +
-        '<span class="step-score tnum">'+(s ? fmt(s.score) : '—')+'</span>' +
-        (s ? '<span class="step-date">'+fmtDate(s.date)+'</span>' : '') +
-        '<span class="step-block" aria-hidden="true">'+place+'</span>' +
-      '</div>';
-    }
-    return '<div class="podium-big" role="list" aria-label="Podium">' +
-      step(2) + step(1) + step(3) +
+  function reactionHtml(rl, idx){
+    var rx = REACTIONS[rl.text];
+    if(!rx) return '';
+    var caption = rx.captions[idx % rx.captions.length];
+    var emoji = '<span class="rx-emoji"' + (rx.gif ? ' style="display:none"' : '') + '>' + rx.emoji + '</span>';
+    var media = rx.gif
+      ? '<img src="' + rx.gif + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-block\'">' + emoji
+      : emoji;
+    return '<div class="reaction-toast ' + rl.cls + '" aria-live="polite">' +
+      '<div class="rx-media">' + media + '</div>' +
+      '<div class="rx-text"><span class="rx-title">' + rl.text + '</span><span class="rx-caption">' + caption + '</span></div>' +
     '</div>';
   }
-
-  function runnersHtml(list){
-    var rest = list.slice(3, 5);
-    if(!rest.length) return '<p class="runners-empty">Personne d\'autre au classement pour l\'instant.</p>';
-    return '<ol class="runners">' + rest.map(function(s,i){
-      return '<li><span class="r-rank tnum">'+(i+4)+'</span><span class="r-who">'+escapeHtml(s.pseudo)+'</span><span class="tnum">'+fmt(s.score)+'</span><span class="r-date">'+fmtDate(s.date)+'</span></li>';
-    }).join('') + '</ol>';
+  function baremeHtml(){
+    return '<div class="card bareme">' +
+      '<h3>Barème</h3>' +
+      '<dl class="bareme-list">' +
+        '<div><dt class="tnum">1 000</dt><dd><b>Précision</b> — points max par manche, selon la distance entre ton clic et la ville réelle.</dd></div>' +
+        '<div><dt class="tnum">+300</dt><dd><b>Rapidité</b> — bonus si tu réponds en moins de '+TIME_LIMIT_S+' secondes.</dd></div>' +
+        '<div><dt class="tnum">13 000</dt><dd><b>Score final</b> — la somme des 10 manches.</dd></div>' +
+      '</dl>' +
+    '</div>';
   }
-
-  function sectionHead(title, rightHtml){
-    return '<div class="boss-section-head"><h2>'+title+'</h2>'+(rightHtml || '')+'</div>';
-  }
-
-  var app = document.getElementById("app");
-
-  function render(){
-    var reseauGame = gameByKey("reseau");
-    var reseauTop = rowsFor(reseauGame, null).slice(0, 5);
-    var reseauSection =
-      '<section class="boss-section" aria-label="Réseau">' +
-        sectionHead('Réseau', statusLabel(status[reseauGame.table])) +
-        '<div class="card boss-hero">' +
-          (reseauTop.length
-            ? podiumHtml(reseauTop) + runnersHtml(reseauTop)
-            : '<div class="empty-cta"><p class="empty-board">Aucun score enregistré pour l\'instant.</p>'+playLink(GAME_PAGE.reseau, 'Jouer')+'</div>') +
-        '</div>' +
-      '</section>';
-
-    var modes = ["metro", "bus"];
-    var matrix = '<div class="mx-corner" aria-hidden="true"></div>' +
-      CITIES.map(function(c){ return '<div class="mx-col" aria-hidden="true">'+escapeHtml(c.name)+'</div>'; }).join('');
-    modes.forEach(function(mKey){
-      var g = gameByKey(mKey);
-      var modeName = mKey === "metro" ? "Métro" : "Bus";
-      matrix += '<div class="mx-row mode-'+mKey+'" aria-hidden="true">'+modeName+'</div>';
-      CITIES.forEach(function(city){
-        var list = city.games.indexOf(mKey) >= 0 ? top3For(g, city.key) : [];
-        var href = GAME_PAGE[mKey] + '?city=' + city.key;
-        matrix += '<div class="card mx-cell">' +
-          '<div class="mx-cell-head">' +
-            '<h3 class="mx-cell-title">'+modeName+' · '+escapeHtml(city.name)+'</h3>' +
-            '<span class="sr-only">'+modeName+' — '+escapeHtml(city.name)+'</span>' +
-            statusLabel(status[g.table]) +
-          '</div>' +
-          (list.length ? boardHtml(list) : '<div class="empty-cta"><p class="empty-board">Aucun score enregistré pour l\'instant.</p>'+playLink(href, 'Jouer')+'</div>') +
-        '</div>';
-      });
-    });
-    var arretsSection =
-      '<section class="boss-section" aria-label="Arrêts">' +
-        sectionHead('Arrêts', '<span class="boss-sub">Top 3 par ville</span>') +
-        '<div class="boss-matrix">' + matrix + '</div>' +
-      '</section>';
-
-    var cityBossCards = CITIES.map(function(city){
-      var gameLabels = city.games.map(function(gKey){
-        var g = gameByKey(gKey);
-        return g ? g.label : gKey;
-      }).join(' + ');
-      var top = cityCombinedTop3(city);
-      var body = top.length
-        ? '<div class="city-king"><span class="city-king-name">'+escapeHtml(top[0].pseudo)+'</span><span class="city-king-score tnum">'+fmt(top[0].score)+' pts</span></div>' +
-          (top.length > 1 ? '<ol class="city-court">' + top.slice(1).map(function(s,i){
-            return '<li><span class="tnum">'+(i+2)+'</span><span class="r-who">'+escapeHtml(s.pseudo)+'</span><span class="tnum">'+fmt(s.score)+'</span></li>';
-          }).join('') + '</ol>' : '')
-        : '<p class="city-empty"><b>Le trône est libre.</b>Joue au métro ou au bus de '+escapeHtml(city.name)+' pour le prendre.</p>';
-      return '<div class="card city-boss">' +
-        '<div><h3>Le Boss de '+escapeHtml(city.name)+'</h3><span class="boss-sub">'+escapeHtml(gameLabels)+'</span></div>' +
-        body +
-      '</div>';
+  function recapCardHtml(){
+    if(state.screen === "gate" || !state.rounds.length) return '';
+    var ended = state.screen === "end";
+    var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    var items = state.rounds.map(function(r,i){
+      var rk = rankLabel(r.distKm);
+      return '<li>' +
+        '<span class="rc-n tnum">'+(i+1)+'</span>' +
+        '<span class="rc-name"><b>'+escapeHtml(r.city.network)+'</b><i>'+escapeHtml(r.city.name)+'</i></span>' +
+        '<span class="rc-km tnum">'+fmt(r.distKm)+' km</span>' +
+        '<span class="badge rc-pts tnum '+rk.cls+'">'+fmt(r.score.total)+'</span>' +
+      '</li>';
     }).join('');
-    var citySection =
-      '<section class="boss-section" aria-label="Boss des villes">' +
-        sectionHead('Boss des villes', '<span class="boss-sub">Meilleur score cumulé métro + bus</span>') +
-        '<div class="city-grid">' + cityBossCards + '</div>' +
-      '</section>';
+    var next = (!ended && state.revealed)
+      ? '<div class="label recap-next">'+((state.roundIdx+1) < ROUNDS_PER_GAME ? 'Manche suivante dans' : 'Résultat final dans')+' <span id="cd-num" class="tnum">3</span> s…</div>'
+      : '';
+    return '<div class="card recap-card">' +
+      '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:6px;">' +
+        '<h3>Résumé de partie</h3><span class="recap-total tnum">'+fmt(total)+' <small>/ 13 000</small></span>' +
+      '</div>' +
+      '<ul class="recap-list">'+items+'</ul>' + next +
+    '</div>';
+  }
+  function toggleFullscreen(){
+    var el = document.getElementById("app");
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement;
+    try{
+      var p = isFs
+        ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+        : (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      if(p && p.catch) p.catch(function(){});
+    }catch(e){}
+  }
+  function renderApp(){
+    var gate = state.screen === "gate";
+    var playing = state.screen === "play";
+    var ended = state.screen === "end";
+
+    var roundNum = state.roundIdx + 1;
+    var runningScore = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    var lastRound = state.rounds[state.rounds.length-1];
+    var rl = lastRound ? rankLabel(lastRound.distKm) : null;
+    var showScorePoints = playing && state.revealed && lastRound;
+    var fsSupported = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+
+    var stats = (playing || ended) ? (
+      '<div class="stat-row">' +
+        '<div class="stat"><span class="label">Manche</span><span class="v tnum">'+(ended ? ROUNDS_PER_GAME : roundNum)+' / '+ROUNDS_PER_GAME+'</span></div>' +
+        '<div class="stat"><span class="label">Score</span><span class="v tnum">'+fmt(ended ? state.lastTotal : runningScore)+'</span></div>' +
+      '</div>'
+    ) : '';
+
+    var promptInner;
+    if(gate){
+      promptInner =
+        '<div class="prompt-bar">' +
+          '<div class="prompt-target">' +
+            '<span class="label">Comment ça marche</span>' +
+            '<span class="network">Trouve le plus de réseaux rapidement !</span>' +
+          '</div>' +
+        '</div>';
+    } else if(playing){
+      var city = currentCity();
+      promptInner =
+        '<div class="prompt-bar">' +
+          '<div class="prompt-target">' +
+            '<span class="label">Place ce réseau sur la carte</span>' +
+            '<span class="network">'+escapeHtml(city.network)+'</span>' +
+          '</div>' +
+          '<div class="timerwrap"><div class="timerbar"><i id="timer-fill"></i></div></div>' +
+        '</div>';
+    } else {
+      var isTop = scoresCache.length && scoresCache[0].pseudo === state.pseudo && scoresCache[0].score === state.lastTotal;
+      promptInner =
+        '<div class="prompt-bar">' +
+          '<div class="prompt-target">' +
+            '<span class="label">Partie terminée</span>' +
+            '<span class="network">'+escapeHtml(state.pseudo)+' — '+fmt(state.lastTotal)+' pts</span>' +
+          '</div>' +
+          '<div class="row">' +
+            '<button class="btn-primary" id="replay-btn">Rejouer</button>' +
+            '<button class="btn-ghost" id="switch-btn">Changer de pseudo</button>' +
+          '</div>' +
+        '</div>' +
+        (isTop ? '<div class="rules"><b style="color:var(--success);">Nouveau meilleur score du classement !</b></div>' : '');
+    }
+
+    var stripHtml = gate ? '' : (
+      '<div class="rounds-strip">' +
+      state.order.map(function(_,i){
+        var cls = "round-chip";
+        if(ended || i < state.roundIdx) cls += " done";
+        if(playing && i === state.roundIdx) cls += " current";
+        return '<div class="'+cls+'">'+(i+1)+'</div>';
+      }).join('') +
+      '</div>'
+    );
+
+    var belowHtml = '';
+    var summaryHtml = '';
+    if(gate){
+      belowHtml = '';
+    } else if(playing && state.revealed && lastRound){
+      summaryHtml =
+        '<div class="card result-panel">' +
+          '<div class="result-metrics">' +
+            '<div class="metric"><span class="label">Distance</span><span class="v tnum">'+fmt(lastRound.distKm)+' km</span></div>' +
+            '<div class="metric"><span class="label">Temps</span><span class="v tnum">'+lastRound.elapsedS.toFixed(1)+' s</span></div>' +
+            '<div class="metric"><span class="label">Précision</span><span class="v tnum">+'+lastRound.score.precision+'</span></div>' +
+            '<div class="metric"><span class="label">Bonus rapidité</span><span class="v tnum">+'+lastRound.score.timeBonus+'</span></div>' +
+            '<div class="metric"><span class="label">Résultat</span><span class="badge '+rl.cls+'">'+rl.text+'</span></div>' +
+          '</div>' +
+          '<div class="label">'+(roundNum < ROUNDS_PER_GAME ? "Manche suivante dans" : "Résultat final dans")+' <span id="cd-num" class="tnum">3</span> s…</div>' +
+        '</div>';
+    } else if(playing){
+      belowHtml = '<p class="hint" id="hint">Clique sur la carte à l\'endroit où tu penses que se trouve ce réseau.</p>';
+    } else {
+      var rows = state.rounds.map(function(r,i){
+        var rl2 = rankLabel(r.distKm);
+        return '<tr>' +
+          '<td class="tnum">'+(i+1)+'</td>' +
+          '<td>'+escapeHtml(r.city.network)+' <span style="color:var(--muted)">— '+escapeHtml(r.city.name)+'</span></td>' +
+          '<td class="tnum">'+fmt(r.distKm)+' km</td>' +
+          '<td class="tnum">'+r.elapsedS.toFixed(1)+' s</td>' +
+          '<td><span class="badge '+rl2.cls+'">'+rl2.text+'</span></td>' +
+          '<td class="tnum">'+r.score.total+'</td>' +
+        '</tr>';
+      }).join('');
+      belowHtml =
+        '<div class="card">' +
+          '<div class="total-line"><span class="label">Score total (sur 13 000)</span><span class="v tnum">'+fmt(state.lastTotal)+'</span></div>' +
+          '<div style="overflow-x:auto; margin-top:10px;">' +
+          '<table class="recap-table"><thead><tr><th style="width:2em;">#</th><th>Réseau</th><th style="width:6em;">Distance</th><th style="width:5em;">Temps</th><th style="width:6em;">Résultat</th><th style="width:4em;">Points</th></tr></thead><tbody>' +
+          rows +
+          '</tbody></table></div>' +
+        '</div>';
+    }
+
+    belowHtml = ended ? '' : belowHtml;
+    summaryHtml = recapCardHtml();
+    var asideHtml = (gate ? baremeHtml() : '') + summaryHtml + leaderboardCard(ended ? {pseudo: state.pseudo, score: state.lastTotal} : null);
 
     app.innerHTML =
-      '<header class="topbar page-head"><div class="brand"><h1>Les Boss</h1><span class="tag">Le classement des meilleurs joueurs</span></div></header>' +
-      reseauSection + arretsSection + citySection;
+      topBar(stats) +
+      '<div class="game-grid">' +
+        '<div class="game-main">' +
+          '<div class="card map-card">' +
+          '<div class="map-card-head">' +
+            promptInner +
+            stripHtml +
+          '</div>' +
+          '<div class="map-wrap'+(gate ? ' inactive' : '')+'">' +
+            '<svg class="map" viewBox="'+GEO.viewBox+'" id="map-svg">' +
+              '<image href="'+GEO.mapImage+'" x="0" y="0" width="1280" height="1230" preserveAspectRatio="xMidYMid slice" />' +
+              '<rect class="clickcatch" id="clickcatch" x="0" y="0" width="1280" height="1230" />' +
+              '<g id="marks"></g>' +
+            '</svg>' +
+            (gate ?
+              '<div class="map-gate-overlay">' +
+                '<span class="label">Bienvenue</span>' +
+                '<span class="network">Entre ton pseudo pour jouer</span>' +
+                '<input type="text" id="pseudo-input" placeholder="Ton pseudo" maxlength="18" autocomplete="off" />' +
+                '<button class="btn-primary" id="start-btn">Jouer</button>' +
+              '</div>'
+            : '') +
+            (showScorePoints ?
+              '<div class="map-score-points '+rl.cls+'">+'+lastRound.score.total+'</div>'
+            : '') +
+            (showScorePoints ? reactionHtml(rl, state.roundIdx) : '') +
+            (fsSupported ? '<button type="button" class="map-fs-btn" id="fs-btn" aria-label="Plein écran" title="Plein écran">' +
+              '<svg class="fs-ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
+              '<svg class="fs-ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>' +
+            '</button>' : '') +
+          '</div>' +
+          '</div>' +
+          '<p class="map-credit">Fond de carte : <a href="https://commons.wikimedia.org/wiki/File:France_relief_location_map.jpg" target="_blank" rel="noopener">Eric Gaba (Wikimedia Commons)</a>, CC BY-SA</p>' +
+          belowHtml +
+        '</div>' +
+        '<div class="game-aside">' + asideHtml + '</div>' +
+      '</div>';
+
+    var svg = document.getElementById("map-svg");
+    var fsBtn = document.getElementById("fs-btn");
+    if(fsBtn) fsBtn.addEventListener("click", toggleFullscreen);
+
+    if(gate){
+      var startBtn = document.getElementById("start-btn");
+      var pseudoInput = document.getElementById("pseudo-input");
+      startBtn.addEventListener("click", function(){
+        var pseudo = (pseudoInput.value || "").trim().slice(0,18) || "Anonyme";
+        newGame(pseudo);
+        render();
+      });
+      pseudoInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ startBtn.click(); }
+      });
+      pseudoInput.focus();
+    } else if(playing && !state.revealed){
+      svg.addEventListener("click", onMapClick);
+      runTimerBar();
+    } else if(playing && state.revealed && lastRound){
+      drawReveal(lastRound);
+      scheduleAdvance(roundNum);
+    } else if(ended){
+      document.getElementById("replay-btn").addEventListener("click", function(){
+        newGame(state.pseudo);
+        render();
+      });
+      document.getElementById("switch-btn").addEventListener("click", function(){
+        state.screen = "gate";
+        state.pseudo = "";
+        render();
+      });
+    }
+
+    function onMapClick(evt){
+      var city = currentCity();
+      var pt = svg.createSVGPoint();
+      var ce = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
+      pt.x = ce.clientX; pt.y = ce.clientY;
+      var loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+      var elapsedS = (performance.now() - state.roundStartTs) / 1000;
+      var distPx = dist(loc.x, loc.y, city.x, city.y);
+      var distKm = distPx * GEO.kmPerPx;
+      var score = scoreRound(distKm, elapsedS);
+      state.rounds.push({
+        city: city,
+        guess: {x: loc.x, y: loc.y},
+        distKm: distKm,
+        elapsedS: elapsedS,
+        score: score
+      });
+      state.revealed = true;
+      cancelTimerBar();
+      svg.removeEventListener("click", onMapClick);
+      render();
+    }
+
+    function runTimerBar(){
+      var fill = document.getElementById("timer-fill");
+      function tick(){
+        if(state.revealed) return;
+        var elapsed = (performance.now() - state.roundStartTs)/1000;
+        var pct = Math.max(0, 1 - elapsed/TIME_LIMIT_S);
+        fill.style.width = (pct*100)+"%";
+        fill.style.background = pct > .4 ? "var(--accent-2)" : (pct > .15 ? "var(--warn)" : "var(--danger)");
+        state.timerRAF = requestAnimationFrame(tick);
+      }
+      tick();
+    }
+    function cancelTimerBar(){
+      if(state.timerRAF) cancelAnimationFrame(state.timerRAF);
+      state.timerRAF = null;
+    }
+
+    function scheduleAdvance(roundNumAtReveal){
+      var secondsLeft = Math.round(ADVANCE_DELAY_MS/1000);
+      clearAdvanceTimers();
+      state.advanceInterval = setInterval(function(){
+        secondsLeft--;
+        var el = document.getElementById("cd-num");
+        if(el) el.textContent = Math.max(secondsLeft, 0);
+      }, 1000);
+      state.advanceTimeout = setTimeout(function(){
+        clearAdvanceTimers();
+        if(roundNumAtReveal < ROUNDS_PER_GAME){
+          state.roundIdx++;
+          startRoundTimer();
+          render();
+        } else {
+          finishGame();
+        }
+      }, ADVANCE_DELAY_MS);
+    }
   }
 
+  function drawReveal(r){
+    var marks = document.getElementById("marks");
+    var svgns = "http://www.w3.org/2000/svg";
+    function el(tag, attrs){
+      var e = document.createElementNS(svgns, tag);
+      for(var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+    [0, 0.18].forEach(function(delay){
+      marks.appendChild(el("circle", {
+        class:"click-ripple", cx:r.guess.x, cy:r.guess.y, r:14, style:"animation-delay:"+delay+"s"
+      }));
+    });
+    marks.appendChild(el("line", {
+      class:"link-line", pathLength:1, x1:r.guess.x, y1:r.guess.y, x2:r.city.x, y2:r.city.y
+    }));
+    marks.appendChild(el("circle", {
+      class:"click-ripple target", cx:r.city.x, cy:r.city.y, r:14
+    }));
+    marks.appendChild(el("circle", {
+      class:"guess-dot", cx:r.guess.x, cy:r.guess.y, r:13
+    }));
+    marks.appendChild(el("circle", {
+      class:"target-dot", cx:r.city.x, cy:r.city.y, r:13
+    }));
+    var t = el("text", {class:"map-label", x:r.city.x + 20, y:r.city.y - 18});
+    t.textContent = r.city.name;
+    marks.appendChild(t);
+  }
+  function finishGame(){
+    var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);
+    state.screen = "end";
+    state.lastTotal = total;
+    render();
+    submitScore(state.pseudo, total);
+    trackEvent("game_completed", "reseau");
+  }
+
+  initLeaderboard();
+  trackEvent("visit", "reseau");
   render();
-  GAMES.forEach(loadTable);
-  trackVisit();
 })();
 </script>
-</body></html>
+</body>
+</html>
