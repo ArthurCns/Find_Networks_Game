@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reseaux de France - Accueil</title>
+<title>Terminus · Tout le monde descend</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%22116%22%20height%3D%22116%22%20rx%3D%2226%22%20fill%3D%22%23FFDE21%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%224%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2250%22%20width%3D%2266%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%230A0A0A%22%2F%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2256%22%20r%3D%2210%22%20fill%3D%22%230A0A0A%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2256%22%20r%3D%2221%22%20fill%3D%22%23FFFFFF%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%226%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="brand/png/terminus-icone-jaune-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#fff8e0;
@@ -122,6 +124,29 @@
     color:var(--ink); padding:2px 12px 10px; margin-bottom:6px;
     border-bottom:var(--bw) solid var(--accent);
   }
+  /* ---------- brand (Terminus logo, see brand/ and design.md) ---------- */
+  .nav-brand{
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    padding:6px 8px 16px; margin-bottom:10px; text-decoration:none; color:var(--ink);
+    border-radius:11px;
+  }
+  .nav-brand:focus-visible{ outline:3px solid var(--accent-2); outline-offset:2px; }
+  .brand-symbol{ width:118px; height:auto; display:block; overflow:visible; transition:transform 200ms var(--ease-out); }
+  .nav-brand:hover .brand-symbol{ transform:translateX(3px); }
+  .bs-bar{ fill:var(--ink); }
+  .bs-stop{ fill:var(--surface); stroke:var(--ink); stroke-width:4; }
+  .bs-shadow{ fill:var(--ink); }
+  .bs-end{ fill:var(--accent); stroke:var(--ink); stroke-width:5; }
+  .brand-word{
+    font-family:"Lexend Mega",system-ui,sans-serif; font-weight:800;
+    font-size:1.32rem; letter-spacing:-.05em; line-height:1; color:var(--ink);
+  }
+  .brand-tagline{
+    font-family:"Public Sans",system-ui,sans-serif; font-weight:900;
+    font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; color:var(--accent-2);
+  }
+  @media (max-width:700px){ .nav-brand{ display:none; } }
+  @media (prefers-reduced-motion: reduce){ .nav-brand:hover .brand-symbol{ transform:none; } }
   .nav-group summary{ list-style:none; cursor:pointer; }
   .nav-group summary::-webkit-details-marker{ display:none; }
   .nav-group-summary{ justify-content:flex-start; }
@@ -493,6 +518,11 @@
   .app.home{ gap:0; padding-block:var(--space-lg) var(--space-2xl); }
 
   /* ---------- heading ---------- */
+  .home-kicker{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.1rem; margin:0; }
+  .home-kicker-logo{ display:flex; align-items:center; gap:.9rem; margin:0; }
+  .home-kicker-logo .brand-symbol{ width:clamp(88px, 60px + 5vw, 132px); }
+  .home-kicker-word{ font-family:var(--font-display); font-weight:800; font-size:clamp(1.9rem, 1.2rem + 2.4vw, 3rem); letter-spacing:-.05em; line-height:1; }
+  .home-kicker-tag{ font-family:var(--font-body); font-weight:900; font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-2); padding-top:.4em; }
   .home-head{ display:flex; flex-direction:column; gap:var(--space-md); max-width:60rem; min-width:0; }
   .home-head h1{ font-size:clamp(1.8rem, 1rem + 3.2vw, 3.5rem); line-height:1.12; overflow-wrap:anywhere; min-width:0; }
   .home-head .accent-underline{
@@ -668,6 +698,11 @@
   }catch(e){}
 </script>
 <nav class="site-nav" aria-label="Navigation principale">
+  <a class="nav-brand" href="index.html" aria-label="Terminus, retour à l'accueil">
+    <svg class="brand-symbol" viewBox="0 0 162 50" aria-hidden="true" focusable="false"><rect class="bs-bar" x="0" y="15" width="146" height="14" rx="7"/><circle class="bs-stop" cx="20" cy="22" r="10"/><circle class="bs-stop" cx="72" cy="22" r="10"/><circle class="bs-shadow" cx="137" cy="25" r="22"/><circle class="bs-end" cx="134" cy="22" r="19.5"/></svg>
+    <span class="brand-word">terminus</span>
+    <span class="brand-tagline">Tout le monde descend</span>
+  </a>
   <div class="nav-menu-label">Menu</div>
   <a class="nav-item is-active" href="index.html" aria-current="page">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-6h4v6"/></svg>
@@ -719,6 +754,7 @@
 </script>
 <main class="app home" id="app">
   <header class="home-head">
+    <div class="home-kicker"><p class="home-kicker-logo"><svg class="brand-symbol" viewBox="0 0 162 50" aria-hidden="true" focusable="false"><rect class="bs-bar" x="0" y="15" width="146" height="14" rx="7"/><circle class="bs-stop" cx="20" cy="22" r="10"/><circle class="bs-stop" cx="72" cy="22" r="10"/><circle class="bs-shadow" cx="137" cy="25" r="22"/><circle class="bs-end" cx="134" cy="22" r="19.5"/></svg><span class="home-kicker-word">terminus</span></p><span class="home-kicker-tag">Tout le monde descend</span></div>
     <h1>Devine <span class="accent-underline">la France</span> des transports</h1>
     <p class="tag">Un jeu de g&#233;ographie en plusieurs manches&#160;: place les r&#233;seaux, les stations de m&#233;tro et les arr&#234;ts de bus sur de vraies cartes, marque des points de pr&#233;cision et de rapidit&#233;, et grimpe dans les classements partag&#233;s.</p>
   </header>
