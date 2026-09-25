@@ -418,7 +418,7 @@
   .m-line{ fill:none; stroke-linecap:round; stroke-linejoin:round; stroke-width:7; }
   .m-line.case{ stroke:var(--m-linecase); stroke-width:12; }
   .map-city-select{
-    position:absolute; left:12px; top:12px; z-index:6;
+    position:absolute; right:12px; top:12px; z-index:6;
     font-family:"Public Sans",sans-serif; font-weight:800; font-size:.9rem; text-transform:uppercase; letter-spacing:.02em;
     padding:.4em .7em; border-radius:9px; border:var(--bw) solid var(--border);
     background:var(--surface); color:var(--ink);
@@ -427,7 +427,9 @@
     transition:transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out);
   }
   .map-city-select:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--border); }
-  .map-city-select:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }  .game-grid{ display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start; }
+  .map-city-select:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }
+  .map-score-points{ top:64px; }  /* below the city picker (top right) */
+  .reaction-toast{ max-width:min(300px, calc(100% - 190px)); }  /* leave room for the city picker */  .game-grid{ display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start; }
   .game-main{ display:flex; flex-direction:column; gap:14px; min-width:0; }
   .recap-card{ padding:16px; }
   .recap-total{ font-family:"Lexend Mega",sans-serif; font-weight:700; font-size:1.4rem; color:var(--ink); }

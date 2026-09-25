@@ -641,7 +641,8 @@
     grid-area:ten; justify-content:space-between;
     background:var(--tile-night); color:var(--tile-night-ink);
   }
-  .ten-num{ margin:0; font-family:var(--font-display); font-weight:700; font-size:clamp(3.2rem, 2.6rem + 2.6vw, 5rem); line-height:.9; color:var(--accent); }
+  .ten-num{ margin:0; font-family:var(--font-display); font-weight:700; font-size:clamp(3.2rem, 2.6rem + 2.6vw, 5rem); line-height:.9; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .ten-num.is-long{ font-size:clamp(2.4rem, 2rem + 1.8vw, 3.6rem); }
   .ten-label{ margin:0; font-weight:800; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; }
   .ten-note{ margin:0; font-weight:600; font-size:.9rem; line-height:1.45; color:color-mix(in oklch, var(--tile-night-ink) 72%, var(--tile-night)); }
 
@@ -832,10 +833,10 @@
         <div class="podium" aria-hidden="true"><span>2</span><span>1</span><span>3</span></div>
       </a>
       <div class="card tile tile-ten">
-        <p class="ten-num">10</p>
+        <p class="ten-num" id="ten-num">10</p>
         <div>
-          <p class="ten-label">manches par partie</p>
-          <p class="ten-note">Chaque manche rapporte des points de pr&#233;cision et de rapidit&#233;.</p>
+          <p class="ten-label" id="ten-label">manches par partie</p>
+          <p class="ten-note" id="ten-note">Chaque manche rapporte des points de pr&#233;cision et de rapidit&#233;.</p>
         </div>
       </div>
       <section class="card tile tile-how" aria-labelledby="how-title">
@@ -871,6 +872,26 @@
       method: "POST",
       headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
       body: JSON.stringify({type: "visit", page: "accueil", city: null})
+    }).catch(function(){});
+    loadGameCount(SUPABASE_REST_URL, SUPABASE_ANON_KEY);
+  }
+  // total games played (all modes): replaces the "10 manches" fallback when available
+  function loadGameCount(rest, key){
+    var num = document.getElementById("ten-num"), label = document.getElementById("ten-label"), note = document.getElementById("ten-note");
+    if(!num) return;
+    fetch(rest + "/rpc/nb_parties_jouees", {
+      method: "POST",
+      headers: { "apikey": key, "Authorization": "Bearer " + key, "Content-Type": "application/json" },
+      body: "{}"
+    }).then(function(r){ return r.ok ? r.json() : null; }).then(function(n){
+      if(n === null || n === "") return;
+      n = Number(n);
+      if(!isFinite(n) || n < 0) return;
+      var txt = n.toLocaleString("fr-FR");
+      num.textContent = txt;
+      if(txt.length > 5) num.classList.add("is-long");
+      label.textContent = n > 1 ? "parties jouées" : "partie jouée";
+      note.textContent = "Au total depuis le lancement, tous jeux confondus : Réseau, Métro et Bus.";
     }).catch(function(){});
   }
 
