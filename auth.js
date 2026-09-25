@@ -54,8 +54,46 @@
 
   function updateNav(){
     var label = document.getElementById("nav-account-label");
-    if(!label) return;
-    label.textContent = (T.state.status === "user" && T.state.pseudo) ? T.state.pseudo : "Connexion";
+    if(label) label.textContent = (T.state.status === "user" && T.state.pseudo) ? "Mon compte" : "Connexion";
+    updateAvatar();
+  }
+
+  // pastille ronde en haut à droite (initiale du pseudo), visible une fois connecté
+  var AVATAR_CSS =
+    ".acct-avatar{position:absolute;top:16px;right:16px;z-index:50;width:46px;height:46px;border-radius:50%;" +
+    "display:flex;align-items:center;justify-content:center;text-decoration:none;" +
+    "font-family:var(--font-display,\"Lexend Mega\",system-ui,sans-serif);font-weight:700;font-size:1.25rem;line-height:1;" +
+    "background:var(--accent,#FFDE21);color:var(--accent-ink,#0a0a0a);" +
+    "border:var(--bw,3px) solid var(--border,#0a0a0a);box-shadow:var(--shadow-sm,3px 3px 0 #0a0a0a);" +
+    "transition:transform 140ms cubic-bezier(.23,1,.32,1),box-shadow 140ms cubic-bezier(.23,1,.32,1);}" +
+    ".acct-avatar:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--border,#0a0a0a);}" +
+    ".acct-avatar:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--border,#0a0a0a);}" +
+    ".acct-avatar:focus-visible{outline:3px solid var(--border,#0a0a0a);outline-offset:3px;}" +
+    "@media (max-width:700px){.acct-avatar{top:12px;right:12px;width:40px;height:40px;font-size:1.05rem;}}" +
+    "@media (prefers-reduced-motion:reduce){.acct-avatar{transition:none;}}";
+
+  function updateAvatar(){
+    if(!document.body) return;
+    var el = document.getElementById("acct-avatar");
+    var pseudo = T.state.status === "user" ? T.state.pseudo : null;
+    if(!pseudo){ if(el) el.remove(); return; }
+    if(!document.getElementById("acct-avatar-css")){
+      var st = document.createElement("style");
+      st.id = "acct-avatar-css";
+      st.textContent = AVATAR_CSS;
+      document.head.appendChild(st);
+    }
+    if(!el){
+      el = document.createElement("a");
+      el.id = "acct-avatar";
+      el.className = "acct-avatar";
+      el.href = "compte.html";
+      document.body.appendChild(el);
+    }
+    el.textContent = (Array.from(pseudo)[0] || "?").toUpperCase();
+    el.title = "Mon compte (" + pseudo + ")";
+    el.setAttribute("aria-label", "Mon compte, connecté en tant que " + pseudo);
+    if(/(^|\/)compte\.html$/.test(location.pathname)) el.setAttribute("aria-current", "page");
   }
 
   if(!window.supabase || !window.supabase.createClient){
