@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+<script defer src="auth.js"></script>
 <style>
   :root{
     --bg:#fff8e0;
@@ -147,6 +149,27 @@
   }
   @media (max-width:700px){ .nav-brand{ display:none; } }
   @media (prefers-reduced-motion: reduce){ .nav-brand:hover .brand-symbol{ transform:none; } }
+  /* ---------- accounts: link buttons, nav account + legal links ---------- */
+  a.btn-primary, a.btn-ghost{
+    display:inline-flex; align-items:center; justify-content:center; text-align:center; text-decoration:none;
+    font-family:"Public Sans",system-ui,sans-serif; font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:.95rem;
+    border-radius:9px; border:var(--bw) solid var(--border); padding:.65em 1.3em; box-shadow:var(--shadow-sm);
+    transition:transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out);
+  }
+  a.btn-primary:hover, a.btn-ghost:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--border); }
+  a.btn-primary:active, a.btn-ghost:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }
+  a.btn-primary:focus-visible, a.btn-ghost:focus-visible{ outline:3px solid var(--accent-2); outline-offset:2px; }
+  .map-gate-overlay a.btn-primary, .map-gate-overlay a.btn-ghost{ width:100%; }
+  .gate-note{ font-size:.8rem; color:var(--muted); line-height:1.35; }
+  #nav-account-label{ overflow:hidden; text-overflow:ellipsis; }
+  .nav-legal{ display:flex; flex-wrap:wrap; gap:2px 10px; padding:10px 12px 0; }
+  .nav-legal a{ font-size:.7rem; font-weight:600; color:var(--muted); text-decoration:none; }
+  .nav-legal a:hover{ color:var(--ink); text-decoration:underline; }
+  @media (max-width:700px){
+    .nav-legal{ display:none; }
+    .nav-theme-btn span{ display:none; }
+    .nav-item{ padding:9px 8px; gap:6px; }
+  }
   .nav-group summary{ list-style:none; cursor:pointer; }
   .nav-group summary::-webkit-details-marker{ display:none; }
   .nav-group-summary{ justify-content:flex-start; }
@@ -574,12 +597,21 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M8 5H4v2a4 4 0 0 0 4 4"/><path d="M16 5h4v2a4 4 0 0 1-4 4"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4l1 4H9l1-4z"/></svg>
     <span>Les Boss</span>
   </a>
+  <a class="nav-item" href="compte.html" id="nav-account">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+    <span id="nav-account-label">Compte</span>
+  </a>
   <div class="nav-spacer"></div>
   <button type="button" class="nav-item nav-theme-btn" id="theme-toggle" aria-label="Changer de thème (clair / sombre)">
     <svg class="theme-ico theme-ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
     <svg class="theme-ico theme-ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.4 6.4 0 0 0 10.5 10.5z"/></svg>
     <span>Thème</span>
   </button>
+  <div class="nav-legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <a href="cgu.html">CGU</a>
+  </div>
 </nav>
 <script>
   try{
@@ -663,6 +695,48 @@
   // Accepts the bare project URL or one that already ends in /rest/v1(/) — either pasted value works.
   var SUPABASE_REST_URL = SUPABASE_URL.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'') + "/rest/v1";
 
+  // ---------------- player accounts (auth.js → window.TerminusAuth) ----------------
+  // Only signed-in players go to the shared leaderboard; the server sets the pseudo from their profile.
+  var AUTH_WAIT_MS = 4000;
+  var authState = {status: "loading"};
+  function watchAuth(){
+    if(window.TerminusAuth){
+      window.TerminusAuth.onChange(function(s){
+        authState = s;
+        if(state.screen === "gate" || state.screen === "end") render();
+      });
+    } else if(performance.now() < AUTH_WAIT_MS){
+      setTimeout(watchAuth, 100);
+    } else {
+      authState = {status: "unavailable"};
+      if(state.screen === "gate") render();
+    }
+  }
+  function signedInPseudo(){ return authState.status === "user" && authState.pseudo ? authState.pseudo : null; }
+  function accountUrl(){ return "compte.html?next=" + encodeURIComponent((location.pathname.split("/").pop() || "index.html") + location.search); }
+  function gateInnerHtml(){
+    var me = signedInPseudo();
+    if(me) return '<span class="label">Bienvenue</span>' +
+      '<span class="network">'+escapeHtml(me)+'</span>' +
+      '<button class="btn-primary" id="start-btn">Jouer</button>' +
+      '<span class="gate-note">Ton score entrera au classement.</span>';
+    if(authState.status === "loading") return '<span class="label">Bienvenue</span>' +
+      '<span class="network">Chargement…</span>';
+    if(authState.status === "unavailable") return '<span class="label">Bienvenue</span>' +
+      '<span class="network">Prêt ?</span>' +
+      '<button class="btn-primary" id="start-btn">Jouer</button>';
+    return '<span class="label">Bienvenue</span>' +
+      '<span class="network">Connecte-toi pour entrer au classement</span>' +
+      '<a class="btn-primary" href="'+accountUrl()+'">Connexion / inscription</a>' +
+      '<button class="btn-ghost" id="start-btn">Jouer sans compte</button>' +
+      '<span class="gate-note">Sans compte, ton score n\'est pas enregistré.</span>';
+  }
+  function endNoteHtml(){
+    if(state.saveError) return '<div class="rules"><b style="color:var(--danger);">Ton score n\'a pas pu être enregistré.</b> Vérifie ta connexion puis rejoue.</div>';
+    if(!signedInPseudo() && dbStatus === "shared") return '<div class="rules">Score non enregistré : <a href="'+accountUrl()+'">crée un compte</a> pour entrer au classement.</div>';
+    return '';
+  }
+
   var dbStatus = "connecting";  // "connecting" | "shared" | "local"
   var scoresCache = [];         // always the current top LEADERBOARD_SIZE, freshest first
 
@@ -716,25 +790,31 @@
 
   // Writes the score, then refreshes the leaderboard (or falls back to local storage).
   function submitScore(pseudo, score){
+    // guests: the score is only shown on screen (the shared leaderboard needs an account)
+    if(dbStatus === "shared" && !signedInPseudo()) return;
     if(dbStatus !== "shared"){
       scoresCache = addLocalScore(pseudo, score);
       render();
       return;
     }
-    fetch(SUPABASE_REST_URL + "/scores_metro", {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify({pseudo: pseudo, score: score, city: CITY_KEY})
+    window.TerminusAuth.getToken().then(function(token){
+      if(!token) throw new Error("no session");
+      // pseudo is overwritten server-side with the account's pseudo
+      return fetch(SUPABASE_REST_URL + "/scores_metro", {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({pseudo: pseudo, score: score, city: CITY_KEY})
+      });
     }).then(function(r){
       if(!r.ok) throw new Error("supabase insert failed");
       loadLeaderboard();
     }).catch(function(){
-      scoresCache = addLocalScore(pseudo, score);
+      state.saveError = true;
       render();
     });
   }
@@ -806,6 +886,7 @@
   function newGame(pseudo){
     clearAdvanceTimers();
     state.pseudo = pseudo;
+    state.saveError = false;
     state.order = shuffle(CITIES.map(function(_,i){return i;})).slice(0, ROUNDS_PER_GAME);
     state.roundIdx = 0;
     state.rounds = [];
@@ -1038,10 +1119,11 @@
           '</div>' +
           '<div class="row">' +
             '<button class="btn-primary" id="replay-btn">Rejouer</button>' +
-            '<button class="btn-ghost" id="switch-btn">Changer de pseudo</button>' +
+            (signedInPseudo() ? '' : '<a class="btn-ghost" href="'+accountUrl()+'">Créer un compte</a>') +
           '</div>' +
         '</div>' +
-        (isTop ? '<div class="rules"><b style="color:var(--success);">Nouveau meilleur score du classement !</b></div>' : '');
+        (isTop ? '<div class="rules"><b style="color:var(--success);">Nouveau meilleur score du classement !</b></div>' : '') +
+        endNoteHtml();
     }
 
     var stripHtml = gate ? '' : (
@@ -1116,10 +1198,7 @@
             '</svg>' +
             (gate ?
               '<div class="map-gate-overlay">' +
-                '<span class="label">Bienvenue</span>' +
-                '<span class="network">Entre ton pseudo pour jouer</span>' +
-                '<input type="text" id="pseudo-input" placeholder="Ton pseudo" maxlength="18" autocomplete="off" />' +
-                '<button class="btn-primary" id="start-btn">Jouer</button>' +
+                gateInnerHtml() +
               '</div>'
             : '') +
             (showScorePoints ?
@@ -1147,16 +1226,13 @@
 
     if(gate){
       var startBtn = document.getElementById("start-btn");
-      var pseudoInput = document.getElementById("pseudo-input");
-      startBtn.addEventListener("click", function(){
-        var pseudo = (pseudoInput.value || "").trim().slice(0,18) || "Anonyme";
-        newGame(pseudo);
-        render();
-      });
-      pseudoInput.addEventListener("keydown", function(e){
-        if(e.key === "Enter"){ startBtn.click(); }
-      });
-      pseudoInput.focus();
+      if(startBtn){
+        startBtn.addEventListener("click", function(){
+          newGame(signedInPseudo() || "Invité");
+          render();
+        });
+        if(signedInPseudo()) startBtn.focus({preventScroll: true});
+      }
     } else if(playing && !state.revealed){
       svg.addEventListener("click", onMapClick);
       runTimerBar();
@@ -1165,12 +1241,7 @@
       scheduleAdvance(roundNum);
     } else if(ended){
       document.getElementById("replay-btn").addEventListener("click", function(){
-        newGame(state.pseudo);
-        render();
-      });
-      document.getElementById("switch-btn").addEventListener("click", function(){
-        state.screen = "gate";
-        state.pseudo = "";
+        newGame(signedInPseudo() || "Invité");
         render();
       });
     }
@@ -1274,6 +1345,7 @@
     trackEvent("game_completed", "metro", CITY_KEY);
   }
 
+  watchAuth();
   initLeaderboard();
   trackEvent("visit", "metro");
   render();

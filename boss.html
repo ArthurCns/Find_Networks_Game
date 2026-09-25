@@ -6,6 +6,8 @@
 <title>Les Boss · Terminus</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%22116%22%20height%3D%22116%22%20rx%3D%2226%22%20fill%3D%22%23FFDE21%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%224%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2250%22%20width%3D%2266%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%230A0A0A%22%2F%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2256%22%20r%3D%2210%22%20fill%3D%22%230A0A0A%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2256%22%20r%3D%2221%22%20fill%3D%22%23FFFFFF%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%226%22%2F%3E%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="brand/png/terminus-icone-jaune-180.png">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+<script defer src="auth.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend+Mega:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -147,6 +149,27 @@
   }
   @media (max-width:700px){ .nav-brand{ display:none; } }
   @media (prefers-reduced-motion: reduce){ .nav-brand:hover .brand-symbol{ transform:none; } }
+  /* ---------- accounts: link buttons, nav account + legal links ---------- */
+  a.btn-primary, a.btn-ghost{
+    display:inline-flex; align-items:center; justify-content:center; text-align:center; text-decoration:none;
+    font-family:"Public Sans",system-ui,sans-serif; font-weight:800; letter-spacing:.02em; text-transform:uppercase; font-size:.95rem;
+    border-radius:9px; border:var(--bw) solid var(--border); padding:.65em 1.3em; box-shadow:var(--shadow-sm);
+    transition:transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out);
+  }
+  a.btn-primary:hover, a.btn-ghost:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--border); }
+  a.btn-primary:active, a.btn-ghost:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }
+  a.btn-primary:focus-visible, a.btn-ghost:focus-visible{ outline:3px solid var(--accent-2); outline-offset:2px; }
+  .map-gate-overlay a.btn-primary, .map-gate-overlay a.btn-ghost{ width:100%; }
+  .gate-note{ font-size:.8rem; color:var(--muted); line-height:1.35; }
+  #nav-account-label{ overflow:hidden; text-overflow:ellipsis; }
+  .nav-legal{ display:flex; flex-wrap:wrap; gap:2px 10px; padding:10px 12px 0; }
+  .nav-legal a{ font-size:.7rem; font-weight:600; color:var(--muted); text-decoration:none; }
+  .nav-legal a:hover{ color:var(--ink); text-decoration:underline; }
+  @media (max-width:700px){
+    .nav-legal{ display:none; }
+    .nav-theme-btn span{ display:none; }
+    .nav-item{ padding:9px 8px; gap:6px; }
+  }
   .nav-group summary{ list-style:none; cursor:pointer; }
   .nav-group summary::-webkit-details-marker{ display:none; }
   .nav-group-summary{ justify-content:flex-start; }
@@ -646,12 +669,21 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M8 5H4v2a4 4 0 0 0 4 4"/><path d="M16 5h4v2a4 4 0 0 1-4 4"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4l1 4H9l1-4z"/></svg>
     <span>Les Boss</span>
   </a>
+  <a class="nav-item" href="compte.html" id="nav-account">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+    <span id="nav-account-label">Compte</span>
+  </a>
   <div class="nav-spacer"></div>
   <button type="button" class="nav-item nav-theme-btn" id="theme-toggle" aria-label="Changer de thème (clair / sombre)">
     <svg class="theme-ico theme-ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>
     <svg class="theme-ico theme-ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.4 6.4 0 0 0 10.5 10.5z"/></svg>
     <span>Thème</span>
   </button>
+  <div class="nav-legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <a href="cgu.html">CGU</a>
+  </div>
 </nav>
 <script>
   try{

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Terminus · Tout le monde descend</title>
+<title>Conditions d’utilisation · Terminus</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%22116%22%20height%3D%22116%22%20rx%3D%2226%22%20fill%3D%22%23FFDE21%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%224%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2250%22%20width%3D%2266%22%20height%3D%2212%22%20rx%3D%226%22%20fill%3D%22%230A0A0A%22%2F%3E%3Ccircle%20cx%3D%2224%22%20cy%3D%2256%22%20r%3D%2210%22%20fill%3D%22%230A0A0A%22%2F%3E%3Ccircle%20cx%3D%2282%22%20cy%3D%2256%22%20r%3D%2221%22%20fill%3D%22%23FFFFFF%22%20stroke%3D%22%230A0A0A%22%20stroke-width%3D%226%22%2F%3E%3C%2Fsvg%3E">
 <link rel="apple-touch-icon" href="brand/png/terminus-icone-jaune-180.png">
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
@@ -525,192 +525,73 @@
     .page-head .stat{ padding:8px 14px; }
     .page-head .stat .v{ font-size:1.1rem; }
   }
-  /* Hallmark · genre: playful · macrostructure: Bento Grid · theme: brand-locked (cream paper · #FFDE21 yellow · ink borders · Lexend Mega + Public Sans)
-   * enrichment: Tier B hand-built SVG (France outline from france_projected.json) + Tier A CSS podium · nav: N3 side-rail (shared, untouched) · footer: none
-   * pre-emit critique: P4 H5 E4 S5 R4 V4 */
   :root{
     --font-display:"Lexend Mega",system-ui,sans-serif;
     --font-body:"Public Sans",system-ui,sans-serif;
-    --space-2xs:.5rem; --space-xs:.75rem; --space-sm:1rem; --space-md:1.5rem;
-    --space-lg:2rem; --space-xl:3rem; --space-2xl:4.5rem;
-    --bento-gap:var(--space-md);
-    --tile-night:oklch(17% 0.01 95);
-    --tile-night-ink:oklch(96% 0.03 95);
   }
+  .app.page{ gap:24px; padding-block:12px 64px; }
+  .page-head h1{ font-size:clamp(1.6rem, 1rem + 2.2vw, 2.4rem); line-height:1.15; }
+  .page-head .tag{ margin-top:8px; display:block; }
 
-  .app.home{ gap:0; padding-block:var(--space-lg) var(--space-2xl); }
-
-  /* ---------- heading ---------- */
-  .home-kicker{ display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.1rem; margin:0; }
-  .home-kicker-logo{ display:flex; align-items:center; gap:.9rem; margin:0; }
-  .home-kicker-logo .brand-symbol{ width:clamp(88px, 60px + 5vw, 132px); }
-  .home-kicker-word{ font-family:var(--font-display); font-weight:800; font-size:clamp(1.9rem, 1.2rem + 2.4vw, 3rem); letter-spacing:-.05em; line-height:1; }
-  .home-kicker-tag{ font-family:var(--font-body); font-weight:900; font-size:.78rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-2); padding-top:.4em; }
-  .home-head{ display:flex; flex-direction:column; gap:var(--space-md); max-width:60rem; min-width:0; }
-  .home-head h1{ font-size:clamp(1.8rem, 1rem + 3.2vw, 3.5rem); line-height:1.12; overflow-wrap:anywhere; min-width:0; }
-  .home-head .accent-underline{
-    background:var(--accent); color:var(--accent-ink); padding:0 .14em;
-    box-shadow:4px 4px 0 var(--border);
-    -webkit-box-decoration-break:clone; box-decoration-break:clone;
+  /* ---------- account ---------- */
+  .acct{ display:flex; flex-direction:column; gap:20px; max-width:680px; width:100%; }
+  .acct-card{
+    background:var(--surface); border:var(--bw) solid var(--border); border-radius:14px;
+    box-shadow:5px 5px 0 var(--border); padding:24px;
+    display:flex; flex-direction:column; gap:14px; min-width:0;
   }
-  .home-head .tag{ margin:0; font-size:1.08rem; line-height:1.55; color:var(--muted); font-weight:600; max-width:58ch; }
-
-  /* ---------- bento ---------- */
-  .bento-wrap{ margin-top:var(--space-xl); container-type:inline-size; }
-  .bento{
-    display:grid; gap:var(--bento-gap);
-    grid-template-columns:repeat(6, minmax(0,1fr));
-    grid-template-areas:
-      "res  res  res  res  arr  arr"
-      "res  res  res  res  arr  arr"
-      "boss boss ten  ten  arr  arr"
-      "how  how  how  how  how  how";
-  }
-  .tile{
-    position:relative; min-width:0;
-    display:flex; flex-direction:column; gap:var(--space-sm);
-    padding:var(--space-lg);
-    color:var(--ink); text-decoration:none;
-  }
-  a.tile{ transition:transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out); }
-  a.tile:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }
-  a.tile:focus-visible{ outline:3px solid var(--accent-2); outline-offset:4px; }
-  .tile-name{ font-size:clamp(1.25rem, 1.05rem + .7vw, 1.8rem); line-height:1.15; }
-  .tile-desc{ margin:0; color:var(--muted); font-weight:600; font-size:.98rem; line-height:1.5; max-width:36ch; }
-  .tile-cta{
-    display:inline-flex; align-items:center; gap:6px; margin-top:auto; padding-top:var(--space-2xs);
-    font-family:var(--font-body); font-weight:800; font-size:.82rem;
-    letter-spacing:.04em; text-transform:uppercase; white-space:nowrap;
-    text-decoration:underline; text-decoration-color:var(--accent);
-    text-decoration-thickness:3px; text-underline-offset:5px;
-  }
-  .tile-cta svg{ width:16px; height:16px; transition:transform 160ms var(--ease-out); }
-
-  /* Reseau: big tile with the France map */
-  .tile-reseau{
-    grid-area:res; min-height:360px;
-    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:var(--space-lg); align-items:stretch;
-  }
-  .tile-copy{ display:flex; flex-direction:column; gap:var(--space-sm); min-width:0; }
-  .reseau-map{ display:block; width:100%; height:auto; max-height:340px; align-self:center; overflow:visible; }
-  .map-land{ fill:var(--surface-2); stroke:var(--border); stroke-width:3; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
-  .map-city{
-    fill:var(--surface); stroke:var(--border); stroke-width:2.5; vector-effect:non-scaling-stroke;
-    transform-box:fill-box; transform-origin:center;
-    transition:transform 220ms var(--ease-out);
-  }
-  .map-city.is-arrets{ fill:var(--accent); }
-
-  /* Arrets: tall yellow tile, city picker */
-  .tile-arrets{ grid-area:arr; background:var(--accent); color:var(--accent-ink); }
-  .tile-arrets .tile-desc{ color:var(--accent-ink); }
-  .arrets-groups{ display:flex; flex-direction:column; gap:var(--space-md); margin-top:auto; padding-top:var(--space-sm); }
-  .arrets-group{ display:flex; flex-direction:column; gap:var(--space-2xs); }
-  .city-btns{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--space-2xs); }
-  .arrets-mode{ font-weight:800; font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; }
-  .city-btn{
-    display:flex; align-items:center; justify-content:space-between; gap:var(--space-xs);
-    min-width:0; min-height:44px; padding:.6em .8em;
+  .acct-card h2{ font-size:1.3rem; margin:0; overflow-wrap:anywhere; }
+  .acct-card h3{ font-size:1rem; margin:0; }
+  .acct-card p{ margin:0; line-height:1.5; }
+  .acct-tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+  .acct-tabs button{ flex:1 1 0; }
+  .acct-tabs button[aria-selected="true"]{ background:var(--accent); color:var(--accent-ink); }
+  .acct form{ display:flex; flex-direction:column; gap:12px; margin:0; }
+  .acct label.field{ display:flex; flex-direction:column; gap:6px; font-weight:800; font-size:.9rem; }
+  .acct input[type="text"], .acct input[type="email"], .acct input[type="password"]{
+    font-family:var(--font-body); font-weight:600; font-size:1rem; width:100%;
+    padding:.65em .9em; border-radius:9px; border:var(--bw) solid var(--border);
     background:var(--surface); color:var(--ink);
-    border:var(--bw) solid var(--border); border-radius:9px; box-shadow:var(--shadow-sm);
-    font-weight:800; font-size:.95rem; text-decoration:none; white-space:nowrap;
-    transition:transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out);
   }
-  .city-btn span{ overflow:hidden; text-overflow:ellipsis; }
-  .city-btn svg{ width:16px; height:16px; flex:none; transition:transform 140ms var(--ease-out); }
-  .city-btn:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--border); }
-  .city-btn:focus-visible{ outline:3px solid var(--accent-2); outline-offset:2px; }
+  .acct input:focus-visible{ outline:3px solid var(--accent-2); outline-offset:2px; }
+  .field-hint{ font-size:.8rem; font-weight:600; color:var(--muted); }
+  .field-hint.ok{ color:var(--success); }
+  .field-hint.bad{ color:var(--danger); }
+  .acct label.check{ display:flex; gap:10px; align-items:flex-start; font-size:.88rem; line-height:1.45; font-weight:500; }
+  .acct label.check input{ width:20px; height:20px; flex:none; margin-top:1px; accent-color:var(--accent-2); }
+  .acct a{ color:inherit; text-decoration-color:var(--accent); text-decoration-thickness:3px; text-underline-offset:3px; }
+  .form-msg{ font-size:.88rem; font-weight:700; min-height:1.2em; }
+  .form-msg.err{ color:var(--danger); }
+  .form-msg.ok{ color:var(--success); }
+  .flash{ border:var(--bw) solid var(--border); border-radius:11px; padding:12px 14px; font-weight:700; background:var(--surface-2); color:var(--ink); }
+  .flash.err{ background:var(--surface); border-color:var(--danger); }
+  .link-btn{ background:none; border:none; box-shadow:none; padding:0; text-transform:none; letter-spacing:0; font-weight:700; font-size:.88rem; text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:3px; text-underline-offset:3px; align-self:flex-start; }
+  .link-btn:hover, .link-btn:active{ transform:none; box-shadow:none; }
+  .acct-info{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px 16px; margin:0; font-size:.92rem; }
+  .acct-info dt{ font-weight:800; }
+  .acct-info dd{ margin:0; overflow-wrap:anywhere; }
+  .acct-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .acct-scores{ width:100%; border-collapse:collapse; font-size:.9rem; }
+  .acct-scores th{ text-align:left; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); padding:6px 4px; border-bottom:var(--bw) solid var(--border); }
+  .acct-scores td{ padding:7px 4px; border-bottom:1px solid var(--line); }
+  .acct-scores td.tnum{ text-align:right; font-weight:800; }
+  .btn-danger{ background:var(--surface); color:var(--danger); border-color:var(--danger); }
+  .acct-danger{ border-color:var(--danger); box-shadow:5px 5px 0 var(--danger); }
+  .acct-foot{ font-size:.8rem; color:var(--muted); line-height:1.5; }
 
-  /* Boss: podium */
-  .tile-boss{ grid-area:boss; display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:var(--space-md); align-items:end; }
-  .tile-boss .tile-copy{ align-self:stretch; }
-  .podium{ display:flex; align-items:flex-end; gap:4px; padding-inline:2px; border-bottom:var(--bw) solid var(--border); }
-  .podium span{
-    display:flex; justify-content:center; width:28px; padding-top:4px;
-    border:var(--bw) solid var(--border); border-bottom:none; border-radius:5px 5px 0 0;
-    background:var(--surface-2); color:var(--ink);
-    font-family:var(--font-display); font-weight:700; font-size:.8rem;
-    transform-origin:bottom center; transition:transform 200ms var(--ease-out);
-  }
-  .podium span:nth-child(1){ height:46px; }
-  .podium span:nth-child(2){ height:70px; background:var(--accent); color:var(--accent-ink); }
-  .podium span:nth-child(3){ height:32px; }
-
-  /* 10 manches: fixed night tile */
-  .tile-ten{
-    grid-area:ten; justify-content:space-between;
-    background:var(--tile-night); color:var(--tile-night-ink);
-  }
-  .ten-num{ margin:0; font-family:var(--font-display); font-weight:700; font-size:clamp(3.2rem, 2.6rem + 2.6vw, 5rem); line-height:.9; color:var(--accent); }
-  .ten-label{ margin:0; font-weight:800; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; }
-  .ten-note{ margin:0; font-weight:600; font-size:.9rem; line-height:1.45; color:color-mix(in oklch, var(--tile-night-ink) 72%, var(--tile-night)); }
-
-  /* How it works: full-width strip */
-  .tile-how{ grid-area:how; gap:var(--space-md); }
-  .tile-how h2{ font-size:1.15rem; }
-  .steps{
-    list-style:none; margin:0; padding:0; counter-reset:step;
-    display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:var(--space-md) var(--space-lg);
-  }
-  .steps li{
-    counter-increment:step;
-    display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:var(--space-sm); align-items:start;
-    color:var(--muted); font-weight:600; font-size:.95rem; line-height:1.5;
-  }
-  .steps li::before{
-    content:counter(step);
-    display:flex; align-items:center; justify-content:center;
-    width:36px; height:36px; border-radius:50%;
-    background:var(--accent); color:var(--accent-ink); border:var(--bw) solid var(--border);
-    font-family:var(--font-display); font-weight:700; font-size:.95rem;
-  }
-  .steps li b{ color:var(--ink); }
-
-  @media (hover:hover){
-    a.tile:hover{ transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--border); }
-    a.tile:hover .tile-cta svg{ transform:translateX(3px); }
-    .tile-reseau:hover .map-city{ transform:scale(1.35); }
-    .tile-boss:hover .podium span:nth-child(2){ transform:scaleY(1.12); }
-    .city-btn:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--border); }
-    .city-btn:hover svg{ transform:translateX(3px); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    a.tile, .tile-cta svg, .map-city, .podium span, .city-btn, .city-btn svg{ transition:none; }
-  }
-
-  /* ---------- container breakpoints ---------- */
-  @container (max-width: 900px){
-    .bento{
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      grid-template-areas:
-        "res  res"
-        "arr  boss"
-        "arr  ten"
-        "how  how";
-    }
-  }
-  @container (max-width: 600px){
-    .bento{
-      grid-template-columns:minmax(0,1fr);
-      grid-template-areas: "res" "arr" "boss" "ten" "how";
-    }
-    .tile-reseau{ grid-template-columns:minmax(0,1fr); min-height:0; }
-    .reseau-map{ max-width:280px; justify-self:center; }
-    .tile-boss{ grid-template-columns:minmax(0,1fr); row-gap:var(--space-sm); }
-    .tile-boss .podium{ order:-1; justify-self:start; }
-    .steps{ grid-template-columns:minmax(0,1fr); }
-  }
-
-  @media (max-width:400px){
-    .city-btn{ padding:.6em .7em; }
-    .city-btn svg{ display:none; }
-  }
-  @media (max-width:700px){
-    :root{ --bento-gap:var(--space-sm); }
-    .app.home{ padding-block:var(--space-sm) var(--space-xl); }
-    .bento-wrap{ margin-top:var(--space-lg); }
-    .tile{ padding:var(--space-md); }
-  }
+  /* ---------- legal ---------- */
+  .legal{ max-width:760px; width:100%; background:var(--surface); border:var(--bw) solid var(--border); border-radius:14px; box-shadow:5px 5px 0 var(--border); padding:clamp(20px, 3vw, 36px); line-height:1.6; }
+  .legal h2{ font-size:1.1rem; margin:1.8em 0 .5em; }
+  .legal h2:first-child{ margin-top:0; }
+  .legal p, .legal ul{ margin:.5em 0; }
+  .legal li{ margin:.25em 0; }
+  .legal a{ color:inherit; text-decoration-color:var(--accent); text-decoration-thickness:3px; text-underline-offset:3px; }
+  .legal table{ width:100%; border-collapse:collapse; font-size:.9rem; margin:.6em 0; }
+  .legal th, .legal td{ text-align:left; vertical-align:top; padding:8px 6px; border-bottom:1px solid var(--line); }
+  .legal th{ font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); border-bottom:var(--bw) solid var(--border); }
+  .legal .updated{ color:var(--muted); font-size:.85rem; }
+  mark.todo{ background:var(--accent); color:var(--accent-ink); padding:0 .25em; font-weight:700; }
+  @media (max-width:700px){ .legal table, .legal thead, .legal tbody, .legal tr, .legal th, .legal td{ display:block; } .legal thead{ display:none; } .legal td{ border-bottom:none; padding:2px 0; } .legal tr{ border-bottom:1px solid var(--line); padding:8px 0; } }
 </style>
 </head>
 <body>
@@ -727,7 +608,7 @@
     <span class="brand-tagline">Tout le monde descend</span>
   </a>
   <div class="nav-menu-label">Menu</div>
-  <a class="nav-item is-active" href="index.html" aria-current="page">
+  <a class="nav-item" href="index.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-6h4v6"/></svg>
     <span>Accueil</span>
   </a>
@@ -784,72 +665,56 @@
     }
   }catch(e){}
 </script>
-<main class="app home" id="app">
-  <header class="home-head">
-    <div class="home-kicker"><p class="home-kicker-logo"><svg class="brand-symbol" viewBox="0 0 162 50" aria-hidden="true" focusable="false"><rect class="bs-bar" x="0" y="15" width="146" height="14" rx="7"/><circle class="bs-stop" cx="20" cy="22" r="10"/><circle class="bs-stop" cx="72" cy="22" r="10"/><circle class="bs-shadow" cx="137" cy="25" r="22"/><circle class="bs-end" cx="134" cy="22" r="19.5"/></svg><span class="home-kicker-word">terminus</span></p><span class="home-kicker-tag">Tout le monde descend</span></div>
-    <h1>Devine <span class="accent-underline">la France</span> des transports</h1>
-    <p class="tag">Un jeu de g&#233;ographie en plusieurs manches&#160;: place les r&#233;seaux, les stations de m&#233;tro et les arr&#234;ts de bus sur de vraies cartes, marque des points de pr&#233;cision et de rapidit&#233;, et grimpe dans les classements partag&#233;s.</p>
+<main class="app page">
+  <header class="page-head">
+    <h1>Conditions d’utilisation</h1>
+    <span class="tag">Les règles du jeu, au sens propre.</span>
   </header>
-  <div class="bento-wrap">
-    <div class="bento">
-      <a class="card tile tile-reseau" href="reseau.html">
-        <div class="tile-copy">
-          <h2 class="tile-name">R&#233;seau</h2>
-          <p class="tile-desc">Place les plus grands r&#233;seaux de transport en commun de France sur la carte, contre la montre.</p>
-          <span class="tile-cta">Jouer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </div>
-        <svg class="reseau-map" viewBox="0 0 760 760" aria-hidden="true" focusable="false"><path class="map-land" d="M 433.52,76.72 L 468.79,111.47 L 494.74,105.73 L 538.96,139.33 L 550.27,145.73 L 564.85,144.17 L 588.71,163.47 L 661.55,177.05 L 635.99,227.52 L 629.58,280.03 L 615.70,292.62 L 592.67,285.84 L 594.29,304.57 L 557.32,345.98 L 556.58,379.36 L 580.71,367.81 L 598.08,400.13 L 595.99,420.96 L 610.87,448.63 L 593.34,471.08 L 606.37,528.11 L 633.76,537.46 L 627.98,569.46 L 582.19,611.10 L 482.49,591.14 L 408.86,615.05 L 403.08,659.44 L 344.48,668.99 L 287.60,635.65 L 269.23,651.59 L 176.18,618.09 L 156.03,589.43 L 182.17,545.22 L 191.79,398.38 L 139.63,321.03 L 102.35,283.73 L 25.10,255.38 L 20.00,201.64 L 85.54,185.60 L 170.43,204.57 L 154.40,121.14 L 202.12,152.75 L 319.81,95.28 L 334.99,34.88 L 379.20,20 L 386.52,45.92 L 410.02,47.13 L 433.52,76.72 Z"/><path class="map-land" d="M 735.39,683.06 L 718.70,740.00 L 695.74,724.99 L 684.04,675.40 L 694.24,648.01 L 726.80,619.86 L 735.39,683.06 Z"/><circle class="map-city" cx="307.71" cy="145.7" r="10"/><circle class="map-city" cx="551.79" cy="611.44" r="10"/><circle class="map-city" cx="448.1" cy="575.58" r="10"/><circle class="map-city" cx="541.51" cy="459.29" r="10"/><circle class="map-city" cx="473.91" cy="440.78" r="10"/><circle class="map-city" cx="564.32" cy="169.57" r="10"/><circle class="map-city" cx="506.98" cy="302.04" r="10"/><circle class="map-city" cx="564.76" cy="201.05" r="10"/><circle class="map-city" cx="455.94" cy="159.32" r="10"/><circle class="map-city" cx="257.59" cy="141.92" r="10"/><circle class="map-city" cx="222.86" cy="485.14" r="10"/><circle class="map-city" cx="619.23" cy="568.25" r="10"/><circle class="map-city" cx="173.61" cy="309.67" r="10"/><circle class="map-city" cx="325.14" cy="576.03" r="10"/><circle class="map-city" cx="644" cy="209.8" r="10"/><circle class="map-city is-arrets" cx="496.58" cy="416.87" r="17"/><circle class="map-city is-arrets" cx="371.04" cy="188.93" r="17"/><circle class="map-city is-arrets" cx="167.33" cy="243.42" r="17"/><circle class="map-city is-arrets" cx="406.68" cy="58.28" r="17"/><circle class="map-city is-arrets" cx="523.58" cy="598.74" r="17"/></svg>
-      </a>
-      <section class="card tile tile-arrets" aria-labelledby="arrets-title">
-        <h2 class="tile-name" id="arrets-title">Arr&#234;ts</h2>
-        <p class="tile-desc">Retrouve les stations de m&#233;tro ou les arr&#234;ts de bus, ville par ville.</p>
-        <div class="arrets-groups">
-          <div class="arrets-group">
-            <span class="arrets-mode">M&#233;tro</span>
-            <div class="city-btns">
-              <a class="city-btn" href="metro.html?city=rennes" aria-label="M&#233;tro de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              <a class="city-btn" href="metro.html?city=paris" aria-label="M&#233;tro de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              <a class="city-btn" href="metro.html?city=lille" aria-label="M&#233;tro de Lille"><span>Lille</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              <a class="city-btn" href="metro.html?city=lyon" aria-label="M&#233;tro de Lyon"><span>Lyon</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              <a class="city-btn" href="metro.html?city=marseille" aria-label="M&#233;tro de Marseille"><span>Marseille</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-          <div class="arrets-group">
-            <span class="arrets-mode">Bus</span>
-            <div class="city-btns">
-              <a class="city-btn" href="arrets.html?city=rennes" aria-label="Bus de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-              <a class="city-btn" href="arrets.html?city=paris" aria-label="Bus de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            </div>
-          </div>
-        </div>
-      </section>
-      <a class="card tile tile-boss" href="boss.html">
-        <div class="tile-copy">
-          <h2 class="tile-name">Les Boss</h2>
-          <p class="tile-desc">Consulte les meilleurs scores et d&#233;couvre qui r&#232;gne sur chaque ville.</p>
-          <span class="tile-cta">Voir le classement <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </div>
-        <div class="podium" aria-hidden="true"><span>2</span><span>1</span><span>3</span></div>
-      </a>
-      <div class="card tile tile-ten">
-        <p class="ten-num">10</p>
-        <div>
-          <p class="ten-label">manches par partie</p>
-          <p class="ten-note">Chaque manche rapporte des points de pr&#233;cision et de rapidit&#233;.</p>
-        </div>
-      </div>
-      <section class="card tile tile-how" aria-labelledby="how-title">
-        <h2 id="how-title">Comment &#231;a marche</h2>
-        <ol class="steps">
-          <li><span><b>Choisis un jeu</b> &#8212; r&#233;seaux nationaux, m&#233;tro ou bus d'une ville.</span></li>
-          <li><span><b>Place ta r&#233;ponse</b> sur la carte le plus vite et le plus pr&#233;cis&#233;ment possible, sur 10 manches.</span></li>
-          <li><span><b>Compare ton score</b> au classement partag&#233; et retrouve-toi dans &#171;&#160;Les Boss&#160;&#187;.</span></li>
-        </ol>
-      </section>
-    </div>
-  </div>
-</main>
+  <article class="legal">
+    <p class="updated">Version du 24 septembre 2026.</p>
 
+    <h2>1. Objet</h2>
+    <p>Les présentes conditions encadrent l’utilisation du site Terminus, un jeu de géographie des transports gratuit édité par <mark class='todo'>[À compléter : prénom et nom de l’éditeur]</mark> (voir les <a href="mentions-legales.html">mentions légales</a>). Créer un compte implique de les accepter.</p>
+
+    <h2>2. Accès au jeu</h2>
+    <p>Le jeu est gratuit et accessible sans compte. Un compte est nécessaire uniquement pour enregistrer ses scores dans les classements partagés. Le service est fourni «&#160;en l’état&#160;», sans garantie de disponibilité permanente&#160;; l’éditeur peut le faire évoluer, l’interrompre ou y mettre fin.</p>
+
+    <h2>3. Compte</h2>
+    <ul>
+      <li>Il faut avoir 15 ans ou plus, ou l’accord d’un parent ou du représentant légal.</li>
+      <li>Un seul compte par personne, avec une adresse e-mail valide dont tu es titulaire.</li>
+      <li>Tu es responsable de la confidentialité de ton mot de passe et des actions faites depuis ton compte.</li>
+      <li>Tu peux supprimer ton compte à tout moment depuis <a href="compte.html">Mon compte</a>&#160;; tes scores sont alors effacés.</li>
+    </ul>
+
+    <h2>4. Pseudo</h2>
+    <p>Chaque pseudo est unique et visible publiquement. Sont interdits les pseudos&#160;:</p>
+    <ul>
+      <li>injurieux, haineux, discriminatoires, violents, à caractère sexuel ou contraires à la loi&#160;;</li>
+      <li>usurpant l’identité d’une autre personne, de l’éditeur ou d’une organisation&#160;;</li>
+      <li>contenant des données personnelles (nom complet, adresse, téléphone…) ou de la publicité.</li>
+    </ul>
+    <p>L’éditeur peut modifier ou supprimer un pseudo qui ne respecte pas ces règles, et suspendre le compte concerné en cas de récidive.</p>
+
+    <h2>5. Fair-play</h2>
+    <p>Il est interdit de fausser les classements&#160;: modification du code du jeu, envoi automatisé ou manuel de scores falsifiés, exploitation de failles, comptes multiples. Les scores manifestement frauduleux peuvent être supprimés et le compte fermé.</p>
+
+    <h2>6. Données personnelles</h2>
+    <p>Leur traitement est décrit dans la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+
+    <h2>7. Propriété intellectuelle</h2>
+    <p>Le jeu, son nom, son logo et son code appartiennent à l’éditeur. Les données cartographiques proviennent de sources ouvertes citées dans les <a href="mentions-legales.html">mentions légales</a>.</p>
+
+    <h2>8. Responsabilité</h2>
+    <p>Les informations du jeu (emplacement des arrêts, noms de réseaux) sont fournies à titre ludique et peuvent être inexactes ou datées&#160;: ne t’en sers pas pour planifier un trajet. L’éditeur ne peut être tenu responsable d’une indisponibilité du service ou d’une perte de scores.</p>
+
+    <h2>9. Modification des conditions</h2>
+    <p>Les conditions peuvent évoluer. La version en vigueur est datée en haut de cette page&#160;; en cas de changement important, ton accord te sera redemandé.</p>
+
+    <h2>10. Droit applicable</h2>
+    <p>Ces conditions sont soumises au droit français. En cas de litige, une solution amiable sera recherchée en priorité (<mark class='todo'>[À compléter : adresse e-mail de contact]</mark>). À défaut, les tribunaux français sont compétents, sans préjudice des règles protectrices dont tu bénéficies en tant que consommateur.</p>
+  </article>
+</main>
 <script>
 (function(){
   "use strict";
@@ -862,19 +727,5 @@
     root.setAttribute("data-theme", next);
     try{ localStorage.setItem("site-theme", next); }catch(e){}
   });
-
-  function trackVisit(){
-    var SUPABASE_URL = "https://wubushemowkizczoogvg.supabase.co";
-    var SUPABASE_ANON_KEY = "sb_publishable_T4k5fQbOQb5lRRt1q4E1XQ_AQTdYWAr";
-    var SUPABASE_REST_URL = SUPABASE_URL.replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'') + "/rest/v1";
-    fetch(SUPABASE_REST_URL + "/site_events", {
-      method: "POST",
-      headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" },
-      body: JSON.stringify({type: "visit", page: "accueil", city: null})
-    }).catch(function(){});
-  }
-
-  trackVisit();
 })();
-</script>
-</body></html>
+</script></body></html>
