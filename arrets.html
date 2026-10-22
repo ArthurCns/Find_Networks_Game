@@ -639,7 +639,17 @@
   /* contrastes des textes colorés (versions foncées sur fond clair) */
   .reaction-toast.success .rx-title, .badge.success, .map-score-points.success{ color:var(--success-ink); }
   .reaction-toast.warn .rx-title, .badge.warn, .map-score-points.warn{ color:var(--warn-ink); }
-  .reaction-toast.danger .rx-title, .badge.danger, .map-score-points.danger{ color:var(--danger-ink); }</style>
+  .reaction-toast.danger .rx-title, .badge.danger, .map-score-points.danger{ color:var(--danger-ink); }
+  /* ---------- zoom de la carte (molette, glisser, pincement, curseur) ---------- */
+  svg.map{ touch-action:pan-x pan-y; }
+  svg.map.is-zoomed{ touch-action:none; }
+  .mk-anchor{ transform:translate(var(--tx, 0px), var(--ty, 0px)) scale(calc(1 / var(--z, 1))); }
+  .link-line{ stroke-width:calc(3px / var(--z, 1)); }
+  .zoom-ctl{ position:absolute; right:8px; top:124px; bottom:64px; max-height:110px; z-index:6; width:22px; opacity:.55; transition:opacity 160ms var(--ease-out); }
+  .zoom-ctl:hover, .zoom-ctl:focus-within{ opacity:1; }
+  .zoom-ctl input{ writing-mode:vertical-lr; direction:rtl; width:22px; height:100%; margin:0; padding:0; accent-color:var(--ink); background:transparent; cursor:pointer; }
+  .zoom-val{ position:absolute; top:calc(100% + 4px); left:50%; transform:translateX(-50%); visibility:hidden; padding:0 4px; border-radius:6px; background:var(--surface); color:var(--ink); font-size:.66rem; font-weight:800; line-height:1.5; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .zoom-ctl.on .zoom-val{ visibility:visible; }</style>
 </head>
 <body>
 <script>
@@ -711,6 +721,14 @@
       document.querySelectorAll(".nav-item-city").forEach(function(a){
         if(a.getAttribute("data-page") === __path && a.getAttribute("data-city") === __qcity) a.classList.add("is-active");
       });
+    }
+    // mobile : le sous-menu Arrêts est un panneau flottant, fermé par défaut et refermé d'un clic ailleurs
+    if(window.matchMedia("(max-width:700px)").matches){
+      var __grp = document.querySelector(".nav-group");
+      if(__grp){
+        __grp.removeAttribute("open");
+        document.addEventListener("click", function(e){ if(!__grp.contains(e.target)) __grp.removeAttribute("open"); });
+      }
     }
   }catch(e){}
 </script>
@@ -987,6 +1005,7 @@
 
   function newGame(pseudo){
     clearAdvanceTimers();
+    state.view = null; state.viewBeforeReveal = null;
     state.pseudo = pseudo;
     state.saveError = false;
     state.order = shuffle(CITIES.map(function(_,i){return i;})).slice(0, ROUNDS_PER_GAME);
@@ -1002,10 +1021,139 @@
   function startRoundTimer(){
     state.roundStartTs = performance.now();
     state.revealed = false;
+    if(state.viewBeforeReveal){ state.view = state.viewBeforeReveal; state.viewBeforeReveal = null; }
   }
 
   // ---------------- rendering ----------------
   var app = document.getElementById("app");
+
+  // ---------------- zoom / deplacement de la carte ----------------
+  var MAX_ZOOM = 8;
+  var suppressClickUntil = 0;
+  function mapDims(){ var vb = GEO.viewBox.split(" ").map(Number); return {W: vb[2], H: vb[3]}; }
+  function viewKey(){ return GEO.viewBox + "|" + (typeof CITY_KEY !== "undefined" ? CITY_KEY : ""); }
+  function getView(){
+    var d = mapDims();
+    if(!state.view || state.viewKey !== viewKey()){
+      state.view = {z: 1, cx: d.W / 2, cy: d.H / 2};
+      state.viewKey = viewKey();
+      state.viewBeforeReveal = null;
+    }
+    return state.view;
+  }
+  function clampView(v){
+    var d = mapDims();
+    v.z = Math.max(1, Math.min(MAX_ZOOM, v.z));
+    var w = d.W / v.z, h = d.H / v.z;
+    v.cx = Math.max(w / 2, Math.min(d.W - w / 2, v.cx));
+    v.cy = Math.max(h / 2, Math.min(d.H - h / 2, v.cy));
+    return v;
+  }
+  function zoomLabel(z){ return (Math.round(z * 10) / 10).toLocaleString("fr-FR"); }
+  function applyView(svg){
+    var v = clampView(getView()), d = mapDims(), w = d.W / v.z, h = d.H / v.z;
+    svg.setAttribute("viewBox", (v.cx - w / 2) + " " + (v.cy - h / 2) + " " + w + " " + h);
+    svg.style.setProperty("--z", v.z);
+    svg.classList.toggle("is-zoomed", v.z > 1.001);
+    var ctl = svg.parentNode.querySelector(".zoom-ctl");
+    if(ctl){
+      var rg = ctl.querySelector("input");
+      rg.value = Math.round(100 * Math.log(v.z) / Math.log(MAX_ZOOM));
+      rg.setAttribute("aria-valuetext", "zoom x" + zoomLabel(v.z));
+      ctl.classList.toggle("on", v.z > 1.001);
+      ctl.querySelector(".zoom-val").textContent = "\u00d7" + zoomLabel(v.z);
+    }
+  }
+  function svgPoint(svg, cx, cy){
+    var pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+  // zoome en gardant le point p (coordonnees carte) au meme endroit a l'ecran
+  function zoomAtPoint(svg, p, newZ){
+    var v = getView(), d = mapDims();
+    newZ = Math.max(1, Math.min(MAX_ZOOM, newZ));
+    var w0 = d.W / v.z, h0 = d.H / v.z;
+    var fx = (p.x - (v.cx - w0 / 2)) / w0, fy = (p.y - (v.cy - h0 / 2)) / h0;
+    var w1 = d.W / newZ, h1 = d.H / newZ;
+    v.z = newZ; v.cx = p.x - fx * w1 + w1 / 2; v.cy = p.y - fy * h1 + h1 / 2;
+    applyView(svg);
+  }
+  function viewCenterPoint(){ var v = getView(); return {x: v.cx, y: v.cy}; }
+  function ensureVisible(svg, x, y){
+    var v = getView(), d = mapDims(), w = d.W / v.z, h = d.H / v.z, m = Math.min(w, h) * 0.08;
+    if(x < v.cx - w / 2 + m) v.cx = x - m + w / 2; else if(x > v.cx + w / 2 - m) v.cx = x + m - w / 2;
+    if(y < v.cy - h / 2 + m) v.cy = y - m + h / 2; else if(y > v.cy + h / 2 - m) v.cy = y + m - h / 2;
+    applyView(svg);
+  }
+  // apres une reponse : la vue est ajustee pour montrer ma reponse et la bonne position (restauree a la manche suivante)
+  function fitReveal(svg, r){
+    var v = getView(), d = mapDims();
+    var minx = Math.min(r.guess.x, r.city.x), maxx = Math.max(r.guess.x, r.city.x);
+    var miny = Math.min(r.guess.y, r.city.y), maxy = Math.max(r.guess.y, r.city.y);
+    var w = d.W / v.z, h = d.H / v.z, m = Math.min(w, h) * 0.12;
+    var inside = minx >= v.cx - w / 2 + m && maxx <= v.cx + w / 2 - m && miny >= v.cy - h / 2 + m && maxy <= v.cy + h / 2 - m;
+    if(!inside){
+      var needW = (maxx - minx) * 1.5 + d.W * 0.06, needH = (maxy - miny) * 1.5 + d.H * 0.06;
+      state.viewBeforeReveal = {z: v.z, cx: v.cx, cy: v.cy};
+      v.z = Math.max(1, Math.min(v.z, d.W / needW, d.H / needH));
+      v.cx = (minx + maxx) / 2; v.cy = (miny + maxy) / 2;
+    }
+    applyView(svg);
+  }
+  function setupZoom(svg){
+    applyView(svg);
+    svg.addEventListener("wheel", function(e){
+      e.preventDefault();
+      var f = Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015));
+      zoomAtPoint(svg, svgPoint(svg, e.clientX, e.clientY), getView().z * f);
+    }, {passive: false});
+    var range = svg.parentNode.querySelector(".zoom-ctl input");
+    if(range) range.addEventListener("input", function(){
+      zoomAtPoint(svg, viewCenterPoint(), Math.pow(MAX_ZOOM, range.value / 100));
+    });
+    // un doigt ou la souris : deplacer la carte (si zoomee) ; deux doigts : pincer
+    var pts = {}, pan = null, pinch = null;
+    function count(){ return Object.keys(pts).length; }
+    svg.addEventListener("pointerdown", function(e){
+      if(e.pointerType === "mouse" && e.button !== 0) return;
+      pts[e.pointerId] = {x: e.clientX, y: e.clientY};
+      if(count() === 1){
+        var v = getView();
+        pan = {sx: e.clientX, sy: e.clientY, cx: v.cx, cy: v.cy, moved: false};
+      } else if(count() === 2){
+        var k = Object.keys(pts), a = pts[k[0]], b = pts[k[1]];
+        pinch = {d: Math.hypot(a.x - b.x, a.y - b.y), z: getView().z};
+        pan = null;
+      }
+    });
+    svg.addEventListener("pointermove", function(e){
+      if(!pts[e.pointerId]) return;
+      pts[e.pointerId] = {x: e.clientX, y: e.clientY};
+      if(pinch && count() === 2){
+        var k = Object.keys(pts), a = pts[k[0]], b = pts[k[1]], dd = Math.hypot(a.x - b.x, a.y - b.y);
+        if(pinch.d > 0){
+          suppressClickUntil = performance.now() + 400;
+          zoomAtPoint(svg, svgPoint(svg, (a.x + b.x) / 2, (a.y + b.y) / 2), pinch.z * dd / pinch.d);
+        }
+      } else if(pan && getView().z > 1.001){
+        var dx = e.clientX - pan.sx, dy = e.clientY - pan.sy;
+        if(!pan.moved && Math.hypot(dx, dy) < 5) return;
+        if(!pan.moved){ pan.moved = true; try{ svg.setPointerCapture(e.pointerId); }catch(err){} }
+        var rect = svg.getBoundingClientRect(), v = getView(), d = mapDims();
+        var upp = (d.W / v.z) / rect.width;   // unites carte par pixel
+        v.cx = pan.cx - dx * upp; v.cy = pan.cy - dy * upp;
+        applyView(svg);
+        suppressClickUntil = performance.now() + 400;
+      }
+    });
+    function endPointer(e){
+      delete pts[e.pointerId];
+      if(count() < 2) pinch = null;
+      if(count() === 0) pan = null;
+    }
+    svg.addEventListener("pointerup", endPointer);
+    svg.addEventListener("pointercancel", endPointer);
+  }
 
   // annonces pour lecteurs d'écran (zone live présente dès le chargement)
   function announce(msg){
@@ -1334,6 +1482,7 @@
               '<div class="map-score-points '+rl.cls+'">+'+lastRound.score.total+'</div>'
             : '') +
             (showScorePoints ? reactionHtml(rl, state.roundIdx) : '') +
+            (gate ? '' : '<div class="zoom-ctl"><input type="range" min="0" max="100" step="1" value="0" aria-label="Niveau de zoom" aria-orientation="vertical"><span class="zoom-val" aria-hidden="true">\u00d71</span></div>') +
             '<select class="map-city-select" id="city-select" aria-label="Choisir une ville">'+cityOptionsHtml()+'</select>' +
             (fsSupported ? '<button type="button" class="map-fs-btn" id="fs-btn" aria-label="Plein écran" title="Plein écran">' +
               '<svg class="fs-ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
@@ -1349,6 +1498,7 @@
       '</div>';
 
     var svg = document.getElementById("map-svg");
+    if(!gate) setupZoom(svg);
     var fsBtn = document.getElementById("fs-btn");
     if(fsBtn) fsBtn.addEventListener("click", toggleFullscreen);
     var citySelect = document.getElementById("city-select");
@@ -1374,6 +1524,7 @@
       if(usingKeyboard) svg.focus({preventScroll: true});
     } else if(playing && state.revealed && lastRound){
       drawReveal(lastRound);
+      fitReveal(svg, lastRound);
       if(!state.zen) scheduleAdvance(roundNum);
       announce("Manche " + roundNum + " sur " + ROUNDS_PER_GAME + " : " + lastRound.city.network + ". Distance : " + distText(lastRound.distKm) + ". Score : " + lastRound.score.total + " points. " + rl.text + ".");
       var nextBtn = document.getElementById("next-btn");
@@ -1406,6 +1557,7 @@
     }
 
     function onMapClick(evt){
+      if(performance.now() < suppressClickUntil) return;   // fin d'un glisser ou d'un pincement
       var pt = svg.createSVGPoint();
       var ce = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
       pt.x = ce.clientX; pt.y = ce.clientY;
@@ -1424,19 +1576,28 @@
         var g = document.getElementById("kb-cursor");
         if(!g){
           g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-          g.setAttribute("id", "kb-cursor"); g.setAttribute("class", "kb-cursor");
+          g.setAttribute("id", "kb-cursor"); g.setAttribute("class", "kb-cursor mk-anchor");
           document.getElementById("marks").appendChild(g);
         }
-        var r = VBW / 45, x = cur.x, y = cur.y;
+        var r = VBW / 45, x = 0, y = 0;
         function shapes(cls){
           return '<circle' + cls + ' cx="' + x + '" cy="' + y + '" r="' + r + '"/>' +
             '<line' + cls + ' x1="' + (x - r * 1.8) + '" y1="' + y + '" x2="' + (x + r * 1.8) + '" y2="' + y + '"/>' +
             '<line' + cls + ' x1="' + x + '" y1="' + (y - r * 1.8) + '" x2="' + x + '" y2="' + (y + r * 1.8) + '"/>';
         }
-        g.innerHTML = shapes(' class="halo"') + shapes('');
+        if(!g.firstChild) g.innerHTML = shapes(' class="halo"') + shapes('');
+        g.setAttribute("style", "--tx:" + cur.x + "px;--ty:" + cur.y + "px");
       }
       svg.addEventListener("keydown", function(e){
-        var k = e.key, step = e.shiftKey ? VBW / 300 : VBW / 50;
+        var vwid = VBW / getView().z;
+        var k = e.key, step = e.shiftKey ? vwid / 300 : vwid / 50;
+        if(k === "+" || k === "=" || k === "-" || k === "_" || k === "0"){
+          e.preventDefault();
+          var zp = cur.shown ? {x: cur.x, y: cur.y} : viewCenterPoint();
+          zoomAtPoint(svg, zp, k === "0" ? 1 : getView().z * ((k === "+" || k === "=") ? 1.5 : 1 / 1.5));
+          if(cur.shown){ ensureVisible(svg, cur.x, cur.y); drawCursor(); }
+          return;
+        }
         if(k === "Enter" || k === " "){
           e.preventDefault();
           if(cur.shown) commitGuess(cur.x, cur.y); else { cur.shown = true; drawCursor(); }
@@ -1447,7 +1608,7 @@
         else return;
         e.preventDefault();
         cur.x = Math.max(0, Math.min(VBW, cur.x)); cur.y = Math.max(0, Math.min(VBH, cur.y));
-        cur.shown = true; drawCursor();
+        cur.shown = true; ensureVisible(svg, cur.x, cur.y); drawCursor();
       });
     }
 
@@ -1520,29 +1681,35 @@
       for(var k in attrs) e.setAttribute(k, attrs[k]);
       return e;
     }
+    // chaque repere est dans un groupe ancre (translate + scale 1/zoom) : taille constante a l'ecran
+    function anchor(x, y){
+      var g = el("g", {class:"mk-anchor", style:"--tx:" + x + "px;--ty:" + y + "px"});
+      marks.appendChild(g);
+      return g;
+    }
     [0, 0.18].forEach(function(delay){
-      marks.appendChild(el("circle", {
-        class:"click-ripple", cx:r.guess.x, cy:r.guess.y, r:14, style:"animation-delay:"+delay+"s"
+      anchor(r.guess.x, r.guess.y).appendChild(el("circle", {
+        class:"click-ripple", cx:0, cy:0, r:14, style:"animation-delay:"+delay+"s"
       }));
     });
     marks.appendChild(el("line", {
       class:"link-line", pathLength:1, x1:r.guess.x, y1:r.guess.y, x2:r.city.x, y2:r.city.y
     }));
-    marks.appendChild(el("circle", {
-      class:"click-ripple target", cx:r.city.x, cy:r.city.y, r:14
+    anchor(r.city.x, r.city.y).appendChild(el("circle", {
+      class:"click-ripple target", cx:0, cy:0, r:14
     }));
-    marks.appendChild(el("circle", {
-      class:"guess-dot", cx:r.guess.x, cy:r.guess.y, r:13
+    anchor(r.guess.x, r.guess.y).appendChild(el("circle", {
+      class:"guess-dot", cx:0, cy:0, r:13
     }));
-    marks.appendChild(el("circle", {
-      class:"target-dot", cx:r.city.x, cy:r.city.y, r:13
+    anchor(r.city.x, r.city.y).appendChild(el("circle", {
+      class:"target-dot", cx:0, cy:0, r:13
     }));
-    var t = el("text", {class:"map-label", x:r.city.x + 20, y:r.city.y - 18});
+    var t = el("text", {class:"map-label", x:20, y:-18});
     t.textContent = r.city.network;
-    var gl = el("text", {class:"map-label guess-label", x:r.guess.x + 20, y:r.guess.y + 34});
+    var gl = el("text", {class:"map-label guess-label", x:20, y:34});
     gl.textContent = "Ma réponse";
-    marks.appendChild(gl);
-    marks.appendChild(t);
+    anchor(r.guess.x, r.guess.y).appendChild(gl);
+    anchor(r.city.x, r.city.y).appendChild(t);
   }
   function finishGame(){
     var total = state.rounds.reduce(function(a,r){return a+r.score.total;},0);

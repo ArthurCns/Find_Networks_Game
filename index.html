@@ -608,7 +608,17 @@
   /* contrastes des textes colorés (versions foncées sur fond clair) */
   .reaction-toast.success .rx-title, .badge.success, .map-score-points.success{ color:var(--success-ink); }
   .reaction-toast.warn .rx-title, .badge.warn, .map-score-points.warn{ color:var(--warn-ink); }
-  .reaction-toast.danger .rx-title, .badge.danger, .map-score-points.danger{ color:var(--danger-ink); }  /* Hallmark · genre: playful · macrostructure: Bento Grid · theme: brand-locked (cream paper · #FFDE21 yellow · ink borders · Lexend Mega + Public Sans)
+  .reaction-toast.danger .rx-title, .badge.danger, .map-score-points.danger{ color:var(--danger-ink); }
+  /* ---------- zoom de la carte (molette, glisser, pincement, curseur) ---------- */
+  svg.map{ touch-action:pan-x pan-y; }
+  svg.map.is-zoomed{ touch-action:none; }
+  .mk-anchor{ transform:translate(var(--tx, 0px), var(--ty, 0px)) scale(calc(1 / var(--z, 1))); }
+  .link-line{ stroke-width:calc(3px / var(--z, 1)); }
+  .zoom-ctl{ position:absolute; right:8px; top:124px; bottom:64px; max-height:110px; z-index:6; width:22px; opacity:.55; transition:opacity 160ms var(--ease-out); }
+  .zoom-ctl:hover, .zoom-ctl:focus-within{ opacity:1; }
+  .zoom-ctl input{ writing-mode:vertical-lr; direction:rtl; width:22px; height:100%; margin:0; padding:0; accent-color:var(--ink); background:transparent; cursor:pointer; }
+  .zoom-val{ position:absolute; top:calc(100% + 4px); left:50%; transform:translateX(-50%); visibility:hidden; padding:0 4px; border-radius:6px; background:var(--surface); color:var(--ink); font-size:.66rem; font-weight:800; line-height:1.5; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .zoom-ctl.on .zoom-val{ visibility:visible; }  /* Hallmark · genre: playful · macrostructure: Bento Grid · theme: brand-locked (cream paper · #FFDE21 yellow · ink borders · Lexend Mega + Public Sans)
    * enrichment: Tier B hand-built SVG (France outline from france_projected.json) + Tier A CSS podium · nav: N3 side-rail (shared, untouched) · footer: none
    * pre-emit critique: P4 H5 E4 S5 R4 V4 */
   :root{
@@ -867,6 +877,14 @@
       document.querySelectorAll(".nav-item-city").forEach(function(a){
         if(a.getAttribute("data-page") === __path && a.getAttribute("data-city") === __qcity) a.classList.add("is-active");
       });
+    }
+    // mobile : le sous-menu Arrêts est un panneau flottant, fermé par défaut et refermé d'un clic ailleurs
+    if(window.matchMedia("(max-width:700px)").matches){
+      var __grp = document.querySelector(".nav-group");
+      if(__grp){
+        __grp.removeAttribute("open");
+        document.addEventListener("click", function(e){ if(!__grp.contains(e.target)) __grp.removeAttribute("open"); });
+      }
     }
   }catch(e){}
 </script>
