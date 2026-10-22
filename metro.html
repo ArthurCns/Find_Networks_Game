@@ -688,6 +688,7 @@
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes</a>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
       <a class="nav-item nav-item-city" data-page="arrets.html" data-city="vannes" href="arrets.html?city=vannes">Vannes</a>
+      <a class="nav-item nav-item-city" data-page="arrets.html" data-city="nantes" href="arrets.html?city=nantes">Nantes</a>
     </div>
   </details>
   <a class="nav-item" href="boss.html">
@@ -1309,7 +1310,8 @@
     var osm = '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">contributeurs OpenStreetMap</a> (ODbL)';
     var idfm = ' &middot; données transport : &copy; <a href="https://data.iledefrance-mobilites.fr" target="_blank" rel="noopener">Île-de-France Mobilités</a>';
     var gmva = ' &middot; donn&eacute;es transport : &copy; <a href="https://www.data.gouv.fr/datasets/reseau-urbain-kiceo/" target="_blank" rel="noopener">Kic&eacute;o (Transdev GMVA Mobilit&eacute;s)</a>, Licence Ouverte v2.0';
-    return '<p class="map-credit">Fond de carte : &copy; ' + osm + (CITY_KEY === 'paris' ? idfm : '') + (CITY_KEY === 'vannes' ? gmva : '') + '</p>';
+    var naolib = ' &middot; donn&eacute;es transport : &copy; <a href="https://data.nantesmetropole.fr" target="_blank" rel="noopener">Nantes M&eacute;tropole</a> (Naolib), licence ODbL';
+    return '<p class="map-credit">Fond de carte : &copy; ' + osm + (CITY_KEY === 'paris' ? idfm : '') + (CITY_KEY === 'vannes' ? gmva : '') + (CITY_KEY === 'nantes' ? naolib : '') + '</p>';
   }
   function cityOptionsHtml(){
     return Object.keys(CITY_DATA).map(function(k){
