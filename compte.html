@@ -525,7 +525,90 @@
     .page-head .stat{ padding:8px 14px; }
     .page-head .stat .v{ font-size:1.1rem; }
   }
-  :root{
+
+  /* ---------- audit UX / accessibilité (22/10/2026) ---------- */
+  :root{ --success-ink:#117a38; --warn-ink:#8f5500; --danger-ink:#c01f1f; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --success-ink:var(--success); --warn-ink:var(--warn); --danger-ink:var(--danger); } }
+  :root[data-theme="dark"]{ --success-ink:var(--success); --warn-ink:var(--warn); --danger-ink:var(--danger); }
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+  .skip-link{ position:absolute; left:12px; top:12px; z-index:100; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; padding:0; background:var(--accent); color:var(--accent-ink); border:var(--bw) solid var(--border); border-radius:9px; font-weight:800; font-size:.85rem; letter-spacing:.02em; text-transform:uppercase; text-decoration:none; }
+  .skip-link:focus{ width:auto; height:auto; overflow:visible; clip-path:none; padding:.6em 1em; outline:3px solid var(--accent-2); outline-offset:2px; }
+  main.app:focus{ outline:none; }
+
+  /* menu latéral : défile si l'écran est bas, plus compact sous 760 px de haut */
+  @media (min-width:701px){ .site-nav{ overflow-y:auto; overscroll-behavior:contain; } }
+  @media (min-width:701px) and (max-height:760px){
+    .site-nav{ gap:4px; padding:12px 10px; }
+    .nav-brand{ padding:2px 6px 8px; margin-bottom:4px; }
+    .brand-symbol{ width:92px; }
+    .nav-menu-label{ padding-bottom:6px; margin-bottom:2px; }
+    .nav-item{ padding:7px 10px; }
+    .nav-item-city{ padding:4px 10px; }
+  }
+  /* tailles de texte et cibles du pied de menu */
+  .nav-legal a{ display:inline-flex; align-items:center; min-height:24px; padding:2px 2px; font-size:.8rem; }
+  .nav-sublabel{ font-size:.74rem; }
+  .brand-tagline{ font-size:.68rem; }
+  table.board th, .recap-table th{ font-size:.74rem; }
+
+  /* barre du bas sur mobile : 6 entrées qui tiennent toujours à l'écran */
+  @media (max-width:700px){
+    .site-nav{ gap:0; padding:4px; justify-content:space-around; }
+    .nav-item{ flex:1 1 0; min-width:0; flex-direction:column; justify-content:center; gap:2px; padding:6px 2px; text-align:center; font-size:.6rem; letter-spacing:0; line-height:1.1; }
+    .nav-item svg{ width:22px; height:22px; }
+    .nav-item span{ white-space:normal; }
+    .nav-group{ flex:1 1 0; min-width:0; display:flex; }
+    .nav-group summary.nav-item{ width:100%; }
+    .nav-item .nav-chevron{ display:none; }
+    .nav-theme-btn{ flex:0 0 46px; }
+    .nav-theme-btn .theme-ico-moon{ display:none; }
+    :root[data-theme="dark"] .nav-theme-btn .theme-ico-sun{ display:none; }
+    :root[data-theme="dark"] .nav-theme-btn .theme-ico-moon{ display:block; }
+    .nav-item-city{ flex-direction:row; font-size:.85rem; padding:8px 10px; min-height:44px; text-align:left; }
+    .skip-link:focus{ top:auto; bottom:calc(100% + 10px); }
+  }
+
+  /* écran d'accueil du jeu : la modale tient toujours dans la carte */
+  .map-wrap.inactive svg.map{ min-height:420px; }
+  .map-card-head .hint{ text-align:left; padding:0; margin:0; }
+  @media (hover:none){ .hint-kbd{ display:none; } }
+
+  /* chrono lisible (texte + barre) et mode sans chrono */
+  .timerline{ display:flex; align-items:center; gap:10px; }
+  .timerline .timerbar{ flex:1; }
+  .timer-text{ min-width:3.2em; text-align:right; font-weight:800; font-size:.9rem; font-variant-numeric:tabular-nums; }
+  .zen-toggle{ display:inline-flex; align-items:center; gap:10px; min-height:44px; margin-top:4px; font-weight:700; font-size:.88rem; cursor:pointer; }
+  .zen-toggle input{ width:22px; height:22px; flex:none; accent-color:var(--accent-2); }
+  .zen-toggle:focus-within{ outline:3px solid var(--accent-2); outline-offset:2px; border-radius:6px; }
+  .zen-note{ color:var(--muted); font-weight:600; }
+  .recap-next{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+  .recap-next .recap-next-label{ flex:1 1 100%; }
+  .recap-next button{ padding:.5em 1em; font-size:.82rem; }
+
+  /* repère clavier sur la carte */
+  svg.map:focus-visible{ outline:3px solid var(--accent-2); outline-offset:-3px; }
+  .kb-cursor circle, .kb-cursor line{ fill:none; stroke:var(--ink); stroke-width:4; stroke-linecap:round; pointer-events:none; }
+  .kb-cursor .halo{ stroke:var(--surface); stroke-width:10; }
+  .guess-label{ font-size:22px; }
+
+  /* plein écran simulé quand l'API native n'existe pas (iPhone) */
+  .map-fs-btn .fs-label{ display:none; }
+  @media (max-width:700px){
+    .map-fs-btn{ width:auto; height:40px; padding:0 12px; gap:8px; }
+    .map-fs-btn .fs-label{ display:inline; font-size:.74rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+  }
+  #app.fs-fake{ position:fixed; inset:0; z-index:60; max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
+  #app.fs-fake .fs-ico-on{ display:none !important; }
+  #app.fs-fake .fs-ico-off{ display:block !important; }
+  #app.fs-fake .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.04)); margin-inline:auto; }
+
+  /* ligne mise en évidence : texte secondaire en encre pour garder le contraste */
+  table.board tbody tr:first-child td.date{ color:var(--ink); }
+
+  /* contrastes des textes colorés (versions foncées sur fond clair) */
+  .reaction-toast.success .rx-title, .badge.success, .map-score-points.success{ color:var(--success-ink); }
+  .reaction-toast.warn .rx-title, .badge.warn, .map-score-points.warn{ color:var(--warn-ink); }
+  .reaction-toast.danger .rx-title, .badge.danger, .map-score-points.danger{ color:var(--danger-ink); }  :root{
     --font-display:"Lexend Mega",system-ui,sans-serif;
     --font-body:"Public Sans",system-ui,sans-serif;
   }
@@ -602,6 +685,7 @@
   }catch(e){}
 </script>
 <nav class="site-nav" aria-label="Navigation principale">
+  <a class="skip-link" href="#app">Aller au contenu</a>
   <a class="nav-brand" href="index.html" aria-label="Terminus, retour à l'accueil">
     <svg class="brand-symbol" viewBox="0 0 162 50" aria-hidden="true" focusable="false"><rect class="bs-bar" x="0" y="15" width="146" height="14" rx="7"/><circle class="bs-stop" cx="20" cy="22" r="10"/><circle class="bs-stop" cx="72" cy="22" r="10"/><circle class="bs-shadow" cx="137" cy="25" r="22"/><circle class="bs-end" cx="134" cy="22" r="19.5"/></svg>
     <span class="brand-word">terminus</span>
@@ -666,9 +750,9 @@
     }
   }catch(e){}
 </script>
-<main class="app page">
+<main class="app page" id="app">
   <header class="page-head">
-    <h1>Mon compte</h1>
+    <h1 id="acct-title">Mon compte</h1>
     <span class="tag">Un compte, un pseudo unique, ta place au classement.</span>
   </header>
   <div class="acct" id="acct" aria-live="polite"><section class="acct-card"><p>Chargement…</p></section></div>
@@ -740,6 +824,11 @@
   // ---------------- views ----------------
   function render(){
     lastKey = st.status + "|" + (st.pseudo || "") + "|" + view;
+    // même nom que l'entrée du menu : « Connexion » tant qu'on n'est pas connecté
+    var heading = st.status === "user" ? "Mon compte" : "Connexion";
+    var h1 = document.getElementById("acct-title");
+    if(h1) h1.textContent = heading;
+    document.title = heading + " · Terminus";
     if(view === "deleted"){
       box.innerHTML = '<section class="acct-card"><h2>Compte supprimé</h2>' +
         '<p>Ton compte, ton pseudo et tous tes scores ont été effacés. Merci d’avoir joué !</p>' +

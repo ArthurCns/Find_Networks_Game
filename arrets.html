@@ -556,7 +556,90 @@
     .page-head .stat{ padding:8px 14px; }
     .page-head .stat .v{ font-size:1.1rem; }
   }
-</style>
+
+  /* ---------- audit UX / accessibilité (22/10/2026) ---------- */
+  :root{ --success-ink:#117a38; --warn-ink:#8f5500; --danger-ink:#c01f1f; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --success-ink:var(--success); --warn-ink:var(--warn); --danger-ink:var(--danger); } }
+  :root[data-theme="dark"]{ --success-ink:var(--success); --warn-ink:var(--warn); --danger-ink:var(--danger); }
+  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+  .skip-link{ position:absolute; left:12px; top:12px; z-index:100; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; padding:0; background:var(--accent); color:var(--accent-ink); border:var(--bw) solid var(--border); border-radius:9px; font-weight:800; font-size:.85rem; letter-spacing:.02em; text-transform:uppercase; text-decoration:none; }
+  .skip-link:focus{ width:auto; height:auto; overflow:visible; clip-path:none; padding:.6em 1em; outline:3px solid var(--accent-2); outline-offset:2px; }
+  main.app:focus{ outline:none; }
+
+  /* menu latéral : défile si l'écran est bas, plus compact sous 760 px de haut */
+  @media (min-width:701px){ .site-nav{ overflow-y:auto; overscroll-behavior:contain; } }
+  @media (min-width:701px) and (max-height:760px){
+    .site-nav{ gap:4px; padding:12px 10px; }
+    .nav-brand{ padding:2px 6px 8px; margin-bottom:4px; }
+    .brand-symbol{ width:92px; }
+    .nav-menu-label{ padding-bottom:6px; margin-bottom:2px; }
+    .nav-item{ padding:7px 10px; }
+    .nav-item-city{ padding:4px 10px; }
+  }
+  /* tailles de texte et cibles du pied de menu */
+  .nav-legal a{ display:inline-flex; align-items:center; min-height:24px; padding:2px 2px; font-size:.8rem; }
+  .nav-sublabel{ font-size:.74rem; }
+  .brand-tagline{ font-size:.68rem; }
+  table.board th, .recap-table th{ font-size:.74rem; }
+
+  /* barre du bas sur mobile : 6 entrées qui tiennent toujours à l'écran */
+  @media (max-width:700px){
+    .site-nav{ gap:0; padding:4px; justify-content:space-around; }
+    .nav-item{ flex:1 1 0; min-width:0; flex-direction:column; justify-content:center; gap:2px; padding:6px 2px; text-align:center; font-size:.6rem; letter-spacing:0; line-height:1.1; }
+    .nav-item svg{ width:22px; height:22px; }
+    .nav-item span{ white-space:normal; }
+    .nav-group{ flex:1 1 0; min-width:0; display:flex; }
+    .nav-group summary.nav-item{ width:100%; }
+    .nav-item .nav-chevron{ display:none; }
+    .nav-theme-btn{ flex:0 0 46px; }
+    .nav-theme-btn .theme-ico-moon{ display:none; }
+    :root[data-theme="dark"] .nav-theme-btn .theme-ico-sun{ display:none; }
+    :root[data-theme="dark"] .nav-theme-btn .theme-ico-moon{ display:block; }
+    .nav-item-city{ flex-direction:row; font-size:.85rem; padding:8px 10px; min-height:44px; text-align:left; }
+    .skip-link:focus{ top:auto; bottom:calc(100% + 10px); }
+  }
+
+  /* écran d'accueil du jeu : la modale tient toujours dans la carte */
+  .map-wrap.inactive svg.map{ min-height:420px; }
+  .map-card-head .hint{ text-align:left; padding:0; margin:0; }
+  @media (hover:none){ .hint-kbd{ display:none; } }
+
+  /* chrono lisible (texte + barre) et mode sans chrono */
+  .timerline{ display:flex; align-items:center; gap:10px; }
+  .timerline .timerbar{ flex:1; }
+  .timer-text{ min-width:3.2em; text-align:right; font-weight:800; font-size:.9rem; font-variant-numeric:tabular-nums; }
+  .zen-toggle{ display:inline-flex; align-items:center; gap:10px; min-height:44px; margin-top:4px; font-weight:700; font-size:.88rem; cursor:pointer; }
+  .zen-toggle input{ width:22px; height:22px; flex:none; accent-color:var(--accent-2); }
+  .zen-toggle:focus-within{ outline:3px solid var(--accent-2); outline-offset:2px; border-radius:6px; }
+  .zen-note{ color:var(--muted); font-weight:600; }
+  .recap-next{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+  .recap-next .recap-next-label{ flex:1 1 100%; }
+  .recap-next button{ padding:.5em 1em; font-size:.82rem; }
+
+  /* repère clavier sur la carte */
+  svg.map:focus-visible{ outline:3px solid var(--accent-2); outline-offset:-3px; }
+  .kb-cursor circle, .kb-cursor line{ fill:none; stroke:var(--ink); stroke-width:4; stroke-linecap:round; pointer-events:none; }
+  .kb-cursor .halo{ stroke:var(--surface); stroke-width:10; }
+  .guess-label{ font-size:22px; }
+
+  /* plein écran simulé quand l'API native n'existe pas (iPhone) */
+  .map-fs-btn .fs-label{ display:none; }
+  @media (max-width:700px){
+    .map-fs-btn{ width:auto; height:40px; padding:0 12px; gap:8px; }
+    .map-fs-btn .fs-label{ display:inline; font-size:.74rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+  }
+  #app.fs-fake{ position:fixed; inset:0; z-index:60; max-width:none; width:100%; padding:16px; overflow:auto; background:var(--bg); }
+  #app.fs-fake .fs-ico-on{ display:none !important; }
+  #app.fs-fake .fs-ico-off{ display:block !important; }
+  #app.fs-fake .map-wrap{ width:min(100%, calc((100vh - 280px) * 1.19)); margin-inline:auto; }
+
+  /* ligne mise en évidence : texte secondaire en encre pour garder le contraste */
+  table.board tbody tr:first-child td.date{ color:var(--ink); }
+
+  /* contrastes des textes colorés (versions foncées sur fond clair) */
+  .reaction-toast.success .rx-title, .badge.success, .map-score-points.success{ color:var(--success-ink); }
+  .reaction-toast.warn .rx-title, .badge.warn, .map-score-points.warn{ color:var(--warn-ink); }
+  .reaction-toast.danger .rx-title, .badge.danger, .map-score-points.danger{ color:var(--danger-ink); }</style>
 </head>
 <body>
 <script>
@@ -566,6 +649,7 @@
   }catch(e){}
 </script>
 <nav class="site-nav" aria-label="Navigation principale">
+  <a class="skip-link" href="#app">Aller au contenu</a>
   <a class="nav-brand" href="index.html" aria-label="Terminus, retour à l'accueil">
     <svg class="brand-symbol" viewBox="0 0 162 50" aria-hidden="true" focusable="false"><rect class="bs-bar" x="0" y="15" width="146" height="14" rx="7"/><circle class="bs-stop" cx="20" cy="22" r="10"/><circle class="bs-stop" cx="72" cy="22" r="10"/><circle class="bs-shadow" cx="137" cy="25" r="22"/><circle class="bs-end" cx="134" cy="22" r="19.5"/></svg>
     <span class="brand-word">terminus</span>
@@ -630,7 +714,8 @@
     }
   }catch(e){}
 </script>
-<div class="app" id="app"></div>
+<main class="app" id="app"></main>
+<div id="sr-status" class="sr-only" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
@@ -678,6 +763,7 @@
   var TIME_BONUS_STEP = TIME_BONUS_MAX / TIME_LIMIT_S;       // points lost per elapsed second
   var LS_KEY = "arrets-star-scores-v1";
   var LEADERBOARD_SIZE = 10;
+  var LEADERBOARD_FETCH = 100;  // lignes lues pour pouvoir afficher chaque joueur une seule fois
 
   // ---------------- leaderboard (Supabase, local fallback) ----------------
   // 1. Create a free project at https://supabase.com
@@ -736,6 +822,7 @@
       '<span class="gate-note">Sans compte, ton score n\'est pas enregistré.</span>';
   }
   function endNoteHtml(){
+    if(state.zen) return '<div class="rules">Mode sans chrono : ce score n\'est pas classé.</div>';
     if(state.saveError) return '<div class="rules"><b style="color:var(--danger);">Ton score n\'a pas pu être enregistré.</b> Vérifie ta connexion puis rejoue.</div>';
     if(!signedInPseudo() && dbStatus === "shared") return '<div class="rules">Score non enregistré : <a href="'+accountUrl()+'">crée un compte</a> pour entrer au classement.</div>';
     return '';
@@ -743,6 +830,14 @@
 
   var dbStatus = "connecting";  // "connecting" | "shared" | "local"
   var scoresCache = [];         // always the current top LEADERBOARD_SIZE, freshest first
+
+  // un seul score (le meilleur) par joueur ; les lignes arrivent triées par score décroissant
+  function bestPerPlayer(rows){
+    var seen = {}, out = [];
+    (rows || []).forEach(function(r){ if(!seen[r.pseudo]){ seen[r.pseudo] = true; out.push(r); } });
+    return out;
+  }
+  function boardList(){ return bestPerPlayer(scoresCache).slice(0, LEADERBOARD_SIZE); }
 
   function loadLocalScores(){
     try{
@@ -794,6 +889,7 @@
 
   // Writes the score, then refreshes the leaderboard (or falls back to local storage).
   function submitScore(pseudo, score){
+    if(state.zen) return;  // mode sans chrono : score non classé
     // guests: the score is only shown on screen (the shared leaderboard needs an account)
     if(dbStatus === "shared" && !signedInPseudo()) return;
     if(dbStatus !== "shared"){
@@ -852,7 +948,7 @@
 
   function scoreRound(distKm, elapsedS){
     var precision = Math.round(Math.max(0, 1000 - distKm*1000));
-    var timeBonus = Math.round(Math.max(0, TIME_BONUS_MAX - Math.floor(elapsedS)*TIME_BONUS_STEP));
+    var timeBonus = state.zen ? 0 : Math.round(Math.max(0, TIME_BONUS_MAX - Math.floor(elapsedS)*TIME_BONUS_STEP));
     return {precision:precision, timeBonus:timeBonus, total:precision+timeBonus};
   }
 
@@ -869,8 +965,10 @@
 
   // ---------------- state ----------------
   var ADVANCE_DELAY_MS = 3000;
+  function maxTotal(){ return state.zen ? ROUNDS_PER_GAME * 1000 : 13000; }
   var state = {
     screen: "gate",        // gate | play | end
+    zen: false,            // mode sans chrono : pas de bonus, pas de classement, manche suivante manuelle
     pseudo: "",
     order: [],             // array of city indices, length ROUNDS_PER_GAME
     roundIdx: 0,
@@ -909,6 +1007,22 @@
   // ---------------- rendering ----------------
   var app = document.getElementById("app");
 
+  // annonces pour lecteurs d'écran (zone live présente dès le chargement)
+  function announce(msg){
+    var el = document.getElementById("sr-status");
+    if(!el) return;
+    el.textContent = "";
+    setTimeout(function(){ el.textContent = msg; }, 60);
+  }
+  function distText(km){ return typeof fmtDist === "function" ? fmtDist(km) : fmt(km) + " km"; }
+  // le focus n'est déplacé automatiquement que pour les utilisateurs du clavier
+  var usingKeyboard = false;
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Tab" || e.key === "Enter" || e.key === " " || e.key.indexOf("Arrow") === 0) usingKeyboard = true;
+    if(e.key === "Escape"){ var a = document.getElementById("app"); if(a) a.classList.remove("fs-fake"); }
+  }, true);
+  document.addEventListener("pointerdown", function(){ usingKeyboard = false; }, true);
+
   function render(){ renderApp(); }
 
   function topBar(extraStatsHtml){
@@ -920,7 +1034,7 @@
   }
 
   function boardStatusLabel(){
-    if(dbStatus === "shared") return '<span class="label" style="color:var(--success);">Partagé — tous les joueurs</span>';
+    if(dbStatus === "shared") return '<span class="label" style="color:var(--success-ink);">Tous les joueurs</span>';
     if(dbStatus === "local") return '<span class="label">Enregistré sur cet appareil</span>';
     return '<span class="label">Connexion…</span>';
   }
@@ -970,7 +1084,7 @@
     var media = rx.gif
       ? '<img src="' + rx.gif + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline-block\'">' + emoji
       : emoji;
-    return '<div class="reaction-toast ' + rl.cls + '" aria-live="polite">' +
+    return '<div class="reaction-toast ' + rl.cls + '">' +
       '<div class="rx-media">' + media + '</div>' +
       '<div class="rx-text"><span class="rx-title">' + rl.text + '</span><span class="rx-caption">' + caption + '</span></div>' +
     '</div>';
@@ -999,17 +1113,21 @@
       '</li>';
     }).join('');
     var next = (!ended && state.revealed)
-      ? '<div class="label recap-next">'+((state.roundIdx+1) < ROUNDS_PER_GAME ? 'Manche suivante dans' : 'Résultat final dans')+' <span id="cd-num" class="tnum">3</span> s…</div>'
+      ? '<div class="recap-next">' +
+          (state.zen ? '' : '<span class="label recap-next-label" id="adv-label">'+((state.roundIdx+1) < ROUNDS_PER_GAME ? 'Manche suivante dans' : 'Résultat final dans')+' <span id="cd-num" class="tnum">'+Math.round(ADVANCE_DELAY_MS/1000)+'</span> s…</span>') +
+          '<button type="button" class="btn-primary" id="next-btn">'+((state.roundIdx+1) < ROUNDS_PER_GAME ? 'Manche suivante' : 'Voir le résultat')+'</button>' +
+          (state.zen ? '' : '<button type="button" id="pause-btn" aria-pressed="false">Pause</button>') +
+        '</div>'
       : '';
     return '<div class="card recap-card">' +
       '<div class="row" style="justify-content:space-between; align-items:baseline; margin-bottom:6px;">' +
-        '<h3>Résumé de partie</h3><span class="recap-total tnum">'+fmt(total)+' <small>/ 13 000</small></span>' +
+        '<h3>Résumé de partie</h3><span class="recap-total tnum">'+fmt(total)+' <small>/ '+fmt(maxTotal())+'</small></span>' +
       '</div>' +
       '<ul class="recap-list">'+items+'</ul>' + next +
     '</div>';
   }
   function cityScores(){
-    return scoresCache.filter(function(s){ return (s.city || "rennes") === CITY_KEY; }).slice(0, LEADERBOARD_SIZE);
+    return bestPerPlayer(scoresCache.filter(function(s){ return (s.city || "rennes") === CITY_KEY; })).slice(0, LEADERBOARD_SIZE);
   }
   function fmtDist(km){
     return km < 1 ? Math.round(km*1000).toLocaleString("fr-FR") + " m" : (Math.round(km*10)/10).toLocaleString("fr-FR") + " km";
@@ -1071,6 +1189,7 @@
     render();
   }  function toggleFullscreen(){
     var el = document.getElementById("app");
+    if(!(document.fullscreenEnabled || document.webkitFullscreenEnabled)){ el.classList.toggle("fs-fake"); return; }
     var isFs = document.fullscreenElement || document.webkitFullscreenElement;
     try{
       var p = isFs
@@ -1089,7 +1208,7 @@
     var lastRound = state.rounds[state.rounds.length-1];
     var rl = lastRound ? rankLabel(lastRound.distKm) : null;
     var showScorePoints = playing && state.revealed && lastRound;
-    var fsSupported = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+    var fsSupported = true;  // plein écran natif, ou simulé (iPhone)
 
     var stats = (playing || ended) ? (
       '<div class="stat-row">' +
@@ -1105,6 +1224,7 @@
           '<div class="prompt-target">' +
             '<span class="label">Comment ça marche</span>' +
             '<span class="network">Retrouve les arrêts du réseau '+escapeHtml(CITY_DATA[CITY_KEY].net)+' !</span>' +
+            '<label class="zen-toggle"><input type="checkbox" id="zen-toggle"'+(state.zen ? ' checked' : '')+'> <span>Mode sans chrono <span class="zen-note">(pas de bonus de rapidité, score non classé)</span></span></label>' +
           '</div>' +
         '</div>';
     } else if(playing){
@@ -1115,8 +1235,9 @@
             '<span class="label">Place cet arrêt sur la carte</span>' +
             '<span class="network">'+escapeHtml(city.network)+'</span>' +
           '</div>' +
-          '<div class="timerwrap"><div class="timerbar"><i id="timer-fill"></i></div></div>' +
-        '</div>';
+          (state.zen ? '' : '<div class="timerwrap" role="timer" aria-label="Bonus de rapidité"><div class="timerline"><div class="timerbar" aria-hidden="true"><i id="timer-fill"></i></div><span class="timer-text tnum" id="timer-text">'+TIME_LIMIT_S+' s</span></div></div>') +
+        '</div>' +
+        '<p class="hint" id="hint">Clique sur la carte à l\'endroit où tu penses que se trouve cet arrêt. <span class="hint-kbd">Au clavier : flèches pour déplacer le repère (Maj pour affiner), Entrée pour valider.</span></p>';
     } else {
       var cs = cityScores(); var isTop = cs.length && cs[0].pseudo === state.pseudo && cs[0].score === state.lastTotal;
       promptInner =
@@ -1162,7 +1283,7 @@
           '<div class="label">'+(roundNum < ROUNDS_PER_GAME ? "Manche suivante dans" : "Résultat final dans")+' <span id="cd-num" class="tnum">3</span> s…</div>' +
         '</div>';
     } else if(playing){
-      belowHtml = '<p class="hint" id="hint">Clique sur la carte à l\'endroit où tu penses que se trouve cet arrêt.</p>';
+      belowHtml = '';
     } else {
       var rows = state.rounds.map(function(r,i){
         var rl2 = rankLabel(r.distKm);
@@ -1177,7 +1298,7 @@
       }).join('');
       belowHtml =
         '<div class="card">' +
-          '<div class="total-line"><span class="label">Score total (sur 13 000)</span><span class="v tnum">'+fmt(state.lastTotal)+'</span></div>' +
+          '<div class="total-line"><span class="label">Score total (sur '+fmt(maxTotal())+')</span><span class="v tnum">'+fmt(state.lastTotal)+'</span></div>' +
           '<div style="overflow-x:auto; margin-top:10px;">' +
           '<table class="recap-table"><thead><tr><th style="width:2em;">#</th><th>Réseau</th><th style="width:6em;">Distance</th><th style="width:5em;">Temps</th><th style="width:6em;">Résultat</th><th style="width:4em;">Points</th></tr></thead><tbody>' +
           rows +
@@ -1199,13 +1320,13 @@
             stripHtml +
           '</div>' +
           '<div class="map-wrap'+(gate ? ' inactive' : '')+'">' +
-            '<svg class="map" viewBox="'+GEO.viewBox+'" id="map-svg">' +
+            '<svg class="map" viewBox="'+GEO.viewBox+'" id="map-svg"'+(gate ? ' preserveAspectRatio="xMidYMid slice"' : '')+'>' +
               mapLayersSvg() +
               '<rect class="clickcatch" id="clickcatch" x="0" y="0" width="'+MAP.W+'" height="'+MAP.H+'" />' +
               '<g id="marks"></g>' +
             '</svg>' +
             (gate ?
-              '<div class="map-gate-overlay">' +
+              '<div class="map-gate-overlay" role="dialog" aria-label="Avant de jouer">' +
                 gateInnerHtml() +
               '</div>'
             : '') +
@@ -1217,6 +1338,7 @@
             (fsSupported ? '<button type="button" class="map-fs-btn" id="fs-btn" aria-label="Plein écran" title="Plein écran">' +
               '<svg class="fs-ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>' +
               '<svg class="fs-ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>' +
+              '<span class="fs-label">Plein écran</span>' +
             '</button>' : '') +
           '</div>' +
           '</div>' +
@@ -1233,33 +1355,105 @@
     if(citySelect) citySelect.addEventListener("change", function(){ switchCity(this.value); });
 
     if(gate){
+      var zenBox = document.getElementById("zen-toggle");
+      if(zenBox) zenBox.addEventListener("change", function(){ state.zen = zenBox.checked; });
       var startBtn = document.getElementById("start-btn");
       if(startBtn){
         startBtn.addEventListener("click", function(){
           newGame(signedInPseudo() || "Invité");
           render();
+          try{ window.scrollTo(0, 0); }catch(e){}
         });
         if(signedInPseudo()) startBtn.focus({preventScroll: true});
       }
     } else if(playing && !state.revealed){
       svg.addEventListener("click", onMapClick);
+      enableKeyboardGuess();
       runTimerBar();
+      announce("Manche " + roundNum + " sur " + ROUNDS_PER_GAME + ". À placer : " + currentCity().network + ".");
+      if(usingKeyboard) svg.focus({preventScroll: true});
     } else if(playing && state.revealed && lastRound){
       drawReveal(lastRound);
-      scheduleAdvance(roundNum);
+      if(!state.zen) scheduleAdvance(roundNum);
+      announce("Manche " + roundNum + " sur " + ROUNDS_PER_GAME + " : " + lastRound.city.network + ". Distance : " + distText(lastRound.distKm) + ". Score : " + lastRound.score.total + " points. " + rl.text + ".");
+      var nextBtn = document.getElementById("next-btn");
+      var pauseBtn = document.getElementById("pause-btn");
+      if(nextBtn){
+        nextBtn.addEventListener("click", function(){
+          clearAdvanceTimers();
+          if(roundNum < ROUNDS_PER_GAME){ state.roundIdx++; startRoundTimer(); render(); } else { finishGame(); }
+        });
+        if(usingKeyboard) nextBtn.focus();
+      }
+      if(pauseBtn) pauseBtn.addEventListener("click", function(){
+        var paused = pauseBtn.getAttribute("aria-pressed") === "true";
+        var lbl = document.getElementById("adv-label");
+        if(paused){
+          pauseBtn.setAttribute("aria-pressed", "false"); pauseBtn.textContent = "Pause";
+          scheduleAdvance(roundNum);
+        } else {
+          clearAdvanceTimers();
+          pauseBtn.setAttribute("aria-pressed", "true"); pauseBtn.textContent = "Reprendre";
+          if(lbl) lbl.textContent = "En pause";
+        }
+      });
     } else if(ended){
       document.getElementById("replay-btn").addEventListener("click", function(){
         newGame(signedInPseudo() || "Invité");
         render();
+        try{ window.scrollTo(0, 0); }catch(e){}
       });
     }
 
     function onMapClick(evt){
-      var city = currentCity();
       var pt = svg.createSVGPoint();
       var ce = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
       pt.x = ce.clientX; pt.y = ce.clientY;
       var loc = pt.matrixTransform(svg.getScreenCTM().inverse());
+      commitGuess(loc.x, loc.y);
+    }
+
+    // jeu au clavier : flèches = déplacer le repère, Maj = pas fin, Entrée / Espace = valider
+    function enableKeyboardGuess(){
+      var vb = GEO.viewBox.split(" ").map(Number), VBW = vb[2], VBH = vb[3];
+      var cur = {x: VBW / 2, y: VBH / 2, shown: false};
+      svg.setAttribute("tabindex", "0");
+      svg.setAttribute("role", "application");
+      svg.setAttribute("aria-label", "Carte. Flèches pour déplacer le repère, Maj plus flèches pour affiner, Entrée pour valider.");
+      function drawCursor(){
+        var g = document.getElementById("kb-cursor");
+        if(!g){
+          g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("id", "kb-cursor"); g.setAttribute("class", "kb-cursor");
+          document.getElementById("marks").appendChild(g);
+        }
+        var r = VBW / 45, x = cur.x, y = cur.y;
+        function shapes(cls){
+          return '<circle' + cls + ' cx="' + x + '" cy="' + y + '" r="' + r + '"/>' +
+            '<line' + cls + ' x1="' + (x - r * 1.8) + '" y1="' + y + '" x2="' + (x + r * 1.8) + '" y2="' + y + '"/>' +
+            '<line' + cls + ' x1="' + x + '" y1="' + (y - r * 1.8) + '" x2="' + x + '" y2="' + (y + r * 1.8) + '"/>';
+        }
+        g.innerHTML = shapes(' class="halo"') + shapes('');
+      }
+      svg.addEventListener("keydown", function(e){
+        var k = e.key, step = e.shiftKey ? VBW / 300 : VBW / 50;
+        if(k === "Enter" || k === " "){
+          e.preventDefault();
+          if(cur.shown) commitGuess(cur.x, cur.y); else { cur.shown = true; drawCursor(); }
+          return;
+        }
+        if(k === "ArrowLeft") cur.x -= step; else if(k === "ArrowRight") cur.x += step;
+        else if(k === "ArrowUp") cur.y -= step; else if(k === "ArrowDown") cur.y += step;
+        else return;
+        e.preventDefault();
+        cur.x = Math.max(0, Math.min(VBW, cur.x)); cur.y = Math.max(0, Math.min(VBH, cur.y));
+        cur.shown = true; drawCursor();
+      });
+    }
+
+    function commitGuess(gx, gy){
+      var city = currentCity();
+      var loc = {x: gx, y: gy};
       var elapsedS = (performance.now() - state.roundStartTs) / 1000;
       var distPx = dist(loc.x, loc.y, city.x, city.y);
       var distKm = distPx * GEO.kmPerPx;
@@ -1279,11 +1473,14 @@
 
     function runTimerBar(){
       var fill = document.getElementById("timer-fill");
+      var txt = document.getElementById("timer-text");
+      if(!fill) return;
       function tick(){
         if(state.revealed) return;
         var elapsed = (performance.now() - state.roundStartTs)/1000;
         var pct = Math.max(0, 1 - Math.floor(elapsed)/TIME_LIMIT_S);
         fill.style.width = (pct*100)+"%";
+        if(txt) txt.textContent = Math.max(0, TIME_LIMIT_S - Math.floor(elapsed)) + " s";
         fill.style.background = pct > .4 ? "var(--accent-2)" : (pct > .15 ? "var(--warn)" : "var(--danger)");
         state.timerRAF = requestAnimationFrame(tick);
       }
@@ -1342,6 +1539,9 @@
     }));
     var t = el("text", {class:"map-label", x:r.city.x + 20, y:r.city.y - 18});
     t.textContent = r.city.network;
+    var gl = el("text", {class:"map-label guess-label", x:r.guess.x + 20, y:r.guess.y + 34});
+    gl.textContent = "Ma réponse";
+    marks.appendChild(gl);
     marks.appendChild(t);
   }
   function finishGame(){
@@ -1349,6 +1549,7 @@
     state.screen = "end";
     state.lastTotal = total;
     render();
+    announce("Partie terminée. Score : " + fmt(total) + " sur " + fmt(maxTotal()) + ".");
     submitScore(state.pseudo, total);
     trackEvent("game_completed", "arrets", CITY_KEY);
   }
