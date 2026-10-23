@@ -174,7 +174,13 @@
   .nav-group summary::-webkit-details-marker{ display:none; }
   .nav-group-summary{ justify-content:flex-start; }
   .nav-chevron{ width:16px; height:16px; margin-left:auto; flex:none; transition:transform 160ms var(--ease-out); }
-  .nav-group[open] .nav-chevron{ transform:rotate(90deg); }
+  .nav-group[open] > summary .nav-chevron, .nav-mode[open] > summary .nav-chevron{ transform:rotate(90deg); }
+  .nav-mode summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; border-radius:8px; padding:8px 10px; min-height:32px; }
+  .nav-mode summary::-webkit-details-marker{ display:none; }
+  .nav-mode summary:hover{ color:var(--ink); background:var(--surface-2); }
+  .nav-mode summary:focus-visible{ outline:3px solid var(--accent-2); outline-offset:1px; }
+  .nav-mode summary .nav-chevron{ width:14px; height:14px; margin-left:0; }
+  .nav-mode-links{ display:flex; flex-direction:column; gap:2px; padding:0 0 4px; }
   .nav-submenu{ display:flex; flex-direction:column; gap:2px; padding:2px 0 6px 12px; }
   .nav-sublabel{
     font-family:"Public Sans",sans-serif; font-weight:800; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
@@ -837,17 +843,32 @@
       <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
     </summary>
     <div class="nav-submenu">
-      <div class="nav-sublabel">Métro</div>
-      <a class="nav-item nav-item-city" data-page="metro.html" data-city="rennes" href="metro.html?city=rennes">Rennes</a>
-      <a class="nav-item nav-item-city" data-page="metro.html" data-city="paris" href="metro.html?city=paris">Paris</a>
-      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lille" href="metro.html?city=lille">Lille</a>
-      <a class="nav-item nav-item-city" data-page="metro.html" data-city="lyon" href="metro.html?city=lyon">Lyon</a>
-      <a class="nav-item nav-item-city" data-page="metro.html" data-city="marseille" href="metro.html?city=marseille">Marseille</a>
-      <div class="nav-sublabel">Bus</div>
-      <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes</a>
-      <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
-      <a class="nav-item nav-item-city" data-page="arrets.html" data-city="vannes" href="arrets.html?city=vannes">Vannes</a>
-      <a class="nav-item nav-item-city" data-page="arrets.html" data-city="nantes" href="arrets.html?city=nantes">Nantes</a>
+      <details class="nav-mode">
+        <summary class="nav-sublabel nav-mode-summary">
+          <span>Métro</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </summary>
+        <div class="nav-mode-links">
+          <a class="nav-item nav-item-city" data-page="metro.html" data-city="rennes" href="metro.html?city=rennes">Rennes</a>
+          <a class="nav-item nav-item-city" data-page="metro.html" data-city="paris" href="metro.html?city=paris">Paris</a>
+          <a class="nav-item nav-item-city" data-page="metro.html" data-city="lille" href="metro.html?city=lille">Lille</a>
+          <a class="nav-item nav-item-city" data-page="metro.html" data-city="lyon" href="metro.html?city=lyon">Lyon</a>
+          <a class="nav-item nav-item-city" data-page="metro.html" data-city="marseille" href="metro.html?city=marseille">Marseille</a>
+        </div>
+      </details>
+      <details class="nav-mode">
+        <summary class="nav-sublabel nav-mode-summary">
+          <span>Bus</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </summary>
+        <div class="nav-mode-links">
+          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes-simple" href="arrets.html?city=rennes-simple">Rennes · Simple</a>
+          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes · Hard</a>
+          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
+          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="vannes" href="arrets.html?city=vannes">Vannes</a>
+          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="nantes" href="arrets.html?city=nantes">Nantes</a>
+        </div>
+      </details>
     </div>
   </details>
   <a class="nav-item" href="boss.html">
@@ -922,7 +943,8 @@
           <div class="arrets-group">
             <span class="arrets-mode">Bus</span>
             <div class="city-btns">
-              <a class="city-btn" href="arrets.html?city=rennes" aria-label="Bus de Rennes"><span>Rennes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="arrets.html?city=rennes-simple" aria-label="Bus de Rennes, version simple : lignes structurantes"><span>Rennes &#183; Simple</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="city-btn" href="arrets.html?city=rennes" aria-label="Bus de Rennes, version hard : tout le r&#233;seau"><span>Rennes &#183; Hard</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
               <a class="city-btn" href="arrets.html?city=paris" aria-label="Bus de Paris"><span>Paris</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
               <a class="city-btn" href="arrets.html?city=vannes" aria-label="Bus de Vannes"><span>Vannes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
               <a class="city-btn" href="arrets.html?city=nantes" aria-label="Bus de Nantes"><span>Nantes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
