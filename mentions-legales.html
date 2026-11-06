@@ -174,13 +174,17 @@
   .nav-group summary::-webkit-details-marker{ display:none; }
   .nav-group-summary{ justify-content:flex-start; }
   .nav-chevron{ width:16px; height:16px; margin-left:auto; flex:none; transition:transform 160ms var(--ease-out); }
-  .nav-group[open] > summary .nav-chevron, .nav-mode[open] > summary .nav-chevron{ transform:rotate(90deg); }
-  .nav-mode summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; border-radius:8px; padding:8px 10px; min-height:32px; }
-  .nav-mode summary::-webkit-details-marker{ display:none; }
-  .nav-mode summary:hover{ color:var(--ink); background:var(--surface-2); }
-  .nav-mode summary:focus-visible{ outline:3px solid var(--accent-2); outline-offset:1px; }
-  .nav-mode summary .nav-chevron{ width:14px; height:14px; margin-left:0; }
+  .nav-group[open] > summary .nav-chevron, .nav-mode[open] > summary .nav-chevron, .nav-sub[open] > summary .nav-chevron{ transform:rotate(90deg); }
+  .nav-mode > summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px; border-radius:8px; padding:8px 10px; min-height:32px; }
+  .nav-mode > summary::-webkit-details-marker{ display:none; }
+  .nav-mode > summary:hover{ color:var(--ink); background:var(--surface-2); }
+  .nav-mode > summary:focus-visible{ outline:3px solid var(--accent-2); outline-offset:1px; }
+  .nav-mode > summary .nav-chevron{ width:14px; height:14px; margin-left:0; }
   .nav-mode-links{ display:flex; flex-direction:column; gap:2px; padding:0 0 4px; }
+  /* a city with several versions (Rennes > Simple / Hard): the city row folds its versions */
+  .nav-sub > summary{ justify-content:space-between; }
+  .nav-sub > summary .nav-chevron{ width:14px; height:14px; margin-left:0; display:block; }
+  .nav-sub-links{ display:flex; flex-direction:column; gap:2px; padding:2px 0 2px 14px; }
   .nav-submenu{ display:flex; flex-direction:column; gap:2px; padding:2px 0 6px 12px; }
   .nav-sublabel{
     font-family:"Public Sans",sans-serif; font-weight:800; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
@@ -575,7 +579,7 @@
   }
 
   /* écran d'accueil du jeu : la modale tient toujours dans la carte */
-  .map-wrap.inactive svg.map{ min-height:420px; }
+  .map-wrap.inactive svg.map{ min-height:360px; }
   .map-card-head .hint{ text-align:left; padding:0; margin:0; }
   @media (hover:none){ .hint-kbd{ display:none; } }
 
@@ -624,7 +628,36 @@
   .zoom-ctl:hover, .zoom-ctl:focus-within{ opacity:1; }
   .zoom-ctl input{ writing-mode:vertical-lr; direction:rtl; width:22px; height:100%; margin:0; padding:0; accent-color:var(--ink); background:transparent; cursor:pointer; }
   .zoom-val{ position:absolute; top:calc(100% + 4px); left:50%; transform:translateX(-50%); visibility:hidden; padding:0 4px; border-radius:6px; background:var(--surface); color:var(--ink); font-size:.66rem; font-weight:800; line-height:1.5; white-space:nowrap; font-variant-numeric:tabular-nums; }
-  .zoom-ctl.on .zoom-val{ visibility:visible; }  :root{
+  .zoom-ctl.on .zoom-val{ visibility:visible; }
+
+  /* ---------- densité d'affichage (06/11/2026) : moins de défilement, carte entière dès l'ouverture ---------- */
+  html{ font-size:14.5px; }
+  @media (min-width:701px){
+    body{ padding-block:12px; padding-left:212px; }
+    .site-nav{ width:196px; padding:14px 10px; gap:4px; }
+    .nav-item{ padding:7px 10px; }
+    .nav-item-city{ padding:5px 10px; }
+    .nav-menu-label{ padding-bottom:6px; margin-bottom:2px; }
+    .nav-mode > summary{ padding:6px 10px; min-height:28px; }
+  }
+  .app{ gap:12px; }
+  .card{ padding:16px; }
+  .map-card{ padding:0; }
+  .map-card-head{ padding:12px 16px; gap:10px; }
+  header.page-head{ padding:0 2px 2px; gap:10px 20px; }
+  .page-head .brand{ gap:2px; }
+  .page-head .brand h1{ font-size:clamp(1.35rem, .95rem + 1.5vw, 2rem); }
+  .page-head .brand .tag{ font-size:.92rem; }
+  .page-head .stat{ padding:7px 14px; }
+  .page-head .stat .v{ font-size:1.2rem; }
+  .prompt-target .network{ font-size:clamp(1.1rem, .85rem + 1vw, 1.6rem); }
+  .timerbar{ height:12px; }
+  .game-grid{ grid-template-columns:1fr 320px; gap:14px; }
+  .game-aside{ gap:12px; top:12px; }
+  .map-credit{ margin:4px 2px 0; }
+  /* the map is sized to the screen height (fitMapToScreen): the leftover width keeps the map background colour */
+  .map-card .map-wrap{ background:var(--map-bg); }
+  :root{
     --font-display:"Lexend Mega",system-ui,sans-serif;
     --font-body:"Public Sans",system-ui,sans-serif;
   }
@@ -742,8 +775,16 @@
           <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </summary>
         <div class="nav-mode-links">
-          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes-simple" href="arrets.html?city=rennes-simple">Rennes · Simple</a>
-          <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Rennes · Hard</a>
+          <details class="nav-sub">
+            <summary class="nav-item nav-item-city nav-sub-summary">
+              <span>Rennes</span>
+              <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </summary>
+            <div class="nav-sub-links">
+              <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes-simple" href="arrets.html?city=rennes-simple">Simple</a>
+              <a class="nav-item nav-item-city" data-page="arrets.html" data-city="rennes" href="arrets.html?city=rennes">Hard</a>
+            </div>
+          </details>
           <a class="nav-item nav-item-city" data-page="arrets.html" data-city="paris" href="arrets.html?city=paris">Paris</a>
           <a class="nav-item nav-item-city" data-page="arrets.html" data-city="vannes" href="arrets.html?city=vannes">Vannes</a>
           <a class="nav-item nav-item-city" data-page="arrets.html" data-city="nantes" href="arrets.html?city=nantes">Nantes</a>
@@ -778,6 +819,11 @@
       var __path = location.pathname.split("/").pop();
       document.querySelectorAll(".nav-item-city").forEach(function(a){
         if(a.getAttribute("data-page") === __path && a.getAttribute("data-city") === __qcity) a.classList.add("is-active");
+      });
+      // a version nested under a city (Rennes > Simple / Hard) opens its group so the active one is visible
+      document.querySelectorAll(".nav-item-city.is-active").forEach(function(a){
+        var sub = a.closest("details.nav-sub");
+        if(sub) sub.setAttribute("open", "");
       });
     }
     // mobile : le sous-menu Arrêts est un panneau flottant, fermé par défaut et refermé d'un clic ailleurs
